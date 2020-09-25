@@ -14,11 +14,27 @@ function! minimap#vim#MinimapRefresh()
     call s:refresh_content()
 endfunction
 
+function! s:buffer_enter_handler()
+    if &filetype ==# 'minimap'
+        call s:minimap_buffer_enter_handler()
+    else
+        call s:source_buffer_enter_handler()
+    endif
+endfunction
+
 function! s:cursor_move_handler()
     if &filetype ==# 'minimap'
         call s:minimap_move()
     else
         call s:source_move()
+    endif
+endfunction
+
+function! s:win_enter_handler()
+    if &filetype ==# 'minimap'
+        call s:minimap_win_enter()
+    else
+        call s:source_win_enter()
     endif
 endfunction
 
@@ -100,10 +116,10 @@ function! s:open_window()
     augroup MinimapAutoCmds
         autocmd!
         autocmd WinEnter <buffer> if winnr('$') == 1|q|endif
-
-        autocmd BufEnter * call s:refresh_content()
+        autocmd BufWritePost            * call s:refresh_content()
+        autocmd BufEnter                * call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved * call s:cursor_move_handler()
-        " autocmd CursorMoved,CursorMovedI,TextChanged,TextChangedI,BufWinEnter
+        autocmd WinEnter                * call s:win_enter_handler()
     augroup END
 
     let &cpoptions = cpoptions_save
@@ -238,13 +254,36 @@ endfunction
 
 function! s:minimap_move()
     let mmwinnr = winnr()
-    let curr = line('.') - 1
+    let curr = line('.')
     let mmlines = line('$')
 
     execute 'wincmd p'
-    let pos = float2nr(1.0 * curr / mmlines * line('$')) + 1
+    let pos = float2nr(1.0 * curr / mmlines * line('$'))
     execute pos
     execute 'wincmd p'
     let winid = win_getid(mmwinnr)
-    call s:highlight_line(winid, curr + 1)
+    call s:highlight_line(winid, curr)
+endfunction
+
+function! s:minimap_win_enter() abort
+    echom 'hello'
+    execute 'wincmd p'
+    let curr = line('.') - 1
+    let srclines = line('$')
+    execute 'wincmd p'
+    let pos = float2nr(1.0 * curr / srclines * line('$')) + 1
+    execute pos
+    call s:minimap_move()
+endfunction
+
+function! s:source_win_enter() abort
+    call s:source_move()
+endfunction
+
+function! s:minimap_buffer_enter_handler() abort
+    " do nothing
+endfunction
+
+function! s:source_buffer_enter_handler() abort
+    call s:refresh_content()
 endfunction
