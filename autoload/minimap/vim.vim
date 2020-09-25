@@ -227,10 +227,8 @@ function! s:source_move() abort
     let total = line('$')
     let mmheight = getwininfo(win_getid(mmwinnr))[0].botline
     let pos = float2nr(1.0 * curr / total * mmheight) + 1
-
-    " silent! call matchdelete(g:minimap_highlight_id, winid)
-    " let g:minimap_highlight_id = matchadd(g:minimap_highlight, '\%' . pos . 'l', 100, -1, { 'window': winid })
     call s:highlight_line(winid, pos)
+    " TODO: Also move the cursor of minimap, but how to? <20-09-25 17:30, Wenxuan Zhang> "
 endfunction
 
 function! s:highlight_line(winid, pos) abort
