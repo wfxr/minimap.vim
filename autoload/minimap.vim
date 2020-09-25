@@ -143,13 +143,13 @@ function! s:refresh_content()
 
     if has_key(s:known_files, fname)
         if s:known_files[fname].mtime != getftime(fname)
-            call s:process_buffer(bufnr, fname, &filetype)
+            call s:process_buffer(mmwinnr, bufnr, fname, &filetype)
         endif
     else
-        call s:process_buffer(bufnr, fname, &filetype)
+        call s:process_buffer(mmwinnr, bufnr, fname, &filetype)
     endif
 
-    call s:render_content(bufnr, fname, &filetype)
+    call s:render_content(mmwinnr, bufnr, fname, &filetype)
 endfunction
 
 function! s:is_valid_file(fname, ftype)
@@ -159,9 +159,10 @@ function! s:is_valid_file(fname, ftype)
     return 1
 endfunction
 
-function! s:process_buffer(bufnr, fname, ftype)
+function! s:process_buffer(mmwinnr, bufnr, fname, ftype)
+    let winid = win_getid(a:mmwinnr)
     let hscale = 2.0 * g:minimap_width / min([winwidth('%'), 120])
-    let vscale = 4.0 * winheight('%') / line('$')
+    let vscale = 4.0 * winheight(winid) / line('$')
     let minimap_cmd = 'w !code-minimap -H' . string(hscale) . ' -V' . string(vscale)
     " echomsg minimap_cmd
     let minimap_output = execute(minimap_cmd)
@@ -187,9 +188,8 @@ function! s:print_warning_msg(msg)
     echohl None
 endfunction
 
-function! s:render_content(bufnr, fname, ftype) abort
-    let mmwinnr = bufwinnr('MINIMAP')
-    execute mmwinnr . 'wincmd w'
+function! s:render_content(mmwinnr, bufnr, fname, ftype) abort
+    execute a:mmwinnr . 'wincmd w'
     setlocal modifiable
 
     let cache = s:known_files[a:bufnr]
