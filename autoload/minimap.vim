@@ -19,13 +19,6 @@ function! minimap#MinimapUpdateHighlight()
 endfunction
 
 let s:known_files = {}
-if !exists('g:minimap_left')
-    let g:minimap_left = 0
-endif
-
-if !exists('g:minimap_width')
-    let g:minimap_width = 10
-endif
 
 function! s:toggle_window()
     let mmwinnr = bufwinnr('MINIMAP')
@@ -159,13 +152,19 @@ function! s:is_valid_file(fname, ftype)
     return 1
 endfunction
 
-function! s:process_buffer(mmwinnr, bufnr, fname, ftype)
+function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     let winid = win_getid(a:mmwinnr)
     let hscale = 2.0 * g:minimap_width / min([winwidth('%'), 120])
     let vscale = 4.0 * winheight(winid) / line('$')
-    let minimap_cmd = 'w !code-minimap -H' . string(hscale) . ' -V' . string(vscale)
-    " echomsg minimap_cmd
-    let minimap_output = execute(minimap_cmd)
+
+    if has('nvim')
+        let minimap_cmd = 'w !code-minimap -H' . string(hscale) . ' -V' . string(vscale)
+        let minimap_output = execute(minimap_cmd) " Not work for vim 8.2 ?
+    else
+        let minimap_cmd = 'code-minimap -H'.string(hscale).' -V'.string(vscale).' '.shellescape(expand('%'))
+        let minimap_output = system(minimap_cmd)
+    endif
+
 
     if v:shell_error
         let msg = 'minimap: could not generate minimap for ' . a:fname
@@ -196,7 +195,11 @@ function! s:render_content(mmwinnr, bufnr, fname, ftype) abort
 
     silent 1,$delete _
     silent put =cache.content
-    silent 1,3delete
+    if has('nvim')
+        silent 1,3delete
+    else
+        silent 1delete
+    endif
 
     setlocal nomodifiable
     execute 'wincmd p'
@@ -219,5 +222,5 @@ function! s:update_highlight() abort
     let pos = float2nr(1.0 * curr / total * mmheight) + 1
 
     silent! call matchdelete(g:minimap_highlight_id, winid)
-    let g:minimap_highlight_id = matchadd('SignifySignAdd', '\%' . pos . 'l', 100, -1, { 'window': winid })
+    let g:minimap_highlight_id = matchadd(g:minimap_highlight, '\%' . pos . 'l', 100, -1, { 'window': winid })
 endfunction
