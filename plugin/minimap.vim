@@ -4,11 +4,11 @@ endif
 
 let loaded_minimap = 1
 
-command! MinimapToggle           call minimap#MinimapToggle()
-command! Minimap                 call minimap#MinimapOpen()
-command! MinimapClose            call minimap#MinimapClose()
-command! MinimapRefresh          call minimap#MinimapRefresh()
-command! MinimapUpdateHightlight call minimap#MinimapUpdateHighlight()
+command! MinimapToggle           call minimap#vim#MinimapToggle()
+command! Minimap                 call minimap#vim#MinimapOpen()
+command! MinimapClose            call minimap#vim#MinimapClose()
+command! MinimapRefresh          call minimap#vim#MinimapRefresh()
+command! MinimapUpdateHightlight call minimap#vim#MinimapUpdateHighlight()
 
 if !exists('g:minimap_left')
     let g:minimap_left = 0

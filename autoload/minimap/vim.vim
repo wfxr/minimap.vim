@@ -1,24 +1,26 @@
-function! minimap#MinimapToggle()
+function! minimap#vim#MinimapToggle()
     call s:toggle_window()
 endfunction
 
-function! minimap#MinimapClose()
+function! minimap#vim#MinimapClose()
     call s:close_window()
 endfunction
 
-function! minimap#MinimapOpen()
+function! minimap#vim#MinimapOpen()
     call s:open_window()
 endfunction
 
-function! minimap#MinimapRefresh()
+function! minimap#vim#MinimapRefresh()
     call s:refresh_content()
 endfunction
 
-function! minimap#MinimapUpdateHighlight()
+function! minimap#vim#MinimapUpdateHighlight()
     call s:update_highlight()
 endfunction
 
 let s:known_files = {}
+let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
+let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
 
 function! s:toggle_window()
     let mmwinnr = bufwinnr('MINIMAP')
@@ -97,7 +99,7 @@ function! s:open_window()
 
         autocmd BufEnter * call s:refresh_content()
         " TODO: Should be improved <20-09-24 21:06, Wenxuan Zhang> "
-        autocmd FocusGained,CursorMoved * call minimap#MinimapUpdateHighlight()
+        autocmd FocusGained,CursorMoved * call minimap#vim#MinimapUpdateHighlight()
         " autocmd CursorMoved,CursorMovedI,TextChanged,TextChangedI,BufWinEnter
     augroup END
 
@@ -154,14 +156,17 @@ endfunction
 
 function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     let winid = win_getid(a:mmwinnr)
-    let hscale = 2.0 * g:minimap_width / min([winwidth('%'), 120])
-    let vscale = 4.0 * winheight(winid) / line('$')
+    let hscale = string(2.0 * g:minimap_width / min([winwidth('%'), 120]))
+    let vscale = string(4.0 * winheight(winid) / line('$'))
 
     if has('nvim')
-        let minimap_cmd = 'w !code-minimap -H' . string(hscale) . ' -V' . string(vscale)
+        let minimap_cmd = 'w !'.s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width
+        " let minimap_cmd = 'w !code-minimap -H' . string(hscale) . ' -V' . string(vscale)
+        echom minimap_cmd
         let minimap_output = execute(minimap_cmd) " Not work for vim 8.2 ?
     else
-        let minimap_cmd = 'code-minimap -H'.string(hscale).' -V'.string(vscale).' '.shellescape(expand('%'))
+        let minimap_cmd = s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width.' '.shellescape(expand('%'))
+        echom minimap_cmd
         let minimap_output = system(minimap_cmd)
     endif
 
