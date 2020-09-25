@@ -266,7 +266,6 @@ function! s:minimap_move()
 endfunction
 
 function! s:minimap_win_enter() abort
-    echom 'hello'
     execute 'wincmd p'
     let curr = line('.') - 1
     let srclines = line('$')
