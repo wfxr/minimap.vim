@@ -24,7 +24,7 @@ if !exists('g:minimap_left')
 endif
 
 if !exists('g:minimap_width')
-    let g:minimap_width = 30
+    let g:minimap_width = 10
 endif
 
 function! s:toggle_window()
@@ -66,7 +66,7 @@ endfunction
 function! s:open_window()
     " If the minimap window is already open jump to it
     let mmwinnr = bufwinnr('__minimap__')
-    if mmwinnr != -1 && winnr() != mmwinnr
+    if mmwinnr != -1
         return
     endif
 
@@ -93,19 +93,19 @@ function! s:open_window()
     setlocal foldcolumn=0
     setlocal foldmethod&
     setlocal foldexpr&
-    setlocal signcolumn=no
+    silent! setlocal signcolumn=no
 
     let cpoptions_save = &cpoptions
     set cpoptions&vim
 
     augroup MinimapAutoCmds
         autocmd!
-        autocmd BufEnter  __minimap__ nested call s:quit_if_only_window()
-        autocmd BufUnload __minimap__ call s:clean_up()
+        autocmd WinEnter <buffer> if winnr('$') == 1|q|endif
 
         autocmd BufEnter * call s:refresh_content()
         " TODO: Should be improved <20-09-24 21:06, Wenxuan Zhang> "
-        autocmd WinEnter,FocusGained,CursorMoved,VimResized * call minimap#MinimapUpdateHighlight()
+        autocmd FocusGained,CursorMoved * call minimap#MinimapUpdateHighlight()
+        " autocmd CursorMoved,CursorMovedI,TextChanged,TextChangedI,BufWinEnter
     augroup END
 
     let &cpoptions = cpoptions_save
@@ -113,9 +113,9 @@ function! s:open_window()
     execute 'wincmd p'
 endfunction
 
-function! s:clean_up()
-    silent! autocmd! MinimapAutoCmds
-endfunction
+" function! s:clean_up()
+    " silent! autocmd! MinimapAutoCmds
+" endfunction
 
 function! s:quit_if_only_window()
     " Before quitting Vim, delete the minimap buffer so that
@@ -161,13 +161,13 @@ function! s:is_valid_file(fname, ftype)
     endif
     return 1
 endfunction
+
 function! s:process_file(fname, ftype)
     let hscale = 2.0 * g:minimap_width / min([winwidth('%'), 120])
     let vscale = 4.0 * winheight('%') / line('$')
-    let minimap_cmd = 'code-minimap -H' . string(hscale) .
-                \' -V' . string(vscale) . ' ' . shellescape(a:fname)
+    let minimap_cmd = 'w !code-minimap -H' . string(hscale) . ' -V' . string(vscale)
     " echomsg minimap_cmd
-    let minimap_output = system(minimap_cmd)
+    let minimap_output = execute(minimap_cmd)
 
     if v:shell_error
         let msg = 'minimap: could not generate minimap for ' . a:fname
@@ -199,7 +199,7 @@ function! s:render_content(fname, ftype) abort
 
     silent 1,$delete _
     silent put =cache.content
-    silent 1delete
+    silent 1,3delete
 
     setlocal nomodifiable
     execute 'wincmd p'
