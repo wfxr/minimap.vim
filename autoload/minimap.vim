@@ -28,7 +28,7 @@ if !exists('g:minimap_width')
 endif
 
 function! s:toggle_window()
-    let mmwinnr = bufwinnr('__minimap__')
+    let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr != -1
         call s:close_window()
         return
@@ -38,7 +38,7 @@ function! s:toggle_window()
 endfunction
 
 function! s:close_window()
-    let mmwinnr = bufwinnr('__minimap__')
+    let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr == -1
         return
     endif
@@ -65,13 +65,13 @@ endfunction
 
 function! s:open_window()
     " If the minimap window is already open jump to it
-    let mmwinnr = bufwinnr('__minimap__')
+    let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr != -1
         return
     endif
 
     let openpos = g:minimap_left ? 'topleft vertical ' : 'botright vertical '
-    execute 'silent! ' . openpos . g:minimap_width . 'split ' . '__minimap__'
+    execute 'silent! ' . openpos . g:minimap_width . 'split ' . 'MINIMAP'
 
     " Buffer-local options
     setlocal filetype=minimap
@@ -113,10 +113,6 @@ function! s:open_window()
     execute 'wincmd p'
 endfunction
 
-" function! s:clean_up()
-    " silent! autocmd! MinimapAutoCmds
-" endfunction
-
 function! s:quit_if_only_window()
     " Before quitting Vim, delete the minimap buffer so that
     " the '0 mark is correctly set to the previous buffer.
@@ -132,13 +128,14 @@ function! s:quit_if_only_window()
 endfunction
 
 function! s:refresh_content()
+    let bufnr = bufnr('%')
     let fname = fnamemodify(bufname('%'), ':p')
 
     if !s:is_valid_file(fname, &filetype)
         return
     endif
 
-    let mmwinnr = bufwinnr('__minimap__')
+    let mmwinnr = bufwinnr('MINIMAP')
 
     if mmwinnr == -1
         return
@@ -146,13 +143,13 @@ function! s:refresh_content()
 
     if has_key(s:known_files, fname)
         if s:known_files[fname].mtime != getftime(fname)
-            call s:process_file(fname, &filetype)
+            call s:process_buffer(bufnr, fname, &filetype)
         endif
     else
-        call s:process_file(fname, &filetype)
+        call s:process_buffer(bufnr, fname, &filetype)
     endif
 
-    call s:render_content(fname, &filetype)
+    call s:render_content(bufnr, fname, &filetype)
 endfunction
 
 function! s:is_valid_file(fname, ftype)
@@ -162,7 +159,7 @@ function! s:is_valid_file(fname, ftype)
     return 1
 endfunction
 
-function! s:process_file(fname, ftype)
+function! s:process_buffer(bufnr, fname, ftype)
     let hscale = 2.0 * g:minimap_width / min([winwidth('%'), 120])
     let vscale = 4.0 * winheight('%') / line('$')
     let minimap_cmd = 'w !code-minimap -H' . string(hscale) . ' -V' . string(vscale)
@@ -181,7 +178,7 @@ function! s:process_file(fname, ftype)
     let cache = {}
     let cache.mtime = getftime(a:fname)
     let cache.content = minimap_output
-    let s:known_files[a:fname] = cache
+    let s:known_files[a:bufnr] = cache
 endfunction
 
 function! s:print_warning_msg(msg)
@@ -190,12 +187,12 @@ function! s:print_warning_msg(msg)
     echohl None
 endfunction
 
-function! s:render_content(fname, ftype) abort
-    let mmwinnr = bufwinnr('__minimap__')
+function! s:render_content(bufnr, fname, ftype) abort
+    let mmwinnr = bufwinnr('MINIMAP')
     execute mmwinnr . 'wincmd w'
     setlocal modifiable
 
-    let cache = s:known_files[a:fname]
+    let cache = s:known_files[a:bufnr]
 
     silent 1,$delete _
     silent put =cache.content
@@ -206,7 +203,7 @@ function! s:render_content(fname, ftype) abort
 endfunction
 
 function! s:update_highlight() abort
-    let mmwinnr = bufwinnr('__minimap__')
+    let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr == -1
         return
     endif
@@ -214,23 +211,13 @@ function! s:update_highlight() abort
     if winnr() == mmwinnr
         return
     endif
+
+    let winid = win_getid(mmwinnr)
     let curr = line('.') - 1
     let total = line('$')
+    let mmheight = getwininfo(win_getid(mmwinnr))[0].botline
+    let pos = float2nr(1.0 * curr / total * mmheight) + 1
 
-    execute mmwinnr . 'wincmd w'
-    setlocal modifiable
-
-    let height = line('$')
-    let pos = float2nr(1.0 * curr / total * height) + 1
-    " if pos < 1
-    "     let pos = 1
-    " elseif pos > height
-    "     let pos = height
-    " endif
-
-    silent! call matchdelete(g:minimap_highlight_id)
-    let g:minimap_highlight_id = matchadd('SignifySignAdd', '\%' . pos . 'l')
-
-    setlocal nomodifiable
-    execute 'wincmd p'
+    silent! call matchdelete(g:minimap_highlight_id, winid)
+    let g:minimap_highlight_id = matchadd('SignifySignAdd', '\%' . pos . 'l', 100, -1, { 'window': winid })
 endfunction
