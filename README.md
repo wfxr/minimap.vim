@@ -1,16 +1,24 @@
 🛰  minimap for vim
 ===============
 
-
 ![screenshot](https://raw.githubusercontent.com/wfxr/i/master/minimap-vim.png)
+
+### 💠 Features
+
+* Dynamic **scaling**.
+* Real-time **highlight**.
+* It's **blazing-fast**.
+* It can be used to **scroll** buffer (in vim's way!).
 
 ### 📥 Installation
 
-[vim-plug](https://github.com/junegunn/vim-plug) for example:
+Use your favorite plugin manager, [vim-plug](https://github.com/junegunn/vim-plug) for example:
 
 ```vim
 Plug 'wfxr/minimap.vim'
 ```
+
+**Note**: [`code-minimap`](https://github.com/wfxr/code-minimap) is required. `minimap.vim` uses it to render minimap at 🚀 speed.
 
 ### ⚙  Options
 
