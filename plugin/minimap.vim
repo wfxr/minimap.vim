@@ -4,9 +4,9 @@ endif
 
 let loaded_minimap = 1
 
-command! MinimapToggle           call minimap#vim#MinimapToggle()
 command! Minimap                 call minimap#vim#MinimapOpen()
 command! MinimapClose            call minimap#vim#MinimapClose()
+command! MinimapToggle           call minimap#vim#MinimapToggle()
 command! MinimapRefresh          call minimap#vim#MinimapRefresh()
 command! MinimapUpdateHightlight call minimap#vim#MinimapUpdateHighlight()
 
