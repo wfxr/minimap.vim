@@ -8,7 +8,6 @@ command! Minimap                 call minimap#vim#MinimapOpen()
 command! MinimapClose            call minimap#vim#MinimapClose()
 command! MinimapToggle           call minimap#vim#MinimapToggle()
 command! MinimapRefresh          call minimap#vim#MinimapRefresh()
-command! MinimapUpdateHightlight call minimap#vim#MinimapUpdateHighlight()
 
 if !exists('g:minimap_left')
     let g:minimap_left = 0

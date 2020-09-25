@@ -14,8 +14,12 @@ function! minimap#vim#MinimapRefresh()
     call s:refresh_content()
 endfunction
 
-function! minimap#vim#MinimapUpdateHighlight()
-    call s:update_highlight()
+function! s:cursor_move_handler()
+    if &filetype ==# 'minimap'
+        call s:minimap_move()
+    else
+        call s:source_move()
+    endif
 endfunction
 
 let s:known_files = {}
@@ -98,8 +102,7 @@ function! s:open_window()
         autocmd WinEnter <buffer> if winnr('$') == 1|q|endif
 
         autocmd BufEnter * call s:refresh_content()
-        " TODO: Should be improved <20-09-24 21:06, Wenxuan Zhang> "
-        autocmd FocusGained,CursorMoved * call minimap#vim#MinimapUpdateHighlight()
+        autocmd FocusGained,CursorMoved * call s:cursor_move_handler()
         " autocmd CursorMoved,CursorMovedI,TextChanged,TextChangedI,BufWinEnter
     augroup END
 
@@ -161,12 +164,11 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
 
     if has('nvim')
         let minimap_cmd = 'w !'.s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width
-        " let minimap_cmd = 'w !code-minimap -H' . string(hscale) . ' -V' . string(vscale)
-        echom minimap_cmd
+        " echom minimap_cmd
         let minimap_output = execute(minimap_cmd) " Not work for vim 8.2 ?
     else
         let minimap_cmd = s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width.' '.shellescape(expand('%'))
-        echom minimap_cmd
+        " echom minimap_cmd
         let minimap_output = system(minimap_cmd)
     endif
 
@@ -210,7 +212,7 @@ function! s:render_content(mmwinnr, bufnr, fname, ftype) abort
     execute 'wincmd p'
 endfunction
 
-function! s:update_highlight() abort
+function! s:source_move() abort
     let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr == -1
         return
@@ -226,6 +228,25 @@ function! s:update_highlight() abort
     let mmheight = getwininfo(win_getid(mmwinnr))[0].botline
     let pos = float2nr(1.0 * curr / total * mmheight) + 1
 
-    silent! call matchdelete(g:minimap_highlight_id, winid)
-    let g:minimap_highlight_id = matchadd(g:minimap_highlight, '\%' . pos . 'l', 100, -1, { 'window': winid })
+    " silent! call matchdelete(g:minimap_highlight_id, winid)
+    " let g:minimap_highlight_id = matchadd(g:minimap_highlight, '\%' . pos . 'l', 100, -1, { 'window': winid })
+    call s:highlight_line(winid, pos)
+endfunction
+
+function! s:highlight_line(winid, pos) abort
+    silent! call matchdelete(g:minimap_highlight_id, a:winid)
+    let g:minimap_highlight_id = matchadd(g:minimap_highlight, '\%' . a:pos . 'l', 100, -1, { 'window': a:winid })
+endfunction
+
+function! s:minimap_move()
+    let mmwinnr = winnr()
+    let curr = line('.') - 1
+    let mmlines = line('$')
+
+    execute 'wincmd p'
+    let pos = float2nr(1.0 * curr / mmlines * line('$')) + 1
+    execute pos
+    execute 'wincmd p'
+    let winid = win_getid(mmwinnr)
+    call s:highlight_line(winid, curr + 1)
 endfunction
