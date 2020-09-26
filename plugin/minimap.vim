@@ -5,11 +5,11 @@ if v:version < 800
     finish
 endif
 
-if exists('loaded_minimap')
+if exists('g:loaded_minimap')
     finish
 endif
 
-let loaded_minimap = 1
+let g:loaded_minimap = 1
 
 command! Minimap                 call minimap#vim#MinimapOpen()
 command! MinimapClose            call minimap#vim#MinimapClose()
@@ -25,7 +25,11 @@ if !exists('g:minimap_width')
 endif
 
 if !exists('g:minimap_highlight')
-    let g:minimap_highlight= 'Title'
+    let g:minimap_highlight = 'Title'
+endif
+
+if !exists('g:minimap_auto_start')
+    let g:minimap_auto_start = 0
 endif
 
 if g:minimap_auto_start == 1
