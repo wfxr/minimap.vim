@@ -49,6 +49,7 @@ You can use [cargo](https://github.com/rust-lang/cargo) to install 'code-minimap
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 ```
 
+*If you need to install the plugin manually, you can refer to this issue: [#2](https://github.com/wfxr/minimap.vim/issues/2).*
 
 ### 🛠  Commands
 
