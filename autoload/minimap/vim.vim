@@ -250,7 +250,7 @@ function! s:source_move() abort
 endfunction
 
 function! s:highlight_line(winid, pos) abort
-    silent! call matchdelete(g:minimap_highlight_id, a:winid)
+    silent! call matchdelete(g:minimap_highlight_id, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
     let g:minimap_highlight_id = matchadd(g:minimap_highlight, '\%' . a:pos . 'l', 100, -1, { 'window': a:winid })
 endfunction
 

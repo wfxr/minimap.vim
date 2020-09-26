@@ -12,22 +12,16 @@
 
 ### 📥 Installation
 
+**Requirement**
+
+- [`code-minimap`](https://github.com/wfxr/code-minimap) is required. `minimap.vim` uses it to render minimap at 🚀 speed.
+- vim8, or neovim 0.5.0+.
+
 Use your favorite plugin manager, [vim-plug](https://github.com/junegunn/vim-plug) for example:
 
 ```vim
 Plug 'wfxr/minimap.vim'
 ```
-
-**Note**: [`code-minimap`](https://github.com/wfxr/code-minimap) is required. `minimap.vim` uses it to render minimap at 🚀 speed.
-
-### ⚙  Options
-
-| Flag                   | Default | Description                                        |
-|------------------------|---------|----------------------------------------------------|
-| `g:minimap_left`       | `0`     | if set minimap window will append left             |
-| `g:minimap_width`      | `10`    | the width of the Tagbar window in characters       |
-| `g:minimap_highlight`  | `Title` | the color of the highlighting for current position |
-| `g:minimap_auto_start` | `0`     | if set minimap will show at startup                |
 
 ### 🛠  Commands
 
@@ -39,6 +33,14 @@ Plug 'wfxr/minimap.vim'
 | MinimapRefresh         | Force refresh minimap window   |
 | MinimapUpdateHighlight | Force update minimap highlight |
 
+### ⚙  Options
+
+| Flag                   | Default | Description                                        |
+|------------------------|---------|----------------------------------------------------|
+| `g:minimap_left`       | `0`     | if set minimap window will append left             |
+| `g:minimap_width`      | `10`    | the width of the Tagbar window in characters       |
+| `g:minimap_highlight`  | `Title` | the color of the highlighting for current position |
+| `g:minimap_auto_start` | `0`     | if set minimap will show at startup                |
 
 ### 📦 dependencies
 
