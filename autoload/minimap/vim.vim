@@ -1,3 +1,5 @@
+" MIT (c) Wenxuan Zhang
+
 function! minimap#vim#MinimapToggle()
     call s:toggle_window()
 endfunction
