@@ -1,7 +1,7 @@
 " MIT (c) Wenxuan Zhang
 
 if v:version < 800
-    echom "minimap: this plugin requires vim >= 8."
+    echom 'minimap: this plugin requires vim >= 8.'
     finish
 endif
 

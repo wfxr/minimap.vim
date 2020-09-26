@@ -1,22 +1,22 @@
 " MIT (c) Wenxuan Zhang
 
-function! minimap#vim#MinimapToggle()
+function! minimap#vim#MinimapToggle() abort
     call s:toggle_window()
 endfunction
 
-function! minimap#vim#MinimapClose()
+function! minimap#vim#MinimapClose() abort
     call s:close_window()
 endfunction
 
-function! minimap#vim#MinimapOpen()
+function! minimap#vim#MinimapOpen() abort
     call s:open_window()
 endfunction
 
-function! minimap#vim#MinimapRefresh()
+function! minimap#vim#MinimapRefresh() abort
     call s:refresh_content()
 endfunction
 
-function! s:buffer_enter_handler()
+function! s:buffer_enter_handler() abort
     if &filetype ==# 'minimap'
         call s:minimap_buffer_enter_handler()
     else
@@ -24,7 +24,7 @@ function! s:buffer_enter_handler()
     endif
 endfunction
 
-function! s:cursor_move_handler()
+function! s:cursor_move_handler() abort
     if &filetype ==# 'minimap'
         call s:minimap_move()
     else
@@ -32,7 +32,7 @@ function! s:cursor_move_handler()
     endif
 endfunction
 
-function! s:win_enter_handler()
+function! s:win_enter_handler() abort
     if &filetype ==# 'minimap'
         call s:minimap_win_enter()
     else
@@ -44,7 +44,7 @@ let s:known_files = {}
 let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
 let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
 
-function! s:toggle_window()
+function! s:toggle_window() abort
     let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr != -1
         call s:close_window()
@@ -54,7 +54,7 @@ function! s:toggle_window()
     call s:open_window()
 endfunction
 
-function! s:close_window()
+function! s:close_window() abort
     let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr == -1
         return
@@ -80,7 +80,7 @@ function! s:close_window()
     endif
 endfunction
 
-function! s:open_window()
+function! s:open_window() abort
     " If the minimap window is already open jump to it
     let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr != -1
@@ -129,7 +129,7 @@ function! s:open_window()
     execute 'wincmd p'
 endfunction
 
-function! s:quit_if_only_window()
+function! s:quit_if_only_window() abort
     " Before quitting Vim, delete the minimap buffer so that
     " the '0 mark is correctly set to the previous buffer.
     if winbufnr(2) == -1
@@ -143,7 +143,7 @@ function! s:quit_if_only_window()
     endif
 endfunction
 
-function! s:refresh_content()
+function! s:refresh_content() abort
     let bufnr = bufnr('%')
     let fname = fnamemodify(bufname('%'), ':p')
 
@@ -168,7 +168,7 @@ function! s:refresh_content()
     call s:render_content(mmwinnr, bufnr, fname, &filetype)
 endfunction
 
-function! s:is_valid_file(fname, ftype)
+function! s:is_valid_file(fname, ftype) abort
     if a:ftype ==# 'minimap'
         return 0
     endif
@@ -206,7 +206,7 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     let s:known_files[a:bufnr] = cache
 endfunction
 
-function! s:print_warning_msg(msg)
+function! s:print_warning_msg(msg) abort
     echohl WarningMsg
     echomsg a:msg
     echohl None
@@ -254,7 +254,7 @@ function! s:highlight_line(winid, pos) abort
     let g:minimap_highlight_id = matchadd(g:minimap_highlight, '\%' . a:pos . 'l', 100, -1, { 'window': a:winid })
 endfunction
 
-function! s:minimap_move()
+function! s:minimap_move() abort
     let mmwinnr = winnr()
     let curr = line('.')
     let mmlines = line('$')
