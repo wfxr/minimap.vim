@@ -28,7 +28,7 @@ if !exists('g:minimap_highlight')
     let g:minimap_highlight= 'Title'
 endif
 
-if g:minimap_auto_start == 1
+if get(g:, 'minimap_auto_start')
     augroup MinimapAutoStart
         au!
         au BufWinEnter * Minimap
