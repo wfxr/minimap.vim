@@ -4,24 +4,19 @@
 #     Email: wenxuangm@gmail.com                                           #
 #   Created: 2020-09-25 14:37                                              #
 ############################################################################
-set -eo pipefail
-IFS=$'\n\t'
+usage() { echo "Usage: $(basename "$0") <hscale> <vscale> <padding> [file]" >&2; }
 
-usage() { echo "Usage: $(basename "$0") <hscale> <vscale> <fill_width> [file]" >&2; }
-
-(( $# < 3 || $# > 4 )) && usage && exit 1
+if [ $# -lt 3 ] || [ $# -gt 4 ]; then
+    usage && exit 1
+fi
 
 hscale=$1
 vscale=$2
-fill_width=$3
+padding=$3
 file=$4
 
-minimap_gen() {
-    if [ -z "$file" ]; then
-        code-minimap -H "$hscale" -V "$vscale"
-    else
-        code-minimap -H "$hscale" -V "$vscale" "$file"
-    fi
-}
-
-minimap_gen | awk "{printf \"%-${fill_width}s\n\",\$1}"
+if [ -z "$file" ]; then
+    code-minimap -H "$hscale" -V "$vscale" --padding "$padding"
+else
+    code-minimap -H "$hscale" -V "$vscale" --padding "$padding" "$file"
+fi
