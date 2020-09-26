@@ -43,13 +43,13 @@ Use your favorite plugin manager, [vim-plug](https://github.com/junegunn/vim-plu
 Plug 'wfxr/minimap.vim'
 ```
 
+*If you need to install the plugin manually, you can refer to this issue: [#2](https://github.com/wfxr/minimap.vim/issues/2).*
+
 You can use [cargo](https://github.com/rust-lang/cargo) to install 'code-minimap' simultaneously (Only recommended for rust users):
 
 ```vim
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 ```
-
-*If you need to install the plugin manually, you can refer to this issue: [#2](https://github.com/wfxr/minimap.vim/issues/2).*
 
 ### 🛠  Commands
 
@@ -66,7 +66,7 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 | Flag                   | Default | Description                                        |
 |------------------------|---------|----------------------------------------------------|
 | `g:minimap_left`       | `0`     | if set minimap window will append left             |
-| `g:minimap_width`      | `10`    | the width of the Tagbar window in characters       |
+| `g:minimap_width`      | `10`    | the width of the minimap window in characters      |
 | `g:minimap_highlight`  | `Title` | the color of the highlighting for current position |
 | `g:minimap_auto_start` | `0`     | if set minimap will show at startup                |
 
