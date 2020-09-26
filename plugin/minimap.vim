@@ -5,11 +5,11 @@ if v:version < 800
     finish
 endif
 
-if exists('loaded_minimap')
+if exists('g:loaded_minimap')
     finish
 endif
 
-let loaded_minimap = 1
+let g:loaded_minimap = 1
 
 command! Minimap                 call minimap#vim#MinimapOpen()
 command! MinimapClose            call minimap#vim#MinimapClose()
