@@ -1,0 +1,16 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: Vint
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: |
+          pip3 install vim-vint
+      - name: Run
+        run: |
+          export PATH="$PATH:$HOME/.local/bin"
+          vint .
