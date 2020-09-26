@@ -43,6 +43,13 @@ Use your favorite plugin manager, [vim-plug](https://github.com/junegunn/vim-plu
 Plug 'wfxr/minimap.vim'
 ```
 
+You can use [cargo](https://github.com/rust-lang/cargo) to install 'code-minimap' simultaneously (Only recommended for rust users):
+
+```vim
+Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+```
+
+
 ### 🛠  Commands
 
 | Flag                   | Description                    |
