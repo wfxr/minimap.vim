@@ -1,7 +1,7 @@
 🛰  minimap for vim
 ===============
 
-![screenshot](https://raw.githubusercontent.com/wfxr/i/master/minimap-vim.png)
+![screenshot](https://raw.githubusercontent.com/wfxr/i/master/minimap-vim.gif)
 
 ### 💠 Features
 
