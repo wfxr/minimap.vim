@@ -1,4 +1,4 @@
-<h1 align="center">🛰 minimap.vim</h1>
+<h1 align="center">📡 minimap.vim</h1>
 <p align="center">
     <em>Blazing fast minimap for vim, powered by <a href="https://github.com/wfxr/code-minimap">code-minimap</a> written in Rust.</em>
 </p>
@@ -69,6 +69,20 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 | `g:minimap_width`      | `10`    | the width of the minimap window in characters      |
 | `g:minimap_highlight`  | `Title` | the color of the highlighting for current position |
 | `g:minimap_auto_start` | `0`     | if set minimap will show at startup                |
+
+### ❓ F.A.Q
+
+---
+#### Highlight and scroll are not working properly.
+
+Check the vim version you are using. [`minimap.vim` requires vim 8.1.1084+ or neovim 0.5.0+](https://github.com/wfxr/minimap.vim/issues/4).
+
+---
+### Integrated with diagnostics or git status plugins?
+
+Not implemented currently but it is possible. But I am a beginner in vim plugin.
+I don't known how to implement such features correctly and efficiently.
+Welcome to contribute!
 
 ### 📦 dependencies
 
