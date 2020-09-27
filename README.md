@@ -1,6 +1,6 @@
 <h1 align="center">📡 minimap.vim</h1>
 <p align="center">
-    <em>Blazing fast minimap for vim, powered by <a href="https://github.com/wfxr/code-minimap">code-minimap</a> written in Rust.</em>
+    <em>Blazing fast minimap for vim, powered by <a href="https://github.com/wfxr/code-minimap">🛰 code-minimap</a> written in Rust.</em>
 </p>
 
 <p align="center">
@@ -23,9 +23,9 @@
 
 ![screenshot](https://raw.githubusercontent.com/wfxr/i/master/minimap-vim.gif)
 
-### 💠 Features
+### ✨ Features
 
-* It's **blazing-fast** (see [benchmark](https://github.com/wfxr/code-minimap#benchmark)).
+* **Blazing-fast** (see [benchmark](https://github.com/wfxr/code-minimap#benchmark)).
 * Dynamic **scaling**.
 * Real-time **highlight**.
 * It can be used to **scroll** buffer (in vim's way!).
@@ -34,7 +34,7 @@
 
 **Requirement**
 
-- [`code-minimap`](https://github.com/wfxr/code-minimap) is required. The plugin uses it to render minimap at 🚀 speed.
+- [🛰`code-minimap`](https://github.com/wfxr/code-minimap) is required. The plugin uses it to render minimap at 🚀 speed.
 - vim8, or neovim 0.5.0+.
 
 Use your favorite plugin manager, [vim-plug](https://github.com/junegunn/vim-plug) for example:
@@ -86,7 +86,7 @@ Welcome to contribute!
 
 ### 📦 dependencies
 
-* [code-minimap](https://github.com/wfxr/code-minimap)
+* [🛰 code-minimap](https://github.com/wfxr/code-minimap)
 
 ### 📃 License
 
