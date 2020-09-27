@@ -1,0 +1,69 @@
+*minimap-vim.txt* generate text minimaps at :rocket: speed
+*minimap*
+
+License: MIT
+Author: wfxr<wenxuangm@gmail.com>
+
+=============================================================================
+CONTENTS                                                          *minimap-toc*
+
+  1. Commands.............|minimap-commands|
+  2. Options..............|minimap-options|
+
+=============================================================================
+1. Commands                                                  *minimap-commands*
+
+Minimap                                                               *Minimap*
+
+  Show minimap window
+
+MinimapClose                                                     *MinimapClose*
+
+  Close minimap window
+
+MinimapToggle                                                   *MinimapToggle*
+
+  Toggle minimap window
+
+MinimapRefresh                                                 *MinimapRefresh*
+
+  Force refresh minimap window
+
+MinimapUpdateHighlight                                 *MinimapUpdateHighlight*
+
+  Force update minimap window
+
+=============================================================================
+2. Options                                                    *minimap-options*
+
+g:minimap_left                                                 *g:minimap_left*
+  
+  Type: |Number|
+  Default: `0`
+
+  If set to `1`, the minimap window will append to the left.
+
+g:minimap_width                                               *g:minimap_width*
+  
+  Type: |Number|
+  Default: `10`
+
+  The width of the minimap window in characters.
+
+g:minimap_highlight                                       *g:minimap_highlight*
+  
+  Type: |String|
+  Default: `'Title'`
+  
+  The color of the highlighting for the current position. Possible values 
+  are any |group-name|.
+
+g:minimap_auto_start                                     *g:minimap_auto_start*
+  
+  Type: |Number|
+  Default: `0`
+
+  If set to `1`, the minimap window will show on startup.
+
+=============================================================================
+vim:tw=78:ts=2:sts=2:sw=2:ft=help:norl:
