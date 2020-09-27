@@ -75,7 +75,7 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 ---
 #### Highlight and scroll are not working properly.
 
-Check the vim version you are using. [`minimap.vim` requires vim 8.2+ or neovim 0.5.0+](https://github.com/wfxr/minimap.vim/issues/4).
+Check the vim version you are using. `minimap.vim` requires [vim 8.2+](https://github.com/wfxr/minimap.vim/issues/5) or [neovim 0.5.0+](https://github.com/wfxr/minimap.vim/issues/4).
 
 ---
 #### Integrated with diagnostics or git status plugins?
