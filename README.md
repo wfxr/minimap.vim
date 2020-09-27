@@ -11,7 +11,7 @@
         <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"/>
     </a>
     <a href="https://github.com/vim/vim">
-        <img src="https://img.shields.io/badge/vim-8.1+-yellow.svg" alt="Vim"/>
+        <img src="https://img.shields.io/badge/vim-8.2+-yellow.svg" alt="Vim"/>
     </a>
     <a href="https://github.com/neovim/neovim">
         <img src="https://img.shields.io/badge/nvim-0.5.0+-yellow.svg" alt="Neovim"/>
@@ -35,7 +35,7 @@
 **Requirement**
 
 - [🛰`code-minimap`](https://github.com/wfxr/code-minimap) is required. The plugin uses it to render minimap at 🚀 speed.
-- vim8, or neovim 0.5.0+.
+- vim8.2+, or neovim 0.5.0+.
 
 Use your favorite plugin manager, [vim-plug](https://github.com/junegunn/vim-plug) for example:
 
@@ -75,7 +75,7 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 ---
 #### Highlight and scroll are not working properly.
 
-Check the vim version you are using. [`minimap.vim` requires vim 8.1.1084+ or neovim 0.5.0+](https://github.com/wfxr/minimap.vim/issues/4).
+Check the vim version you are using. [`minimap.vim` requires vim 8.2+ or neovim 0.5.0+](https://github.com/wfxr/minimap.vim/issues/4).
 
 ---
 #### Integrated with diagnostics or git status plugins?
