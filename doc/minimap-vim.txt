@@ -4,8 +4,9 @@
 =============================================================================
 CONTENTS                                                          *minimap-toc*
 
-  1. Commands.............|minimap-commands|
-  2. Options..............|minimap-options|
+  1. Commands.................................|minimap-commands|
+  2. Options..................................|minimap-options|
+  3. FAQ......................................|minimap-FAQ|
 
 =============================================================================
 1. Commands                                                  *minimap-commands*
@@ -61,6 +62,22 @@ g:minimap_auto_start                                     *g:minimap_auto_start*
   Default: `0`
 
   If set to `1`, the minimap window will show on startup.
+
+=============================================================================
+3. FAQ                                                            *minimap-FAQ*
+
+|Q:|
+  Highlight and scrolling are not working properly.
+
+|A:|
+  Check the vim version you are using. minimap.vim requires vim 8.1.1084+ or
+  neovim 0.5.0+.
+
+|Q:|
+  Integrated with diagnostics or git status plugins?
+
+|A:|
+  Not implemented currently but it should be possible in the future.
 
 LICENSE                                                       *minimap-license*
 =============================================================================
