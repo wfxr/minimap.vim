@@ -70,7 +70,7 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 | `g:minimap_highlight`  | `Title` | the color of the highlighting for current position |
 | `g:minimap_auto_start` | `0`     | if set minimap will show at startup                |
 
-### ❓ F.A.Q
+### 💬 F.A.Q
 
 ---
 #### Highlight and scroll are not working properly.
@@ -78,9 +78,9 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 Check the vim version you are using. [`minimap.vim` requires vim 8.1.1084+ or neovim 0.5.0+](https://github.com/wfxr/minimap.vim/issues/4).
 
 ---
-### Integrated with diagnostics or git status plugins?
+#### Integrated with diagnostics or git status plugins?
 
-Not implemented currently but it is possible. But I am a beginner in vim plugin.
+Not implemented currently but it should be possible. But I am a beginner in vim plugin.
 I don't known how to implement such features correctly and efficiently.
 Welcome to contribute!
 
