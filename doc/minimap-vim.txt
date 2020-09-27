@@ -1,9 +1,6 @@
 *minimap-vim.txt* Blazing fast minimap for vim, powered by code-minimap
 *minimap*
 
-License: MIT
-Author: wfxr<wenxuangm@gmail.com>
-
 =============================================================================
 CONTENTS                                                          *minimap-toc*
 
@@ -64,6 +61,13 @@ g:minimap_auto_start                                     *g:minimap_auto_start*
   Default: `0`
 
   If set to `1`, the minimap window will show on startup.
+
+LICENSE                                                       *minimap-license*
+=============================================================================
+
+The MIT License (MIT)
+
+Copyright (c) 2020 Wenxuan Zhang
 
 =============================================================================
 vim:tw=78:ts=2:sts=2:sw=2:ft=help:norl:
