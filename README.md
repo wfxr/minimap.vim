@@ -80,7 +80,7 @@ Check the vim version you are using. [`minimap.vim` requires vim 8.1.1084+ or ne
 ---
 #### Integrated with diagnostics or git status plugins?
 
-Not implemented currently but it should be possible. But I am a beginner in vim plugin.
+Not implemented currently but it should be possible. I am a beginner in vim plugin.
 I don't known how to implement such features correctly and efficiently.
 Welcome to contribute!
 
