@@ -41,7 +41,11 @@ function! s:win_enter_handler() abort
 endfunction
 
 let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
-let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
+if has('win32')
+    let s:minimap_gen = s:bin_dir.'minimap_generator.bat'
+else
+    let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
+endif
 let s:minimap_cache = {}
 
 function! s:toggle_window() abort
