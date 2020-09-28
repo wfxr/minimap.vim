@@ -40,7 +40,7 @@ function! s:win_enter_handler() abort
     endif
 endfunction
 
-let s:known_files = {}
+let s:known_buffers = {}
 let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
 let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
 
@@ -129,20 +129,6 @@ function! s:open_window() abort
     execute 'wincmd p'
 endfunction
 
-function! s:quit_if_only_window() abort
-    " Before quitting Vim, delete the minimap buffer so that
-    " the '0 mark is correctly set to the previous buffer.
-    if winbufnr(2) == -1
-        " Check if there is more than one tab page
-        if tabpagenr('$') == 1
-            bdelete
-            quit
-        else
-            close
-        endif
-    endif
-endfunction
-
 function! s:refresh_content() abort
     let bufnr = bufnr('%')
     let fname = fnamemodify(bufname('%'), ':p')
@@ -157,8 +143,8 @@ function! s:refresh_content() abort
         return
     endif
 
-    if has_key(s:known_files, fname)
-        if s:known_files[fname].mtime != getftime(fname)
+    if has_key(s:known_buffers, bufnr)
+        if s:known_buffers[bufnr].mtime != getftime(fname)
             call s:process_buffer(mmwinnr, bufnr, fname, &filetype)
         endif
     else
@@ -192,10 +178,13 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
 
 
     if v:shell_error
-        let msg = 'minimap: could not generate minimap for ' . a:fname
-        call s:print_warning_msg(msg)
-        if !empty(minimap_output)
-            call s:print_warning_msg(minimap_output)
+        " print error message if file exists
+        if filereadable(expand('%'))
+            let msg = 'minimap: could not generate minimap for ' . a:fname
+            call s:print_warning_msg(msg)
+            if !empty(minimap_output)
+                call s:print_warning_msg(minimap_output)
+            endif
         endif
         return
     endif
@@ -203,7 +192,7 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     let cache = {}
     let cache.mtime = getftime(a:fname)
     let cache.content = minimap_output
-    let s:known_files[a:bufnr] = cache
+    let s:known_buffers[a:bufnr] = cache
 endfunction
 
 function! s:print_warning_msg(msg) abort
@@ -213,10 +202,14 @@ function! s:print_warning_msg(msg) abort
 endfunction
 
 function! s:render_content(mmwinnr, bufnr, fname, ftype) abort
+    if !has_key(s:known_buffers, a:bufnr)
+        return
+    endif
+
     execute a:mmwinnr . 'wincmd w'
     setlocal modifiable
 
-    let cache = s:known_files[a:bufnr]
+    let cache = s:known_buffers[a:bufnr]
 
     silent 1,$delete _
     silent put =cache.content
