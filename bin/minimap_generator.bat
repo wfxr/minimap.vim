@@ -4,7 +4,7 @@
 set COUNT=0
 for %%x in (%*) do set /A COUNT+=1
 
-if %COUNT% NEQ 3 if %COUNT% NEQ 4  echo Usage: minimap_generator.bat ^<hscale^> ^<vscale^> ^<padding^> [file] goto exit
+if %COUNT% NEQ 3 if %COUNT% NEQ 4  echo Usage: minimap_generator.bat ^<hscale^> ^<vscale^> ^<padding^> [file] & goto exit
 
 set hscale=%1
 set vscale=%2
