@@ -32,6 +32,10 @@ if !exists('g:minimap_auto_start')
     let g:minimap_auto_start = 0
 endif
 
+if !exists('g:minimap_cursorline_matchid')
+    let g:minimap_cursorline_matchid = 9265454 " magic number
+endif
+
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
         au!
