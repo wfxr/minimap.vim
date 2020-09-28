@@ -84,9 +84,20 @@ Not implemented currently but it should be possible. I am a beginner in vim plug
 I don't known how to implement such features correctly and efficiently.
 Welcome to contribute!
 
-### 📦 dependencies
+---
+#### Minimap window is too wide for me, how to use it as a simple scrollbar?
 
-* [🛰 code-minimap](https://github.com/wfxr/code-minimap)
+You can change the minimap window width:
+```vim
+let g:minimap_width = 2
+```
+Or use [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim) instead if what you want
+is a pure scrollbar indicator.
+
+### 📦 Related Project
+
+* [code-minimap](https://github.com/wfxr/code-minimap): A high performance code minimap render.
+* [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim): A pure scrollbar indicator for neovim (nightly).
 
 ### 📃 License
 
