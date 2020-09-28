@@ -40,9 +40,9 @@ function! s:win_enter_handler() abort
     endif
 endfunction
 
-let s:known_buffers = {}
 let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
 let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
+let s:minimap_cache = {}
 
 function! s:toggle_window() abort
     let mmwinnr = bufwinnr('MINIMAP')
@@ -143,8 +143,8 @@ function! s:refresh_content() abort
         return
     endif
 
-    if has_key(s:known_buffers, bufnr)
-        if s:known_buffers[bufnr].mtime != getftime(fname)
+    if has_key(s:minimap_cache, bufnr)
+        if s:minimap_cache[bufnr].mtime != getftime(fname)
             call s:process_buffer(mmwinnr, bufnr, fname, &filetype)
         endif
     else
@@ -192,7 +192,7 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     let cache = {}
     let cache.mtime = getftime(a:fname)
     let cache.content = minimap_output
-    let s:known_buffers[a:bufnr] = cache
+    let s:minimap_cache[a:bufnr] = cache
 endfunction
 
 function! s:print_warning_msg(msg) abort
@@ -202,14 +202,14 @@ function! s:print_warning_msg(msg) abort
 endfunction
 
 function! s:render_content(mmwinnr, bufnr, fname, ftype) abort
-    if !has_key(s:known_buffers, a:bufnr)
+    if !has_key(s:minimap_cache, a:bufnr)
         return
     endif
 
     execute a:mmwinnr . 'wincmd w'
     setlocal modifiable
 
-    let cache = s:known_buffers[a:bufnr]
+    let cache = s:minimap_cache[a:bufnr]
 
     silent 1,$delete _
     silent put =cache.content
