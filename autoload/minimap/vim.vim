@@ -122,10 +122,10 @@ function! s:open_window() abort
     augroup MinimapAutoCmds
         autocmd!
         autocmd WinEnter <buffer> if winnr('$') == 1|q|endif
-        autocmd BufWritePost            * call s:refresh_content()
-        autocmd BufEnter                * call s:buffer_enter_handler()
-        autocmd FocusGained,CursorMoved * call s:cursor_move_handler()
-        autocmd WinEnter                * call s:win_enter_handler()
+        autocmd BufWritePost                         * call s:refresh_content()
+        autocmd BufEnter                             * call s:buffer_enter_handler()
+        autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
+        autocmd WinEnter                             * call s:win_enter_handler()
     augroup END
 
     let &cpoptions = cpoptions_save
