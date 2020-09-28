@@ -1,20 +1,25 @@
 " MIT (c) Wenxuan Zhang
 
+if exists('g:loaded_minimap')
+    finish
+endif
+
 if v:version < 800
     echom 'minimap: this plugin requires vim >= 8.'
     finish
 endif
 
-if exists('g:loaded_minimap')
+if !executable('code-minimap')
+    echom 'minimap: this plugin requires code-minimap installed.'
     finish
 endif
 
 let g:loaded_minimap = 1
 
-command! Minimap                 call minimap#vim#MinimapOpen()
-command! MinimapClose            call minimap#vim#MinimapClose()
-command! MinimapToggle           call minimap#vim#MinimapToggle()
-command! MinimapRefresh          call minimap#vim#MinimapRefresh()
+command! Minimap        call minimap#vim#MinimapOpen()
+command! MinimapClose   call minimap#vim#MinimapClose()
+command! MinimapToggle  call minimap#vim#MinimapToggle()
+command! MinimapRefresh call minimap#vim#MinimapRefresh()
 
 if !exists('g:minimap_left')
     let g:minimap_left = 0
