@@ -34,7 +34,7 @@
 
 **Requirement**
 
-- [🛰`code-minimap`](https://github.com/wfxr/code-minimap) is required. The plugin uses it to render minimap at 🚀 speed.
+- [🛰`code-minimap`](https://github.com/wfxr/code-minimap) is required. The plugin receives rendered minimap from it.
 - vim8.2+, or neovim 0.5.0+.
 
 Use your favorite plugin manager, [vim-plug](https://github.com/junegunn/vim-plug) for example:
