@@ -87,7 +87,7 @@ Welcome to contribute!
 ---
 #### Minimap window is too wide for me, how to use it as a simple scrollbar?
 
-You can change the minimap window width:
+You can decrease the minimap window width:
 ```vim
 let g:minimap_width = 2
 ```
