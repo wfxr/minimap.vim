@@ -19,4 +19,4 @@
 
 <!-- get by running `vim --version` or `nvim --version` -->
 
-## Problem / Steps to reproduce
+## Problem and steps to reproduce
