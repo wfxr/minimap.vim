@@ -185,7 +185,7 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     let hscale = string(2.0 * g:minimap_width / min([winwidth('%'), 120]))
     let vscale = string(4.0 * winheight(winid) / line('$'))
 
-    " Users that have set up shells may interfere with program execution.
+    " Users that have custom shells may face problems.
     let usershell = &shell
     let &shell = s:default_shell
 
