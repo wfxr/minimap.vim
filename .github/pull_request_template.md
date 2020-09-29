@@ -15,10 +15,11 @@
 
 - [ ] Bug fix
 - [ ] New feature
+- [ ] Improvement of existing features
 - [ ] Refactor
 - [ ] Breaking change
 - [ ] Documentation change
-- [ ] CICD related improvement
+- [ ] CI / CD
 
 ## Test environment
 
