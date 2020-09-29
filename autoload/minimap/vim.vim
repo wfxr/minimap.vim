@@ -59,6 +59,7 @@ function! s:toggle_window() abort
 endfunction
 
 function! s:close_window() abort
+    silent! call matchdelete(g:minimap_cursorline_matchid)
     let mmwinnr = bufwinnr('MINIMAP')
     if mmwinnr == -1
         return
@@ -122,7 +123,7 @@ function! s:open_window() abort
 
     augroup MinimapAutoCmds
         autocmd!
-        autocmd WinEnter <buffer> if winnr('$') == 1|q|endif
+        autocmd WinEnter <buffer> if winnr('$') == 1|q|silent! call s:close_window()|endif
         autocmd BufWritePost                         * call s:refresh_content()
         autocmd BufEnter                             * call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
