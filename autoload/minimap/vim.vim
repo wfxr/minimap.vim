@@ -171,6 +171,12 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     let hscale = string(2.0 * g:minimap_width / min([winwidth('%'), 120]))
     let vscale = string(4.0 * winheight(winid) / line('$'))
 
+    " Powershell doesn't work, so we need to use cmd.exe for Windows.
+    if has('win32') && &shell[-7:-1] !=? 'cmd.exe'
+        let usershell = &shell
+        let &shell = 'cmd.exe'
+    endif
+
     if has('nvim')
         let minimap_cmd = 'w !'.s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width
         " echom minimap_cmd
@@ -181,6 +187,10 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
         let minimap_output = system(minimap_cmd)
     endif
 
+    " Recover the user's selected shell.
+    if exists('usershell')
+        let &shell = usershell
+    endif
 
     if v:shell_error
         " print error message if file exists
