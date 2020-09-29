@@ -117,6 +117,7 @@ function! s:open_window() abort
     setlocal nocursorline
     silent! setlocal signcolumn=no
     silent! setlocal norelativenumber
+    silent! setlocal sidescrolloff=0
 
     let cpoptions_save = &cpoptions
     set cpoptions&vim
@@ -129,6 +130,16 @@ function! s:open_window() abort
         autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
         autocmd WinEnter                             * call s:win_enter_handler()
     augroup END
+
+    " https://github.com/neovim/neovim/issues/6211
+    noremap <buffer> <ScrollWheelUp>     k
+    noremap <buffer> <2-ScrollWheelUp>   k
+    noremap <buffer> <3-ScrollWheelUp>   k
+    noremap <buffer> <4-ScrollWheelUp>   k
+    noremap <buffer> <ScrollWheelDown>   j
+    noremap <buffer> <2-ScrollWheelDown> j
+    noremap <buffer> <3-ScrollWheelDown> j
+    noremap <buffer> <4-ScrollWheelDown> j
 
     let &cpoptions = cpoptions_save
 
