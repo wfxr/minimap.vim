@@ -229,9 +229,9 @@ function! s:render_content(mmwinnr, bufnr, fname, ftype) abort
     silent 1,$delete _
     silent put =cache.content
     if has('nvim')
-        silent 1,3delete
+        silent 1,3delete _
     else
-        silent 1delete
+        silent 1delete _
     endif
 
     setlocal nomodifiable
