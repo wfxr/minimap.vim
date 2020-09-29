@@ -109,12 +109,13 @@ function! s:open_window() abort
     setlocal nospell
     setlocal nowrap
     setlocal nonumber
-    silent! setlocal norelativenumber
     setlocal nofoldenable
     setlocal foldcolumn=0
     setlocal foldmethod&
     setlocal foldexpr&
+    setlocal nocursorline
     silent! setlocal signcolumn=no
+    silent! setlocal norelativenumber
 
     let cpoptions_save = &cpoptions
     set cpoptions&vim
