@@ -94,10 +94,11 @@ let g:minimap_width = 2
 Or use [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim) instead if what you want
 is a pure scrollbar indicator.
 
-### 📦 Related Project
+### 📦 Related Projects
 
 * [code-minimap](https://github.com/wfxr/code-minimap): A high performance code minimap render.
 * [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim): A pure scrollbar indicator for neovim (nightly).
+* [vim-minimap](https://github.com/severin-lemaignan/vim-minimap): A minimap plugin written in python.
 
 ### 📃 License
 
