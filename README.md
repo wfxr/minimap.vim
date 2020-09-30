@@ -94,6 +94,14 @@ let g:minimap_width = 2
 Or use [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim) instead if what you want
 is a pure scrollbar indicator.
 
+---
+### A jumble of characters show up instead of dots?
+
+Vim 8.2 uses the encoding 'latin1' by default, if it can't detect locale from the environment.  (You're probably on Windows.)
+Check that your encoding is set to 'utf-8' in your .vimrc file; the minimap will not correctly display otherwise.
+Unfortunately, encoding is not window-local!  It will change the encoding of all *shown* text to utf-8.
+
+
 ### 📦 Related Projects
 
 * [code-minimap](https://github.com/wfxr/code-minimap): A high performance code minimap render.
