@@ -85,6 +85,18 @@ function! s:close_window() abort
     endif
 endfunction
 
+function! s:close_window_last() abort
+    " We are on the last tab and the <MINIMAP> buffer is in the last window
+    let tabnum = tabpagenr()
+    if winnr('$') == 1
+        silent! call s:close_window()
+        if tabnum == tabpagenr('$') && tabnum == 1
+            doautocmd ExitPre,VimLeavePre,VimLeave 
+        endif
+        quit
+    endif
+endfunction
+
 function! s:open_window() abort
     " If the minimap window is already open jump to it
     let mmwinnr = bufwinnr('-MINIMAP-')
@@ -124,7 +136,7 @@ function! s:open_window() abort
 
     augroup MinimapAutoCmds
         autocmd!
-        autocmd WinEnter <buffer> if winnr('$') == 1|q|silent! call s:close_window()|endif
+        autocmd WinEnter <buffer>                      call s:close_window_last()
         autocmd BufWritePost                         * call s:refresh_content()
         autocmd BufEnter                             * call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
