@@ -271,14 +271,19 @@ function! s:source_move() abort
         return
     endif
 
-    if winnr() == mmwinnr
+    let curwinnr = winnr()
+    if curwinnr == mmwinnr
         return
     endif
 
     let winid = win_getid(mmwinnr)
     let curr = line('.') - 1
     let total = line('$')
-    let mmheight = getwininfo(win_getid(mmwinnr))[0].botline
+
+    noautocmd execute mmwinnr . 'wincmd w'
+    let mmheight = line('w$')
+    noautocmd execute curwinnr . 'wincmd w'
+    
     let pos = float2nr(1.0 * curr / total * mmheight) + 1
     call s:highlight_line(winid, pos)
     " TODO: Also move the cursor of minimap, but how to? <20-09-25 17:30, Wenxuan Zhang> "
