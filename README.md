@@ -94,6 +94,15 @@ let g:minimap_width = 2
 Or use [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim) instead if what you want
 is a pure scrollbar indicator.
 
+---
+#### How to use a custom highlight group?
+
+You can define a custom highlight group and set it for minimap like this:
+```vim
+hi MinimapCurrentLine ctermfg=Green guifg=#50FA7B guibg=#32302f
+let g:minimap_highlight = 'MinimapCurrentLine'
+```
+
 ### 📦 Related Projects
 
 * [code-minimap](https://github.com/wfxr/code-minimap): A high performance code minimap render.
