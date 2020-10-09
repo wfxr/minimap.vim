@@ -49,7 +49,7 @@ endif
 let s:minimap_cache = {}
 
 function! s:toggle_window() abort
-    let mmwinnr = bufwinnr('MINIMAP')
+    let mmwinnr = bufwinnr('-MINIMAP-')
     if mmwinnr != -1
         call s:close_window()
         return
@@ -60,7 +60,7 @@ endfunction
 
 function! s:close_window() abort
     silent! call matchdelete(g:minimap_cursorline_matchid)
-    let mmwinnr = bufwinnr('MINIMAP')
+    let mmwinnr = bufwinnr('-MINIMAP-')
     if mmwinnr == -1
         return
     endif
@@ -87,13 +87,13 @@ endfunction
 
 function! s:open_window() abort
     " If the minimap window is already open jump to it
-    let mmwinnr = bufwinnr('MINIMAP')
+    let mmwinnr = bufwinnr('-MINIMAP-')
     if mmwinnr != -1
         return
     endif
 
     let openpos = g:minimap_left ? 'topleft vertical ' : 'botright vertical '
-    execute 'silent! ' . openpos . g:minimap_width . 'split ' . 'MINIMAP'
+    execute 'silent! ' . openpos . g:minimap_width . 'split ' . '-MINIMAP-'
 
     " Buffer-local options
     setlocal filetype=minimap
@@ -154,7 +154,7 @@ function! s:refresh_content() abort
         return
     endif
 
-    let mmwinnr = bufwinnr('MINIMAP')
+    let mmwinnr = bufwinnr('-MINIMAP-')
 
     if mmwinnr == -1
         return
@@ -251,7 +251,7 @@ function! s:render_content(mmwinnr, bufnr, fname, ftype) abort
 endfunction
 
 function! s:source_move() abort
-    let mmwinnr = bufwinnr('MINIMAP')
+    let mmwinnr = bufwinnr('-MINIMAP-')
     if mmwinnr == -1
         return
     endif
