@@ -46,7 +46,7 @@ if has('win32')
     let s:default_shell = 'cmd.exe'
 else
     let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
-    let s:default_shell = 'bash'
+    let s:default_shell = 'sh'
 endif
 let s:minimap_cache = {}
 
