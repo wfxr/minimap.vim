@@ -43,8 +43,10 @@ endfunction
 let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
 if has('win32')
     let s:minimap_gen = s:bin_dir.'minimap_generator.bat'
+    let s:default_shell = 'cmd.exe'
 else
     let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
+    let s:default_shell = 'sh'
 endif
 let s:minimap_cache = {}
 
@@ -195,11 +197,9 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     let hscale = string(2.0 * g:minimap_width / min([winwidth('%'), 120]))
     let vscale = string(4.0 * winheight(winid) / line('$'))
 
-    " Powershell doesn't work, so we need to use cmd.exe for Windows.
-    if has('win32') && &shell[-7:-1] !=? 'cmd.exe'
-        let usershell = &shell
-        let &shell = 'cmd.exe'
-    endif
+    " Users that have custom shells may face problems.
+    let usershell = &shell
+    let &shell = s:default_shell
 
     if has('nvim')
         let minimap_cmd = 'w !'.s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width
@@ -212,9 +212,7 @@ function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
     endif
 
     " Recover the user's selected shell.
-    if exists('usershell')
-        let &shell = usershell
-    endif
+    let &shell = usershell
 
     if v:shell_error
         " print error message if file exists
