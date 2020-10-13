@@ -71,6 +71,7 @@ function! s:close_window() abort
         if winbufnr(2) != -1
             " Other windows are open, only close the this one
             close
+            exe 'wincmd p'
         endif
     else
         exe mmwinnr . 'wincmd c'
