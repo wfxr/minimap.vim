@@ -149,6 +149,7 @@ function! s:open_window() abort
     let &cpoptions = cpoptions_save
 
     execute 'wincmd p'
+    call s:update_highlight()
 endfunction
 
 function! s:refresh_minimap(force) abort
