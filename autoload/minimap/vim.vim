@@ -167,8 +167,8 @@ function! s:refresh_minimap(force) abort
     if a:force || !has_key(s:minimap_cache, bufnr) ||
                 \ s:minimap_cache[bufnr].mtime != getftime(fname)
         call s:generate_minimap(mmwinnr, bufnr, fname, &filetype)
-        call s:render_minimap(mmwinnr, bufnr, fname, &filetype)
     endif
+    call s:render_minimap(mmwinnr, bufnr, fname, &filetype)
 endfunction
 
 function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
