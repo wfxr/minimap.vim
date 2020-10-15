@@ -322,4 +322,5 @@ endfunction
 
 function! s:source_buffer_enter_handler() abort
     call s:refresh_minimap(0)
+    call s:update_highlight()
 endfunction
