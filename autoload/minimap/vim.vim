@@ -13,7 +13,7 @@ function! minimap#vim#MinimapOpen() abort
 endfunction
 
 function! minimap#vim#MinimapRefresh() abort
-    call s:refresh_content()
+    call s:refresh_minimap()
 endfunction
 
 function! s:buffer_enter_handler() abort
@@ -130,7 +130,7 @@ function! s:open_window() abort
     augroup MinimapAutoCmds
         autocmd!
         autocmd WinEnter                      <buffer> call s:close_window_last()
-        autocmd BufWritePost,VimResized              * call s:refresh_content(1)
+        autocmd BufWritePost,VimResized              * call s:refresh_minimap(1)
         autocmd BufEnter                             * call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
         autocmd WinEnter                             * call s:win_enter_handler()
@@ -151,14 +151,13 @@ function! s:open_window() abort
     execute 'wincmd p'
 endfunction
 
-function! s:refresh_content(force) abort
-    let bufnr = bufnr('%')
-    let fname = fnamemodify(bufname('%'), ':p')
-
-    if !s:is_valid_file(fname, &filetype)
-        return
+function! s:refresh_minimap(force) abort
+    if &filetype ==# 'minimap'
+        execute 'wincmd p'
     endif
 
+    let bufnr = bufnr('%')
+    let fname = fnamemodify(bufname('%'), ':p')
     let mmwinnr = bufwinnr('-MINIMAP-')
 
     if mmwinnr == -1
@@ -170,13 +169,6 @@ function! s:refresh_content(force) abort
         call s:generate_minimap(mmwinnr, bufnr, fname, &filetype)
         call s:render_minimap(mmwinnr, bufnr, fname, &filetype)
     endif
-endfunction
-
-function! s:is_valid_file(fname, ftype) abort
-    if a:ftype ==# 'minimap'
-        return 0
-    endif
-    return 1
 endfunction
 
 function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
@@ -263,7 +255,6 @@ function! s:source_move() abort
     let mmheight = getwininfo(winid)[0].botline
     let pos = float2nr(1.0 * curr / total * mmheight) + 1
     call s:highlight_line(winid, pos)
-    " TODO: Also move the cursor of minimap, but how to? <20-09-25 17:30, Wenxuan Zhang> "
 endfunction
 
 function! s:highlight_line(winid, pos) abort
@@ -303,5 +294,5 @@ function! s:minimap_buffer_enter_handler() abort
 endfunction
 
 function! s:source_buffer_enter_handler() abort
-    call s:refresh_content(0)
+    call s:refresh_minimap(0)
 endfunction
