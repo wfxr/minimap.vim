@@ -313,7 +313,7 @@ function! s:minimap_win_enter() abort
 endfunction
 
 function! s:source_win_enter() abort
-    call s:source_move()
+    call s:update_highlight()
 endfunction
 
 function! s:minimap_buffer_enter_handler() abort
