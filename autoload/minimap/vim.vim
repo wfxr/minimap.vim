@@ -84,7 +84,7 @@ function! s:close_window_last() abort
     if winnr('$') == 1
         silent! call s:close_window()
         if tabnum == tabpagenr('$') && tabnum == 1
-            doautocmd ExitPre,VimLeavePre,VimLeave 
+            doautocmd ExitPre,VimLeavePre,VimLeave
         endif
         quit
     endif
@@ -130,7 +130,7 @@ function! s:open_window() abort
     augroup MinimapAutoCmds
         autocmd!
         autocmd WinEnter                      <buffer> call s:close_window_last()
-        autocmd BufWritePost                         * call s:refresh_content()
+        autocmd BufWritePost,VimResized              * call s:refresh_content(1)
         autocmd BufEnter                             * call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
         autocmd WinEnter                             * call s:win_enter_handler()
@@ -151,7 +151,7 @@ function! s:open_window() abort
     execute 'wincmd p'
 endfunction
 
-function! s:refresh_content() abort
+function! s:refresh_content(force) abort
     let bufnr = bufnr('%')
     let fname = fnamemodify(bufname('%'), ':p')
 
@@ -165,15 +165,11 @@ function! s:refresh_content() abort
         return
     endif
 
-    if has_key(s:minimap_cache, bufnr)
-        if s:minimap_cache[bufnr].mtime != getftime(fname)
-            call s:process_buffer(mmwinnr, bufnr, fname, &filetype)
-        endif
-    else
-        call s:process_buffer(mmwinnr, bufnr, fname, &filetype)
+    if a:force || !has_key(s:minimap_cache, bufnr) ||
+                \ s:minimap_cache[bufnr].mtime != getftime(fname)
+        call s:generate_minimap(mmwinnr, bufnr, fname, &filetype)
+        call s:render_minimap(mmwinnr, bufnr, fname, &filetype)
     endif
-
-    call s:render_content(mmwinnr, bufnr, fname, &filetype)
 endfunction
 
 function! s:is_valid_file(fname, ftype) abort
@@ -183,7 +179,7 @@ function! s:is_valid_file(fname, ftype) abort
     return 1
 endfunction
 
-function! s:process_buffer(mmwinnr, bufnr, fname, ftype) abort
+function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
     let winid = win_getid(a:mmwinnr)
     let hscale = string(2.0 * g:minimap_width / min([winwidth('%'), 120]))
     let vscale = string(4.0 * winheight(winid) / line('$'))
@@ -229,7 +225,7 @@ function! s:print_warning_msg(msg) abort
     echohl None
 endfunction
 
-function! s:render_content(mmwinnr, bufnr, fname, ftype) abort
+function! s:render_minimap(mmwinnr, bufnr, fname, ftype) abort
     if !has_key(s:minimap_cache, a:bufnr)
         return
     endif
@@ -307,5 +303,5 @@ function! s:minimap_buffer_enter_handler() abort
 endfunction
 
 function! s:source_buffer_enter_handler() abort
-    call s:refresh_content()
+    call s:refresh_content(0)
 endfunction
