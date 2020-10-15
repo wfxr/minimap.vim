@@ -257,6 +257,32 @@ function! s:source_move() abort
     call s:highlight_line(winid, pos)
 endfunction
 
+" botline is broken and this works.  However, it's slow, so we call this function less.
+" Remove this function when `getwininfo().botline` is fixed.
+function! s:update_highlight() abort
+    let mmwinnr = bufwinnr('-MINIMAP-')
+    if mmwinnr == -1
+        return
+    endif
+
+    if winnr() == mmwinnr
+        return
+    endif
+
+    let winid = win_getid(mmwinnr)
+    let curr = line('.') - 1
+    let total = line('$')
+
+    let l:winview = winsaveview()
+    execute mmwinnr . 'wincmd w'
+    let mmheight = line('w$')
+    execute 'wincmd p'
+    call winrestview(l:winview)
+    
+    let pos = float2nr(1.0 * curr / total * mmheight) + 1
+    call s:highlight_line(winid, pos)
+endfunction
+
 function! s:highlight_line(winid, pos) abort
     silent! call matchdelete(g:minimap_cursorline_matchid, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
     call matchadd(g:minimap_highlight, '\%' . a:pos . 'l', 100, g:minimap_cursorline_matchid, { 'window': a:winid })
