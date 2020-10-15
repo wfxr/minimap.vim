@@ -130,7 +130,7 @@ function! s:open_window() abort
     augroup MinimapAutoCmds
         autocmd!
         autocmd WinEnter                      <buffer> call s:close_window_last()
-        autocmd BufWritePost,VimResized              * call s:refresh_minimap(1)
+        autocmd BufWritePost,VimResized              * call s:refresh_minimap(1) | call s:update_highlight()
         autocmd BufEnter                             * call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
         autocmd WinEnter                             * call s:win_enter_handler()
