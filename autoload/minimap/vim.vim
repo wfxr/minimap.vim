@@ -130,7 +130,7 @@ function! s:open_window() abort
     augroup MinimapAutoCmds
         autocmd!
         autocmd WinEnter                      <buffer> call s:close_window_last()
-        autocmd BufWritePost,VimResized              * call s:refresh_minimap(1)
+        autocmd BufWritePost,VimResized              * call s:refresh_minimap(1) | call s:update_highlight()
         autocmd BufEnter                             * call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
         autocmd WinEnter                             * call s:win_enter_handler()
@@ -149,6 +149,7 @@ function! s:open_window() abort
     let &cpoptions = cpoptions_save
 
     execute 'wincmd p'
+    call s:update_highlight()
 endfunction
 
 function! s:refresh_minimap(force) abort
@@ -257,6 +258,32 @@ function! s:source_move() abort
     call s:highlight_line(winid, pos)
 endfunction
 
+" botline is broken and this works.  However, it's slow, so we call this function less.
+" Remove this function when `getwininfo().botline` is fixed.
+function! s:update_highlight() abort
+    let mmwinnr = bufwinnr('-MINIMAP-')
+    if mmwinnr == -1
+        return
+    endif
+
+    if winnr() == mmwinnr
+        return
+    endif
+
+    let winid = win_getid(mmwinnr)
+    let curr = line('.') - 1
+    let total = line('$')
+
+    let l:winview = winsaveview()
+    execute mmwinnr . 'wincmd w'
+    let mmheight = line('w$')
+    execute 'wincmd p'
+    call winrestview(l:winview)
+    
+    let pos = float2nr(1.0 * curr / total * mmheight) + 1
+    call s:highlight_line(winid, pos)
+endfunction
+
 function! s:highlight_line(winid, pos) abort
     silent! call matchdelete(g:minimap_cursorline_matchid, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
     call matchadd(g:minimap_highlight, '\%' . a:pos . 'l', 100, g:minimap_cursorline_matchid, { 'window': a:winid })
@@ -286,7 +313,7 @@ function! s:minimap_win_enter() abort
 endfunction
 
 function! s:source_win_enter() abort
-    call s:source_move()
+    call s:update_highlight()
 endfunction
 
 function! s:minimap_buffer_enter_handler() abort
@@ -295,4 +322,5 @@ endfunction
 
 function! s:source_buffer_enter_handler() abort
     call s:refresh_minimap(0)
+    call s:update_highlight()
 endfunction
