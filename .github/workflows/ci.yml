@@ -7,10 +7,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
       - name: Install
         run: |
-          pip3 install vim-vint
+          pip install vim-vint
+          pip install pre-commit
       - name: Run
         run: |
-          export PATH="$PATH:$HOME/.local/bin"
-          vint .
+          pre-commit run --all-files
