@@ -104,7 +104,8 @@ g:minimap_auto_start                                     *g:minimap_auto_start*
   Minimap shows up as a jumble of characters?
 
 |A:|
-  Check that your encoding is set to `utf-8` and not `latin1` (for Vim users), and check that you're using a font that is Unicode-compatible.
+  Check that your encoding is set to `utf-8` and not `latin1` (for Vim users),
+  and check that you're using a font that is Unicode-compatible.
 
 
 LICENSE                                                       *minimap-license*
