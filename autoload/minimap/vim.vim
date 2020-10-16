@@ -279,7 +279,7 @@ function! s:update_highlight() abort
     let mmheight = line('w$')
     execute 'wincmd p'
     call winrestview(l:winview)
-    
+
     let pos = float2nr(1.0 * curr / total * mmheight) + 1
     call s:highlight_line(winid, pos)
 endfunction
