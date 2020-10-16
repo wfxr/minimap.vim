@@ -14,4 +14,4 @@ jobs:
           pip install pre-commit
       - name: Run
         run: |
-          pre-commit run --all-files || git diff --color=always && exit 1
+          pre-commit run --all-files || { git diff --color=always && exit 1; }
