@@ -186,9 +186,9 @@ function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
         " echom minimap_cmd
         let minimap_output = execute(minimap_cmd) " Not work for vim 8.2 ?
     else
-        let minimap_cmd = s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width.' '.shellescape(expand('%'))
+        let minimap_cmd = s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width
         " echom minimap_cmd
-        let minimap_output = system(minimap_cmd)
+        let minimap_output = system(minimap_cmd, join(getline(1, '$'), "\n"))
     endif
 
     " Recover the user's selected shell.
