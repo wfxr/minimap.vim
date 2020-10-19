@@ -41,6 +41,10 @@ if !exists('g:minimap_cursorline_matchid')
     let g:minimap_cursorline_matchid = 9265454 " magic number
 endif
 
+if !exists('g:minimap_block_filetypes')
+    let g:minimap_block_filetypes = ['', 'fugitive', 'nerdtree', 'startify']
+endif
+
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
         au!
