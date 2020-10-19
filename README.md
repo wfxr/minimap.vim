@@ -63,12 +63,13 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 ### ⚙  Options
 
-| Flag                   | Default | Description                                        |
-|------------------------|---------|----------------------------------------------------|
-| `g:minimap_left`       | `0`     | if set minimap window will append left             |
-| `g:minimap_width`      | `10`    | the width of the minimap window in characters      |
-| `g:minimap_highlight`  | `Title` | the color of the highlighting for current position |
-| `g:minimap_auto_start` | `0`     | if set minimap will show at startup                |
+| Flag                        | Default                    | Description                                        |
+|-----------------------------|----------------------------|----------------------------------------------------|
+| `g:minimap_left`            | `0`                        | if set minimap window will append left             |
+| `g:minimap_width`           | `10`                       | the width of the minimap window in characters      |
+| `g:minimap_highlight`       | `Title`                    | the color of the highlighting for current position |
+| `g:minimap_auto_start`      | `0`                        | if set minimap will show at startup                |
+| `g:minimap_block_filetypes` | `['fugitive', 'nerdtree']` | disable minimap for specific file types            |
 
 ### 💬 F.A.Q
 

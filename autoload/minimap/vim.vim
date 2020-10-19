@@ -129,11 +129,20 @@ function! s:open_window() abort
 
     augroup MinimapAutoCmds
         autocmd!
-        autocmd WinEnter                      <buffer> call s:close_window_last()
-        autocmd BufWritePost,VimResized              * call s:refresh_minimap(1) | call s:update_highlight()
-        autocmd BufEnter                             * call s:buffer_enter_handler()
-        autocmd FocusGained,CursorMoved,CursorMovedI * call s:cursor_move_handler()
-        autocmd WinEnter                             * call s:win_enter_handler()
+        autocmd WinEnter <buffer> call s:close_window_last()
+        autocmd WinEnter *
+                    \ if !s:ignored_filetypes() |
+                    \ call s:win_enter_handler()
+        autocmd BufWritePost,VimResized *
+                    \ if !s:ignored_filetypes() |
+                    \ call s:refresh_minimap(1) |
+                    \ call s:update_highlight()
+        autocmd BufEnter,FileType *
+                    \ if !s:ignored_filetypes() |
+                    \ call s:buffer_enter_handler()
+        autocmd FocusGained,CursorMoved,CursorMovedI *
+                    \ if !s:ignored_filetypes() |
+                    \ call s:cursor_move_handler()
     augroup END
 
     " https://github.com/neovim/neovim/issues/6211
@@ -150,6 +159,10 @@ function! s:open_window() abort
 
     execute 'wincmd p'
     call s:update_highlight()
+endfunction
+
+function! s:ignored_filetypes() abort
+    return index(g:minimap_block_filetypes, &filetype) >= 0
 endfunction
 
 function! s:refresh_minimap(force) abort
