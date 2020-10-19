@@ -63,6 +63,12 @@ g:minimap_auto_start                                     *g:minimap_auto_start*
 
   If set to `1`, the minimap window will show on startup.
 
+g:minimap_block_filetypes                           *g:minimap_block_filetypes*
+
+  Type: |Array|
+  Default: `['', 'fugitive', 'nerdtree']`
+
+  Disable minimap for specific file types.
 =============================================================================
 3. FAQ                                                            *minimap-FAQ*
 
