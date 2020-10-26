@@ -249,6 +249,11 @@ function! s:render_minimap(mmwinnr, bufnr, fname, ftype) abort
         silent 1delete _
     endif
 
+    if g:minimap_base_highlight !=# 'Normal'
+        silent! call matchdelete(g:minimap_base_matchid)
+        call matchadd(g:minimap_base_highlight, '.*', 10, g:minimap_base_matchid)
+    endif
+
     setlocal nomodifiable
     execute 'wincmd p'
 endfunction

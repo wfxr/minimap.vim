@@ -21,6 +21,10 @@ command! MinimapClose   call minimap#vim#MinimapClose()
 command! MinimapToggle  call minimap#vim#MinimapToggle()
 command! MinimapRefresh call minimap#vim#MinimapRefresh()
 
+if !exists('g:minimap_auto_start')
+    let g:minimap_auto_start = 0
+endif
+
 if !exists('g:minimap_left')
     let g:minimap_left = 0
 endif
@@ -29,16 +33,20 @@ if !exists('g:minimap_width')
     let g:minimap_width = 10
 endif
 
+if !exists('g:minimap_base_highlight')
+    let g:minimap_base_highlight = 'Normal'
+endif
+
+if !exists('g:minimap_base_matchid')
+    let g:minimap_base_matchid = 9265454 " magic number
+endif
+
 if !exists('g:minimap_highlight')
     let g:minimap_highlight = 'Title'
 endif
 
-if !exists('g:minimap_auto_start')
-    let g:minimap_auto_start = 0
-endif
-
 if !exists('g:minimap_cursorline_matchid')
-    let g:minimap_cursorline_matchid = 9265454 " magic number
+    let g:minimap_cursorline_matchid = 9265455
 endif
 
 if !exists('g:minimap_block_filetypes')

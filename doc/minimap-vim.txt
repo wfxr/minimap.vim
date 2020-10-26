@@ -69,6 +69,14 @@ g:minimap_block_filetypes                           *g:minimap_block_filetypes*
   Default: `['fugitive', 'nerdtree']`
 
   Disable minimap for specific file types.
+
+g:minimap_base_highlight                             *g:minimap_base_highlight*
+
+  Type: |String|
+  Default: `'Normal'`
+
+  The base color group for minimap. Possible values are any |group-name|.
+
 =============================================================================
 3. FAQ                                                            *minimap-FAQ*
 
