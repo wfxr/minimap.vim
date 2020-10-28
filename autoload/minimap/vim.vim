@@ -240,6 +240,7 @@ function! s:render_minimap(mmwinnr, bufnr, fname, ftype) abort
         return
     endif
 
+    let curwinview = winsaveview()
     execute a:mmwinnr . 'wincmd w'
     setlocal modifiable
 
@@ -260,6 +261,7 @@ function! s:render_minimap(mmwinnr, bufnr, fname, ftype) abort
 
     setlocal nomodifiable
     execute 'wincmd p'
+    call winrestview(curwinview)
 endfunction
 
 function! s:source_move() abort
@@ -296,11 +298,11 @@ function! s:update_highlight() abort
     let curr = line('.') - 1
     let total = line('$')
 
-    let l:winview = winsaveview()
+    let curwinview = winsaveview()
     execute mmwinnr . 'wincmd w'
     let mmheight = line('w$')
     execute 'wincmd p'
-    call winrestview(l:winview)
+    call winrestview(curwinview)
 
     let pos = float2nr(1.0 * curr / total * mmheight) + 1
     call s:highlight_line(winid, pos)
