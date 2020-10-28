@@ -13,7 +13,11 @@ function! minimap#vim#MinimapOpen() abort
 endfunction
 
 function! minimap#vim#MinimapRefresh() abort
-    call s:refresh_minimap()
+    call s:refresh_minimap(1)
+endfunction
+
+function! minimap#vim#MinimapUpdateHighlight() abort
+    call s:update_highlight()
 endfunction
 
 function! s:buffer_enter_handler() abort

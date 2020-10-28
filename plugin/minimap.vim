@@ -16,10 +16,11 @@ endif
 
 let g:loaded_minimap = 1
 
-command! Minimap        call minimap#vim#MinimapOpen()
-command! MinimapClose   call minimap#vim#MinimapClose()
-command! MinimapToggle  call minimap#vim#MinimapToggle()
-command! MinimapRefresh call minimap#vim#MinimapRefresh()
+command! Minimap                call minimap#vim#MinimapOpen()
+command! MinimapClose           call minimap#vim#MinimapClose()
+command! MinimapToggle          call minimap#vim#MinimapToggle()
+command! MinimapRefresh         call minimap#vim#MinimapRefresh()
+command! MinimapUpdateHighlight call minimap#vim#MinimapUpdateHighlight()
 
 if !exists('g:minimap_auto_start')
     let g:minimap_auto_start = 0
