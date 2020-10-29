@@ -141,7 +141,7 @@ function! s:open_window() abort
                     \ if !s:ignored_filetypes() |
                     \ call s:refresh_minimap(1) |
                     \ call s:update_highlight()
-        autocmd BufEnter,FileType *
+        autocmd BufEnter *
                     \ if !s:ignored_filetypes() |
                     \ call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved,CursorMovedI *
