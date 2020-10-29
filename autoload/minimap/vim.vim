@@ -23,7 +23,7 @@ endfunction
 function! s:buffer_enter_handler() abort
     if &filetype ==# 'minimap'
         call s:minimap_buffer_enter_handler()
-    else
+    elseif &buftype !=# 'terminal'
         call s:source_buffer_enter_handler()
     endif
 endfunction
