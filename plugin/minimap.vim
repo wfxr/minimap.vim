@@ -51,7 +51,7 @@ if !exists('g:minimap_cursorline_matchid')
 endif
 
 if !exists('g:minimap_block_filetypes')
-    let g:minimap_block_filetypes = ['fugitive', 'nerdtree']
+    let g:minimap_block_filetypes = ['fugitive', 'nerdtree', 'tagbar']
 endif
 
 if g:minimap_auto_start == 1
