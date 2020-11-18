@@ -112,6 +112,12 @@ Check that your encoding is set to `utf-8` and not `latin1` (for Vim users).
 Also, ensure that you're using a Unicode-compatible font that has Braille characters in it.
 
 ---
+
+### 😉 Maintainers
+
+* [wfxr](https://github.com/wfxr)
+* [rabirabirara](https://github.com/rabirabirara)
+
 ### 📦 Related Projects
 
 * [code-minimap](https://github.com/wfxr/code-minimap): A high performance code minimap render.
