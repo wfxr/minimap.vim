@@ -115,12 +115,9 @@ Also, ensure that you're using a Unicode-compatible font that has Braille charac
 
 ### 🌼 Maintainers
 
-<a href="https://github.com/wfxr">
-    <img src="https://avatars1.githubusercontent.com/u/6105425" width=64 style="border-radius:50%" alt="wfxr">
-</a>
-<a href="https://github.com/rabirabirara">
-    <img src="https://avatars1.githubusercontent.com/u/59306451" width=64 style="border-radius:50%" alt="rabirabirara">
-</a>
+* <a href="https://github.com/wfxr"><img src="https://avatars1.githubusercontent.com/u/6105425" width=32 align="center" alt="wfxr"></a> [wfxr](https://github.com/wfxr)
+
+* <a href="https://github.com/rabirabirara"><img src="https://avatars1.githubusercontent.com/u/59306451" width=32 align="center" alt="rabirabirara"></a> [rabirabirara](https://github.com/rabirabirara)
 
 ### 📦 Related Projects
 
