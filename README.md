@@ -113,17 +113,17 @@ Also, ensure that you're using a Unicode-compatible font that has Braille charac
 
 ---
 
-### 🌼 Maintainers
-
-* <a href="https://github.com/wfxr"><img src="https://avatars1.githubusercontent.com/u/6105425" width=32 align="center" alt="wfxr"></a> [wfxr](https://github.com/wfxr)
-
-* <a href="https://github.com/rabirabirara"><img src="https://avatars1.githubusercontent.com/u/59306451" width=32 align="center" alt="rabirabirara"></a> [rabirabirara](https://github.com/rabirabirara)
-
 ### 📦 Related Projects
 
 * [code-minimap](https://github.com/wfxr/code-minimap): A high performance code minimap render.
 * [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim): A pure scrollbar indicator for neovim (nightly).
 * [vim-minimap](https://github.com/severin-lemaignan/vim-minimap): A minimap plugin written in python.
+
+### 🌼 Maintainers
+
+| [![wfxr](https://avatars1.githubusercontent.com/u/6105425?s=72)](https://github.com/wfxr) | [![rabirabirara](https://avatars1.githubusercontent.com/u/59306451?s=72)](https://github.com/rabirabirara) |
+| :---:                                                                                     | :---:                                                                                                      |
+| [wfxr](https://github.com/wfxr)                                                           | [rabirabirara](https://github.com/rabirabirara)                                                            |
 
 ### 📃 License
 
