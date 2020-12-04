@@ -166,9 +166,9 @@ function! s:open_window() abort
 endfunction
 
 function! s:ignored() abort
-    return (&filetype !=# 'minimap') &&
+    return &filetype !=# 'minimap' &&
                 \ (
-                \   index(g:minimap_block_buftypes, &buftype) >= 0 ||
+                \   index(g:minimap_block_buftypes,  &buftype)  >= 0 ||
                 \   index(g:minimap_block_filetypes, &filetype) >= 0
                 \ )
 endfunction
