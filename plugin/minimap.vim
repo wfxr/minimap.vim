@@ -54,6 +54,10 @@ if !exists('g:minimap_block_filetypes')
     let g:minimap_block_filetypes = ['fugitive', 'nerdtree', 'tagbar']
 endif
 
+if !exists('g:minimap_block_buftypes')
+    let g:minimap_block_buftypes = ['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']
+endif
+
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
         au!

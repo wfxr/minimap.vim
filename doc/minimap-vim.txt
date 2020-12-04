@@ -70,6 +70,13 @@ g:minimap_block_filetypes                           *g:minimap_block_filetypes*
 
   Disable minimap for specific file types.
 
+g:minimap_block_buftypes                             *g:minimap_block_buftypes*
+
+  Type: |Array|
+  Default: `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']`
+
+  Disable minimap for specific buffer types.
+
 g:minimap_base_highlight                             *g:minimap_base_highlight*
 
   Type: |String|
