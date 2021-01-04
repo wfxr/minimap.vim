@@ -48,9 +48,11 @@ let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
 if has('win32')
     let s:minimap_gen = s:bin_dir.'minimap_generator.bat'
     let s:default_shell = 'cmd.exe'
+    let s:default_shellflag = '/s /c'
 else
     let s:minimap_gen = s:bin_dir.'minimap_generator.sh'
     let s:default_shell = 'sh'
+    let s:default_shellflag = '-c'
 endif
 let s:minimap_cache = {}
 
@@ -194,9 +196,11 @@ function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
     let hscale = string(2.0 * g:minimap_width / min([winwidth('%'), 120]))
     let vscale = string(4.0 * winheight(winid) / line('$'))
 
-    " Users that have custom shells may face problems.
+    " Users that have custom shells and shell flags may face problems.
     let usershell = &shell
+    let userflag = &shellcmdflag
     let &shell = s:default_shell
+    let &shellcmdflag = s:default_shellflag
 
     if has('nvim')
         let minimap_cmd = 'w !'.s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width
@@ -208,8 +212,9 @@ function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
         let minimap_output = system(minimap_cmd, join(getline(1, '$'), "\n"))
     endif
 
-    " Recover the user's selected shell.
+    " Recover the user's selected shell and flag.
     let &shell = usershell
+    let &shellcmdflag = userflag
 
     if v:shell_error
         " print error message if file exists
