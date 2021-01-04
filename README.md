@@ -63,14 +63,15 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 ### ⚙  Options
 
-| Flag                        | Default                    | Description                                   |
-|-----------------------------|----------------------------|-----------------------------------------------|
-| `g:minimap_auto_start`      | `0`                        | if set minimap will show at startup           |
-| `g:minimap_width`           | `10`                       | the width of the minimap window in characters |
-| `g:minimap_highlight`       | `Title`                    | the color group for current position          |
-| `g:minimap_base_highlight`  | `Normal`                   | the base color group for minimap              |
-| `g:minimap_block_filetypes` | `['fugitive', 'nerdtree']` | disable minimap for specific file types       |
-| `g:minimap_left`            | `0`                        | if set minimap window will append left        |
+| Flag                        | Default                                                   | Description                                   |
+|-----------------------------|-----------------------------------------------------------|-----------------------------------------------|
+| `g:minimap_auto_start`      | `0`                                                       | if set minimap will show at startup           |
+| `g:minimap_width`           | `10`                                                      | the width of the minimap window in characters |
+| `g:minimap_highlight`       | `Title`                                                   | the color group for current position          |
+| `g:minimap_base_highlight`  | `Normal`                                                  | the base color group for minimap              |
+| `g:minimap_block_filetypes` | `['fugitive', 'nerdtree', 'tagbar' ]`                     | disable minimap for specific file types       |
+| `g:minimap_block_buftypes`  | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types     |
+| `g:minimap_left`            | `0`                                                       | if set minimap window will append left        |
 
 ### 💬 F.A.Q
 
@@ -112,11 +113,18 @@ Check that your encoding is set to `utf-8` and not `latin1` (for Vim users).
 Also, ensure that you're using a Unicode-compatible font that has Braille characters in it.
 
 ---
+
 ### 📦 Related Projects
 
 * [code-minimap](https://github.com/wfxr/code-minimap): A high performance code minimap render.
 * [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim): A pure scrollbar indicator for neovim (nightly).
 * [vim-minimap](https://github.com/severin-lemaignan/vim-minimap): A minimap plugin written in python.
+
+### 🌼 Maintainers
+
+| [![wfxr](https://avatars1.githubusercontent.com/u/6105425?s=72)](https://github.com/wfxr) | [![rabirabirara](https://avatars1.githubusercontent.com/u/59306451?s=72)](https://github.com/rabirabirara) |
+| :---:                                                                                     | :---:                                                                                                      |
+| [wfxr](https://github.com/wfxr)                                                           | [rabirabirara](https://github.com/rabirabirara)                                                            |
 
 ### 📃 License
 

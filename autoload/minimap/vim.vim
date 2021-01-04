@@ -137,17 +137,17 @@ function! s:open_window() abort
         autocmd!
         autocmd WinEnter <buffer> call s:close_window_last()
         autocmd WinEnter *
-                    \ if !s:ignored_filetypes() |
+                    \ if !s:ignored() |
                     \ call s:win_enter_handler()
         autocmd BufWritePost,VimResized *
-                    \ if !s:ignored_filetypes() |
+                    \ if !s:ignored() |
                     \ call s:refresh_minimap(1) |
                     \ call s:update_highlight()
         autocmd BufEnter,FileType *
-                    \ if !s:ignored_filetypes() |
+                    \ if !s:ignored() |
                     \ call s:buffer_enter_handler()
         autocmd FocusGained,CursorMoved,CursorMovedI *
-                    \ if !s:ignored_filetypes() |
+                    \ if !s:ignored() |
                     \ call s:cursor_move_handler()
     augroup END
 
@@ -167,8 +167,12 @@ function! s:open_window() abort
     call s:update_highlight()
 endfunction
 
-function! s:ignored_filetypes() abort
-    return index(g:minimap_block_filetypes, &filetype) >= 0
+function! s:ignored() abort
+    return &filetype !=# 'minimap' &&
+                \ (
+                \   index(g:minimap_block_buftypes,  &buftype)  >= 0 ||
+                \   index(g:minimap_block_filetypes, &filetype) >= 0
+                \ )
 endfunction
 
 function! s:refresh_minimap(force) abort
