@@ -136,19 +136,10 @@ function! s:open_window() abort
     augroup MinimapAutoCmds
         autocmd!
         autocmd WinEnter <buffer> call s:close_window_last()
-        autocmd WinEnter *
-                    \ if !s:ignored() |
-                    \ call s:win_enter_handler()
-        autocmd BufWritePost,VimResized *
-                    \ if !s:ignored() |
-                    \ call s:refresh_minimap(1) |
-                    \ call s:update_highlight()
-        autocmd BufEnter,FileType *
-                    \ if !s:ignored() |
-                    \ call s:buffer_enter_handler()
-        autocmd FocusGained,CursorMoved,CursorMovedI *
-                    \ if !s:ignored() |
-                    \ call s:cursor_move_handler()
+        autocmd WinEnter *                              call s:handle_autocmd(1)
+        autocmd BufWritePost,VimResized *               call s:handle_autocmd(2)
+        autocmd BufEnter,FileType *                     call s:handle_autocmd(3)
+        autocmd FocusGained,CursorMoved,CursorMovedI *  call s:handle_autocmd(4)
     augroup END
 
     " https://github.com/neovim/neovim/issues/6211
@@ -164,7 +155,26 @@ function! s:open_window() abort
     let &cpoptions = cpoptions_save
 
     execute 'wincmd p'
+    call s:refresh_minimap(1)
     call s:update_highlight()
+endfunction
+
+function! s:handle_autocmd(autocmdtype) abort
+    " Refactor this if Vim gets a case statement.
+    if s:ignored()
+        if g:minimap_close_on_block
+            call s:close_window()
+        endif
+    elseif a:autocmdtype == 1
+        call s:win_enter_handler()
+    elseif a:autocmdtype == 2
+        call s:refresh_minimap(1) |
+        call s:update_highlight()
+    elseif a:autocmdtype == 3
+        call s:buffer_enter_handler()
+    elseif a:autocmdtype == 4
+        call s:cursor_move_handler()
+    endif
 endfunction
 
 function! s:ignored() abort
