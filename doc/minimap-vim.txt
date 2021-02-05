@@ -77,6 +77,14 @@ g:minimap_block_buftypes                             *g:minimap_block_buftypes*
 
   Disable minimap for specific buffer types.
 
+g:minimap_close_on_block                             *g:minimap_close_on_block*
+
+  Type: |Number|
+  Default: `0`
+
+  If set to `1`, the minimap window will instead close for the specified 
+  file/buffer types.
+
 g:minimap_base_highlight                             *g:minimap_base_highlight*
 
   Type: |String|

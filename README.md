@@ -71,6 +71,7 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 | `g:minimap_base_highlight`  | `Normal`                                                  | the base color group for minimap              |
 | `g:minimap_block_filetypes` | `['fugitive', 'nerdtree', 'tagbar' ]`                     | disable minimap for specific file types       |
 | `g:minimap_block_buftypes`  | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types     |
+| `g:minimap_close_on_block`  | `0`                                                       | if set minimap will close instead of disable  |
 | `g:minimap_left`            | `0`                                                       | if set minimap window will append left        |
 
 ### 💬 F.A.Q
