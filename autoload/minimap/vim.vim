@@ -186,7 +186,7 @@ function! s:ignored() abort
                 \ )
 endfunction
 
-function s:closed_on() abort
+function! s:closed_on() abort
     return &filetype !=# 'minimap' &&
                 \ (
                 \   index(g:minimap_close_buftypes,  &buftype)  >= 0 ||
