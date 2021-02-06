@@ -63,6 +63,14 @@ g:minimap_auto_start                                     *g:minimap_auto_start*
 
   If set to `1`, the minimap window will show on startup.
 
+g:minimap_auto_start_win_enter                           *g:minimap_auto_start*
+
+  Type: |Number|
+  Default: `0`
+
+  If both this and `g:minimap_auto_start` are set to `1`, the minimap window
+  will show on `WinEnter`.
+
 g:minimap_block_filetypes                           *g:minimap_block_filetypes*
 
   Type: |Array|
@@ -77,13 +85,23 @@ g:minimap_block_buftypes                             *g:minimap_block_buftypes*
 
   Disable minimap for specific buffer types.
 
-g:minimap_close_on_block                             *g:minimap_close_on_block*
+g:minimap_close_filetypes                           *g:minimap_close_filetypes*
 
-  Type: |Number|
-  Default: `0`
+  Type: |Array|
+  Default: `['startify']`
 
-  If set to `1`, the minimap window will instead close for the specified 
-  file/buffer types.
+  Close minimap for specific file types.  If a filetype listed here is also
+  present in `g:minimap_block_filetypes`, the minimap will prefer to close
+  rather than disable.
+
+g:minimap_close_buftypes                             *g:minimap_close_buftypes*
+
+  Type: |Array|
+  Default: `[]`
+
+  Close minimap for specific buffer types.  If a filetype listed here is also
+  present in `g:minimap_block_buftypes`, the minimap will prefer to close
+  rather than disable.
 
 g:minimap_base_highlight                             *g:minimap_base_highlight*
 

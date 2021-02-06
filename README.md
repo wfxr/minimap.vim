@@ -63,16 +63,18 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 ### ⚙  Options
 
-| Flag                        | Default                                                   | Description                                   |
-|-----------------------------|-----------------------------------------------------------|-----------------------------------------------|
-| `g:minimap_auto_start`      | `0`                                                       | if set minimap will show at startup           |
-| `g:minimap_width`           | `10`                                                      | the width of the minimap window in characters |
-| `g:minimap_highlight`       | `Title`                                                   | the color group for current position          |
-| `g:minimap_base_highlight`  | `Normal`                                                  | the base color group for minimap              |
-| `g:minimap_block_filetypes` | `['fugitive', 'nerdtree', 'tagbar' ]`                     | disable minimap for specific file types       |
-| `g:minimap_block_buftypes`  | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types     |
-| `g:minimap_close_on_block`  | `0`                                                       | if set minimap will close instead of disable  |
-| `g:minimap_left`            | `0`                                                       | if set minimap window will append left        |
+| Flag                             | Default                                                   | Description                                                    |
+|----------------------------------|-----------------------------------------------------------|----------------------------------------------------------------|
+| `g:minimap_auto_start`           | `0`                                                       | if set minimap will show at startup                            |
+| `g:minimap_auto_start_win_enter` | `0`                                                       | if set with `g:minimap_auto_start` minimap shows on `WinEnter` |
+| `g:minimap_width`                | `10`                                                      | the width of the minimap window in characters                  |
+| `g:minimap_highlight`            | `Title`                                                   | the color group for current position                           |
+| `g:minimap_base_highlight`       | `Normal`                                                  | the base color group for minimap                               |
+| `g:minimap_block_filetypes`      | `['fugitive', 'nerdtree', 'tagbar' ]`                     | disable minimap for specific file types                        |
+| `g:minimap_block_buftypes`       | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                      |
+| `g:minimap_close_filetypes`      | `['startify']`                                            | close minimap for specific file types                          |
+| `g:minimap_close_buftypes`       | `[]`                                                      | close minimap for specific buffer types                        |
+| `g:minimap_left`                 | `0`                                                       | if set minimap window will append left                         |
 
 ### 💬 F.A.Q
 
