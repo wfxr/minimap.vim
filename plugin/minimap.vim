@@ -58,8 +58,16 @@ if !exists('g:minimap_block_buftypes')
     let g:minimap_block_buftypes = ['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']
 endif
 
-if !exists('g:minimap_close_on_block')
-    let g:minimap_close_on_block = 0
+if !exists('g:minimap_close_filetypes')
+    let g:minimap_close_filetypes = ['startify']
+endif
+
+if !exists('g:minimap_close_buftypes')
+    let g:minimap_close_buftypes = []
+endif
+
+if !exists('g:minimap_start_on_win_enter')
+    let g:minimap_start_on_win_enter = 0
 endif
 
 if g:minimap_auto_start == 1
@@ -67,4 +75,7 @@ if g:minimap_auto_start == 1
         au!
         au BufWinEnter * Minimap
     augroup end
+    if g:minimap_start_on_win_enter == 1
+        au MinimapAutoStart WinEnter * Minimap
+    endif
 endif

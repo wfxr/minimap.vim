@@ -135,7 +135,7 @@ function! s:open_window() abort
 
     augroup MinimapAutoCmds
         autocmd!
-        autocmd WinEnter <buffer> call s:close_window_last()
+        autocmd WinEnter <buffer>                       call s:handle_autocmd(0)
         autocmd WinEnter *                              call s:handle_autocmd(1)
         autocmd BufWritePost,VimResized *               call s:handle_autocmd(2)
         autocmd BufEnter,FileType *                     call s:handle_autocmd(3)
@@ -160,19 +160,20 @@ function! s:open_window() abort
 endfunction
 
 function! s:handle_autocmd(autocmdtype) abort
-    " Refactor this if Vim gets a case statement.
-    if s:ignored()
-        if g:minimap_close_on_block
-            call s:close_window()
-        endif
-    elseif a:autocmdtype == 1
+    if s:closed_on()
+        call s:close_window()
+    elseif s:ignored()
+        return
+    elseif a:autocmdtype == 0           " WinEnter <buffer>
+        call s:close_window_last()
+    elseif a:autocmdtype == 1           " WinEnter *
         call s:win_enter_handler()
-    elseif a:autocmdtype == 2
+    elseif a:autocmdtype == 2           " BufWritePost,VimResized *
         call s:refresh_minimap(1) |
         call s:update_highlight()
-    elseif a:autocmdtype == 3
+    elseif a:autocmdtype == 3           " BufEnter,FileType *
         call s:buffer_enter_handler()
-    elseif a:autocmdtype == 4
+    elseif a:autocmdtype == 4           " FocusGained,CursorMoved,CursorMovedI *
         call s:cursor_move_handler()
     endif
 endfunction
@@ -182,6 +183,14 @@ function! s:ignored() abort
                 \ (
                 \   index(g:minimap_block_buftypes,  &buftype)  >= 0 ||
                 \   index(g:minimap_block_filetypes, &filetype) >= 0
+                \ )
+endfunction
+
+function s:closed_on() abort
+    return &filetype !=# 'minimap' &&
+                \ (
+                \   index(g:minimap_close_buftypes,  &buftype)  >= 0 ||
+                \   index(g:minimap_close_filetypes, &filetype) >= 0
                 \ )
 endfunction
 
