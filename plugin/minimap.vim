@@ -66,16 +66,16 @@ if !exists('g:minimap_close_buftypes')
     let g:minimap_close_buftypes = []
 endif
 
-if !exists('g:minimap_start_on_win_enter')
-    let g:minimap_start_on_win_enter = 0
+if !exists('g:minimap_auto_start_win_enter')
+    let g:minimap_auto_start_win_enter = 0
 endif
 
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
         au!
         au BufWinEnter * Minimap
+        if g:minimap_auto_start_win_enter == 1
+            au WinEnter * Minimap
+        endif
     augroup end
-    if g:minimap_start_on_win_enter == 1
-        au MinimapAutoStart WinEnter * Minimap
-    endif
 endif
