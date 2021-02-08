@@ -85,9 +85,19 @@ function! s:close_window() abort
 endfunction
 
 function! s:close_window_last() abort
-    " We are on the last tab and the <MINIMAP> buffer is in the last window
-    let tabnum = tabpagenr()
-    if winnr('$') == 1
+    " Check if this is last window - if not, then no closing
+    if winnr('$') != 1
+        return
+    endif
+    " If user bufdeleted, don't quit; just delete buffer
+    " Neovim doesn't enter minimap window on bufdeleting last buffer; take advantage
+    let loaded_buffers = filter(range(1, bufnr('$')), 'bufloaded(v:val)')
+    let loaded_count = len(loaded_buffers)
+    if loaded_count > 1
+        bw
+    else
+        " Check if this is the last tab
+        let tabnum = tabpagenr()
         silent! call s:close_window()
         if tabnum == tabpagenr('$') && tabnum == 1
             doautocmd ExitPre,VimLeavePre,VimLeave
