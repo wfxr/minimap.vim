@@ -99,7 +99,7 @@ endfunction
 function! s:open_window() abort
     " If the minimap window is already open jump to it
     let mmwinnr = bufwinnr('-MINIMAP-')
-    if mmwinnr != -1
+    if mmwinnr != -1 || s:closed_on()   " Don't open if file/buftype is closed on
         return
     endif
 
@@ -161,7 +161,10 @@ endfunction
 
 function! s:handle_autocmd(autocmdtype) abort
     if s:closed_on()
-        call s:close_window()
+        let mmwinnr = bufwinnr('-MINIMAP-')
+        if mmwinnr != -1
+            call s:close_window()
+        endif
     elseif s:ignored()
         return
     elseif a:autocmdtype == 0           " WinEnter <buffer>
