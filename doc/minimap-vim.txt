@@ -63,7 +63,7 @@ g:minimap_auto_start                                     *g:minimap_auto_start*
 
   If set to `1`, the minimap window will show on startup.
 
-g:minimap_auto_start_win_enter                           *g:minimap_auto_start*
+g:minimap_auto_start_win_enter                           *g:minimap_auto_start_win_enter*
 
   Type: |Number|
   Default: `0`
