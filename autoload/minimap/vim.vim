@@ -91,9 +91,9 @@ function! s:close_window_last() abort
     endif
     " If user bufdeleted, don't quit; just delete buffer
     " Neovim doesn't enter minimap window on bufdeleting last buffer; take advantage
-    let loaded_buffers = filter(range(1, bufnr('$')), 'bufloaded(v:val)')
-    let loaded_count = len(loaded_buffers)
-    if loaded_count > 1
+    let listed_buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+    let listed_count = len(listed_buffers)
+    if listed_count > 1
         bw
     else
         " Check if this is the last tab
