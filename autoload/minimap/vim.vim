@@ -114,7 +114,7 @@ function! s:open_window() abort
     endif
 
     let openpos = g:minimap_left ? 'topleft vertical ' : 'botright vertical '
-    execute 'silent! ' . openpos . g:minimap_width . 'split ' . '-MINIMAP-'
+    noautocmd execute 'silent! ' . openpos . g:minimap_width . 'split ' . '-MINIMAP-'
 
     " Buffer-local options
     setlocal filetype=minimap
