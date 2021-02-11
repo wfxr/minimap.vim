@@ -84,33 +84,29 @@ function! s:close_window() abort
     endif
 endfunction
 
-function! s:handle_quit() abort
-    let s:quit_out = 1
-endfunction
-
 function! s:quit_last() abort
     let tabnum = tabpagenr()
-    " silent! call s:close_window()
     if tabnum == tabpagenr('$') && tabnum == 1
         doautocmd ExitPre,VimLeavePre,VimLeave
     endif
-    if exists('s:quit_all') && s:quit_all
-        execute 'qall'
-    else
-        execute 'quit'
-    endif
+    execute 'quit'
 endfunction
 
 function! s:close_auto() abort
     if winnr('$') != 1
         return
     endif
-    " Check if user quit with ':q'.
-    if exists('s:quit_out') && s:quit_out
-        let s:quit_out = 0
+
+    " Check if user quit with some variation of ':q'.
+    " This is a little brittle, but it works better than autocmds, which have
+    " seemingly arbitrary order.
+    let lastcmd = histget('cmd', -1)
+    let didquit = match(lastcmd, 'q')
+
+    if didquit != -1
         call s:quit_last()
     else
-        bdelete
+        bwipeout
     endif
 endfunction
 
@@ -153,8 +149,6 @@ function! s:open_window() abort
 
     augroup MinimapAutoCmds
         autocmd!
-        " autocmd WinClosed *         echom 'winclosed' | sleep 1 
-        autocmd QuitPre *                               call s:handle_quit() " in case user :quit instead of :bdelete
         autocmd WinEnter <buffer>                       call s:handle_autocmd(0)
         autocmd WinEnter *                              call s:handle_autocmd(1)
         autocmd BufWritePost,VimResized *               call s:handle_autocmd(2)
