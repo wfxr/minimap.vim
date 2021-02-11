@@ -104,7 +104,7 @@ function! s:close_auto() abort
     let didquit = match(lastcmd, 'q')
 
     if didquit != -1
-        call s:quit_last()
+        silent! call s:quit_last()
     else
         bwipeout
     endif
