@@ -75,7 +75,7 @@ function! s:close_window() abort
 
     if winnr() == mmwinnr
         if winbufnr(2) != -1
-            " Other windows are open, only close the this one
+            " Other windows are open, only close this one
             close
             exe 'wincmd p'
         endif
@@ -84,25 +84,29 @@ function! s:close_window() abort
     endif
 endfunction
 
-function! s:close_window_last() abort
-    " Check if this is last window - if not, then no closing
+function! s:quit_last() abort
+    let tabnum = tabpagenr()
+    if tabnum == tabpagenr('$') && tabnum == 1
+        doautocmd ExitPre,VimLeavePre,VimLeave
+    endif
+    execute 'quit'
+endfunction
+
+function! s:close_auto() abort
     if winnr('$') != 1
         return
     endif
-    " If user bufdeleted, don't quit; just delete buffer
-    " Neovim doesn't enter minimap window on bufdeleting last buffer; take advantage
-    let listed_buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-    let listed_count = len(listed_buffers)
-    if listed_count > 1
-        bw
+
+    " Check if user quit with some variation of ':q'.
+    " This is a little brittle, but it works better than autocmds, which have
+    " seemingly arbitrary order.
+    let lastcmd = histget('cmd', -1)
+    let didquit = match(lastcmd, 'q')
+
+    if didquit != -1
+        silent! call s:quit_last()
     else
-        " Check if this is the last tab
-        let tabnum = tabpagenr()
-        silent! call s:close_window()
-        if tabnum == tabpagenr('$') && tabnum == 1
-            doautocmd ExitPre,VimLeavePre,VimLeave
-        endif
-        quit
+        bwipeout
     endif
 endfunction
 
@@ -178,7 +182,7 @@ function! s:handle_autocmd(autocmdtype) abort
     elseif s:ignored()
         return
     elseif a:autocmdtype == 0           " WinEnter <buffer>
-        call s:close_window_last()
+        call s:close_auto()
     elseif a:autocmdtype == 1           " WinEnter *
         call s:win_enter_handler()
     elseif a:autocmdtype == 2           " BufWritePost,VimResized *
