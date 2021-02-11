@@ -75,7 +75,7 @@ function! s:close_window() abort
 
     if winnr() == mmwinnr
         if winbufnr(2) != -1
-            " Other windows are open, only close the this one
+            " Other windows are open, only close this one
             close
             exe 'wincmd p'
         endif
@@ -84,25 +84,33 @@ function! s:close_window() abort
     endif
 endfunction
 
-function! s:close_window_last() abort
-    " Check if this is last window - if not, then no closing
+function! s:handle_quit() abort
+    let s:quit_out = 1
+endfunction
+
+function! s:quit_last() abort
+    let tabnum = tabpagenr()
+    " silent! call s:close_window()
+    if tabnum == tabpagenr('$') && tabnum == 1
+        doautocmd ExitPre,VimLeavePre,VimLeave
+    endif
+    if exists('s:quit_all') && s:quit_all
+        execute 'qall'
+    else
+        execute 'quit'
+    endif
+endfunction
+
+function! s:close_auto() abort
     if winnr('$') != 1
         return
     endif
-    " If user bufdeleted, don't quit; just delete buffer
-    " Neovim doesn't enter minimap window on bufdeleting last buffer; take advantage
-    let listed_buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-    let listed_count = len(listed_buffers)
-    if listed_count > 1
-        bw
+    " Check if user quit with ':q'.
+    if exists('s:quit_out') && s:quit_out
+        let s:quit_out = 0
+        call s:quit_last()
     else
-        " Check if this is the last tab
-        let tabnum = tabpagenr()
-        silent! call s:close_window()
-        if tabnum == tabpagenr('$') && tabnum == 1
-            doautocmd ExitPre,VimLeavePre,VimLeave
-        endif
-        quit
+        bdelete
     endif
 endfunction
 
@@ -145,6 +153,8 @@ function! s:open_window() abort
 
     augroup MinimapAutoCmds
         autocmd!
+        " autocmd WinClosed *         echom 'winclosed' | sleep 1 
+        autocmd QuitPre *                               call s:handle_quit() " in case user :quit instead of :bdelete
         autocmd WinEnter <buffer>                       call s:handle_autocmd(0)
         autocmd WinEnter *                              call s:handle_autocmd(1)
         autocmd BufWritePost,VimResized *               call s:handle_autocmd(2)
@@ -178,7 +188,7 @@ function! s:handle_autocmd(autocmdtype) abort
     elseif s:ignored()
         return
     elseif a:autocmdtype == 0           " WinEnter <buffer>
-        call s:close_window_last()
+        call s:close_auto()
     elseif a:autocmdtype == 1           " WinEnter *
         call s:win_enter_handler()
     elseif a:autocmdtype == 2           " BufWritePost,VimResized *
