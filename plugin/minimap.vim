@@ -66,6 +66,10 @@ if !exists('g:minimap_close_buftypes')
     let g:minimap_close_buftypes = []
 endif
 
+if !exists('g:minimap_did_quit')
+    let g:minimap_did_quit = 0
+endif
+
 if !exists('g:minimap_auto_start_win_enter')
     let g:minimap_auto_start_win_enter = 0
 endif

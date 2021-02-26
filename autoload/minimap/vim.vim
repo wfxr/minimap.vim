@@ -97,13 +97,7 @@ function! s:close_auto() abort
         return
     endif
 
-    " Check if user quit with some variation of ':q'.
-    " This is a little brittle, but it works better than autocmds, which have
-    " seemingly arbitrary order.
-    let lastcmd = histget('cmd', -1)
-    let didquit = match(lastcmd, 'q')
-
-    if didquit != -1
+    if g:minimap_did_quit
         silent! call s:quit_last()
     else
         bwipeout
@@ -149,6 +143,7 @@ function! s:open_window() abort
 
     augroup MinimapAutoCmds
         autocmd!
+        autocmd QuitPre *                               let g:minimap_did_quit = 1
         autocmd WinEnter <buffer>                       call s:handle_autocmd(0)
         autocmd WinEnter *                              call s:handle_autocmd(1)
         autocmd BufWritePost,VimResized *               call s:handle_autocmd(2)
