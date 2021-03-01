@@ -1,6 +1,6 @@
+repos:
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v2.4.0
   hooks:
@@ -12,3 +12,16 @@ repos:
   rev: master
   hooks:
   - id: vint
+- repo: local
+  hooks:
+  - id: update-license
+    name: update license
+    pass_filenames: false
+    language: system
+    always_run: true
+    entry: >
+      sh -c '
+        curl -fsSL https://wfxr.mit-license.org/2020/license.txt > ./LICENSE &&
+            printf "\n\n(https://wfxr.mit-license.org/2020)\n" >> ./LICENSE &&
+            git add ./LICENSE || { git checkout ./LICENSE && exit 1; }
+      '
