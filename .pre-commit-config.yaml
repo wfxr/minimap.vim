@@ -21,7 +21,6 @@ repos:
     always_run: true
     entry: >
       sh -c '
-        curl -fsSL https://wfxr.mit-license.org/2020/license.txt > ./LICENSE &&
-            printf "\n\n(https://wfxr.mit-license.org/2020)\n" >> ./LICENSE &&
+        (curl -fsSL https://wfxr.mit-license.org/2020/license.txt && echo) > ./LICENSE &&
             git add ./LICENSE || { git checkout ./LICENSE && exit 1; }
       '

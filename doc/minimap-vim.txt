@@ -132,16 +132,17 @@ g:minimap_base_highlight                             *g:minimap_base_highlight*
   Minimap window is too wide for me, how to use it as a simple scrollbar?
 
 |A:|
-  You can decrease the minimap window width:
+  You can reduce the width of the minimap window:
 
       let g:minimap_width = 2
 
 
 |Q:|
-  How to use a custom highlight group for minimap?
+  I don't like the default highlight group, how to change it?
 
 |A:|
-  You can define a custom highlight group and set it for minimap like this:
+  Choose any one of the highlight groups (or define a new one) and just set it
+  for minimap like this:
 
       hi MinimapCurrentLine ctermfg=Green guifg=#50FA7B guibg=#32302f
       let g:minimap_highlight = 'MinimapCurrentLine'

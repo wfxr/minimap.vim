@@ -54,6 +54,14 @@ You can use [cargo](https://github.com/rust-lang/cargo) to install 'code-minimap
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 ```
 
+### 📑 Example configuration
+
+```vim
+let g:minimap_width = 10
+let g:minimap_auto_start = 1
+let g:minimap_auto_start_win_enter = 1
+```
+
 ### 🛠  Commands
 
 | Flag                   | Description                    |
@@ -75,7 +83,7 @@ Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 | `g:minimap_base_highlight`       | `Normal`                                                  | the base color group for minimap                               |
 | `g:minimap_block_filetypes`      | `['fugitive', 'nerdtree', 'tagbar' ]`                     | disable minimap for specific file types                        |
 | `g:minimap_block_buftypes`       | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                      |
-| `g:minimap_close_filetypes`      | `['startify', 'netrw']`                                   | close minimap for specific file types                          |
+| `g:minimap_close_filetypes`      | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                          |
 | `g:minimap_close_buftypes`       | `[]`                                                      | close minimap for specific buffer types                        |
 | `g:minimap_left`                 | `0`                                                       | if set minimap window will append left                         |
 
@@ -89,14 +97,13 @@ Check the vim version you are using. `minimap.vim` requires [vim 8.2+](https://g
 ---
 #### Integrated with diagnostics or git status plugins?
 
-Not implemented currently but it should be possible. I am a beginner in vim plugin.
-I don't known how to implement such features correctly and efficiently.
+Not implemented currently but it should be possible.
 Welcome to contribute!
 
 ---
 #### Minimap window is too wide for me, how to use it as a simple scrollbar?
 
-You can decrease the minimap window width:
+You can reduce the width of the minimap window:
 ```vim
 let g:minimap_width = 2
 ```
@@ -104,13 +111,15 @@ Or use [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim) instead if wh
 is a pure scrollbar indicator.
 
 ---
-#### How to use a custom highlight group?
+#### I don't like the default highlight group, how to change it?
 
-You can define a custom highlight group and set it for minimap like this:
+Choose any one of the highlight groups (or define a new one) and just set it for minimap like this:
 ```vim
 hi MinimapCurrentLine ctermfg=Green guifg=#50FA7B guibg=#32302f
 let g:minimap_highlight = 'MinimapCurrentLine'
 ```
+
+*All existed Highlight groups can be displayed by `:hi`.*
 
 ---
 #### Minimap shows up as a jumble of characters?
