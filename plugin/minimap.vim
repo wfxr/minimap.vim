@@ -59,7 +59,7 @@ if !exists('g:minimap_block_buftypes')
 endif
 
 if !exists('g:minimap_close_filetypes')
-    let g:minimap_close_filetypes = ['startify', 'netrw']
+    let g:minimap_close_filetypes = ['startify', 'netrw', 'vim-plug']
 endif
 
 if !exists('g:minimap_close_buftypes')

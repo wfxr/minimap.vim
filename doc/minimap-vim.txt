@@ -88,7 +88,7 @@ g:minimap_block_buftypes                             *g:minimap_block_buftypes*
 g:minimap_close_filetypes                           *g:minimap_close_filetypes*
 
   Type: |Array|
-  Default: `['startify', 'netrw']`
+  Default: `['startify', 'netrw', 'vim-plug']`
 
   Close minimap for specific file types.  If a filetype listed here is also
   present in `g:minimap_block_filetypes`, the minimap will prefer to close
