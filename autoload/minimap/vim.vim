@@ -181,6 +181,8 @@ function! s:handle_autocmd(autocmdtype) abort
     elseif a:autocmdtype == 0           " WinEnter <buffer>
         call s:close_auto()
     elseif a:autocmdtype == 1           " WinEnter *
+        " If previously triggered minimap_did_quit, untrigger it
+        let g:minimap_did_quit = 0
         call s:win_enter_handler()
     elseif a:autocmdtype == 2           " BufWritePost,VimResized *
         call s:refresh_minimap(1)
