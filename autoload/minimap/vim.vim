@@ -67,7 +67,7 @@ function! s:toggle_window() abort
 endfunction
 
 function! s:close_window() abort
-    silent! call matchdelete(g:minimap_cursorline_matchid)
+    call s:clear_highlights()
     let mmwinnr = bufwinnr('-MINIMAP-')
     if mmwinnr == -1
         return
@@ -101,6 +101,8 @@ function! s:close_auto() abort
         silent! call s:quit_last()
     else
         bwipeout
+        " In case the plugin accidentally highlights the main buffer.
+        call s:clear_highlights()
     endif
 endfunction
 
@@ -181,7 +183,7 @@ function! s:handle_autocmd(autocmdtype) abort
     elseif a:autocmdtype == 1           " WinEnter *
         call s:win_enter_handler()
     elseif a:autocmdtype == 2           " BufWritePost,VimResized *
-        call s:refresh_minimap(1) |
+        call s:refresh_minimap(1)
         call s:update_highlight()
     elseif a:autocmdtype == 3           " BufEnter,FileType *
         call s:buffer_enter_handler()
@@ -351,6 +353,12 @@ endfunction
 function! s:highlight_line(winid, pos) abort
     silent! call matchdelete(g:minimap_cursorline_matchid, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
     call matchadd(g:minimap_highlight, '\%' . a:pos . 'l', 100, g:minimap_cursorline_matchid, { 'window': a:winid })
+endfunction
+
+" Clears matches of current window only.
+function! s:clear_highlights() abort
+    silent! call matchdelete(g:minimap_base_matchid)
+    silent! call matchdelete(g:minimap_cursorline_matchid)
 endfunction
 
 function! s:minimap_move() abort
