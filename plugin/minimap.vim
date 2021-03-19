@@ -74,6 +74,10 @@ if !exists('g:minimap_auto_start_win_enter')
     let g:minimap_auto_start_win_enter = 0
 endif
 
+if !exists('g:minimap_highlight_range')
+    let g:minimap_highlight_range = 0
+endif
+
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
         au!
