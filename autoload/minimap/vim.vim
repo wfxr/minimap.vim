@@ -145,12 +145,21 @@ function! s:open_window() abort
 
     augroup MinimapAutoCmds
         autocmd!
-        autocmd QuitPre *                               let g:minimap_did_quit = 1
-        autocmd WinEnter <buffer>                       call s:handle_autocmd(0)
-        autocmd WinEnter *                              call s:handle_autocmd(1)
-        autocmd BufWritePost,VimResized *               call s:handle_autocmd(2)
-        autocmd BufEnter,FileType *                     call s:handle_autocmd(3)
-        autocmd FocusGained,CursorMoved,CursorMovedI *  call s:handle_autocmd(4)
+        autocmd QuitPre *                                       let g:minimap_did_quit = 1
+        autocmd WinEnter <buffer>                               call s:handle_autocmd(0)
+        autocmd WinEnter *                                      call s:handle_autocmd(1)
+        autocmd BufWritePost,VimResized *                       call s:handle_autocmd(2)
+        autocmd BufEnter,FileType *                             call s:handle_autocmd(3)
+        autocmd FocusGained,CursorMoved,CursorMovedI <buffer>   call s:handle_autocmd(4)
+        if g:minimap_highlight_range == 1
+            " Vim and Neovim (pre-November 2020) do not have a WinScrolled autocmd event.
+            if g:minimap_win_scrolled_exists == 1
+                autocmd FocusGained,WinScrolled *               call s:handle_autocmd(5)
+            else
+                autocmd FocusGained,CursorMoved,CursorMovedI *  call s:handle_autocmd(5)
+        else
+            autocmd FocusGained,CursorMoved,CursorMovedI *      call s:handle_autocmd(6)
+        endif
     augroup END
 
     " https://github.com/neovim/neovim/issues/6211
@@ -170,7 +179,7 @@ function! s:open_window() abort
     call s:update_highlight()
 endfunction
 
-function! s:handle_autocmd(autocmdtype) abort
+function! s:handle_autocmd(cmd) abort
     if s:closed_on()
         let mmwinnr = bufwinnr('-MINIMAP-')
         if mmwinnr != -1
@@ -178,19 +187,23 @@ function! s:handle_autocmd(autocmdtype) abort
         endif
     elseif s:ignored()
         return
-    elseif a:autocmdtype == 0           " WinEnter <buffer>
+    elseif a:cmd == 0           " WinEnter <buffer>
         call s:close_auto()
-    elseif a:autocmdtype == 1           " WinEnter *
+    elseif a:cmd == 1           " WinEnter *
         " If previously triggered minimap_did_quit, untrigger it
         let g:minimap_did_quit = 0
         call s:win_enter_handler()
-    elseif a:autocmdtype == 2           " BufWritePost,VimResized *
+    elseif a:cmd == 2           " BufWritePost,VimResized *
         call s:refresh_minimap(1)
         call s:update_highlight()
-    elseif a:autocmdtype == 3           " BufEnter,FileType *
+    elseif a:cmd == 3           " BufEnter,FileType *
         call s:buffer_enter_handler()
-    elseif a:autocmdtype == 4           " FocusGained,CursorMoved,CursorMovedI *
-        call s:cursor_move_handler()
+    elseif a:cmd == 4           " FocusGained,CursorMoved,CursorMovedI <buffer>
+        call s:minimap_move()
+    elseif a:cmd == 5           " FocusGained,WinScrolled * (neovim); else same autocmds as below
+        call s:source_win_scroll()
+    elseif a:cmd == 6           " FocusGained,CursorMoved,CursorMovedI *
+        call s:source_move()
     endif
 endfunction
 
@@ -308,6 +321,7 @@ function! s:render_minimap(mmwinnr, bufnr, fname, ftype) abort
     call winrestview(curwinview)
 endfunction
 
+" Only called if g:minimap_highlight_range is not set.
 function! s:source_move() abort
     let mmwinnr = bufwinnr('-MINIMAP-')
     if mmwinnr == -1
@@ -322,19 +336,9 @@ function! s:source_move() abort
     let total = line('$')
     let mmheight = getwininfo(winid)[0].botline
 
-    if g:minimap_highlight_range
-        let startln = line('w0') - 1
-        let endln = line('w$') - 1
-        " The -/+ 1 compensates for the exclusive ranges we use in the
-        " patterns for matchadd.
-        let pos1 = s:buffer_to_map(startln, total, mmheight) - 1
-        let pos2 = s:buffer_to_map(endln, total, mmheight) + 1
-        call s:highlight_range(winid, pos1, pos2)
-    else
-        let curr = line('.') - 1
-        let pos = s:buffer_to_map(curr, total, mmheight)
-        call s:highlight_line(winid, pos)
-    endif
+    let curr = line('.') - 1
+    let pos = s:buffer_to_map(curr, total, mmheight)
+    call s:highlight_line(winid, pos)
 endfunction
 
 " botline is broken and this works.  However, it's slow, so we call this function less.
@@ -403,6 +407,30 @@ function! s:minimap_move() abort
     execute 'wincmd p'
     let winid = win_getid(mmwinnr)
     call s:highlight_line(winid, curr)
+endfunction
+
+" Only called if g:minimap_highlight_range is set.
+function! s:source_win_scroll() abort
+    let mmwinnr = bufwinnr('-MINIMAP-')
+    if mmwinnr == -1
+        return
+    endif
+
+    if winnr() == mmwinnr
+        return
+    endif
+
+    let winid = win_getid(mmwinnr)
+    let total = line('$')
+    let mmheight = getwininfo(winid)[0].botline
+
+    let start = line('w0') - 1
+    let end = line('w$') - 1
+    " The -/+ 1 compensates for the exclusive ranges we use in the
+    " patterns for matchadd.
+    let pos1 = s:buffer_to_map(start, total, mmheight) - 1
+    let pos2 = s:buffer_to_map(end, total, mmheight) + 1
+    call s:highlight_range(winid, pos1, pos2)
 endfunction
 
 function! s:minimap_win_enter() abort

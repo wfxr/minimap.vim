@@ -78,6 +78,13 @@ if !exists('g:minimap_highlight_range')
     let g:minimap_highlight_range = 0
 endif
 
+" Warning: it is the user's job to check if they have the WinScrolled event!
+" As soon as Neovim 0.5.0 officially releases as stable, this option should be removed as 
+" every user will have the WinScrolled autocmd event.
+if !exists('g:minimap_win_scrolled_exists')
+    let g:minimap_win_scrolled_exists = 0
+endif
+
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
         au!
