@@ -56,6 +56,14 @@ g:minimap_highlight                                       *g:minimap_highlight*
   The color of the highlighting for the current position. Possible values
   are any |group-name|.
 
+g:minimap_highlight_range                           *g:minimap_highlight_range*
+
+  Type: |Number|
+  Default: `0`
+
+  If set to `1`, the minimap window will highlight over a range of lines
+  representing the visible lines in the buffer.
+
 g:minimap_auto_start                                     *g:minimap_auto_start*
 
   Type: |Number|
@@ -63,7 +71,7 @@ g:minimap_auto_start                                     *g:minimap_auto_start*
 
   If set to `1`, the minimap window will show on startup.
 
-g:minimap_auto_start_win_enter                           *g:minimap_auto_start_win_enter*
+g:minimap_auto_start_win_enter                 *g:minimap_auto_start_win_enter*
 
   Type: |Number|
   Default: `0`

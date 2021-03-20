@@ -86,6 +86,7 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_close_filetypes`      | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                          |
 | `g:minimap_close_buftypes`       | `[]`                                                      | close minimap for specific buffer types                        |
 | `g:minimap_left`                 | `0`                                                       | if set minimap window will append left                         |
+| `g:minimap_highlight_range`      | `0`                                                       | if set minimap will highlight range of visible lines           |
 
 ### 💬 F.A.Q
 
