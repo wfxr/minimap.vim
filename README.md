@@ -130,6 +130,14 @@ Check that your encoding is set to `utf-8` and not `latin1` (for Vim users).
 Also, ensure that you're using a Unicode-compatible font that has Braille characters in it.
 
 ---
+#### What is `g:minimap_win_scrolled_exists` and how do you use it?
+
+You can have the minimap highlight all the visible lines in your current window
+by setting `g:minimap_highlight_range`.  If you use Neovim, and your version
+is recent enough (after November 7, 2020), you can set this option to update
+the highlight when the window is scrolled.
+
+---
 
 ### 📦 Related Projects
 

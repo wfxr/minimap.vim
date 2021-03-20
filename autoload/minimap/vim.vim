@@ -157,6 +157,7 @@ function! s:open_window() abort
                 autocmd FocusGained,WinScrolled *               call s:handle_autocmd(5)
             else
                 autocmd FocusGained,CursorMoved,CursorMovedI *  call s:handle_autocmd(5)
+            endif
         else
             autocmd FocusGained,CursorMoved,CursorMovedI *      call s:handle_autocmd(6)
         endif
