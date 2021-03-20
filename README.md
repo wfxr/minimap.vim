@@ -74,19 +74,20 @@ let g:minimap_auto_start_win_enter = 1
 
 ### ⚙  Options
 
-| Flag                             | Default                                                   | Description                                                    |
-|----------------------------------|-----------------------------------------------------------|----------------------------------------------------------------|
-| `g:minimap_auto_start`           | `0`                                                       | if set minimap will show at startup                            |
-| `g:minimap_auto_start_win_enter` | `0`                                                       | if set with `g:minimap_auto_start` minimap shows on `WinEnter` |
-| `g:minimap_width`                | `10`                                                      | the width of the minimap window in characters                  |
-| `g:minimap_highlight`            | `Title`                                                   | the color group for current position                           |
-| `g:minimap_base_highlight`       | `Normal`                                                  | the base color group for minimap                               |
-| `g:minimap_block_filetypes`      | `['fugitive', 'nerdtree', 'tagbar' ]`                     | disable minimap for specific file types                        |
-| `g:minimap_block_buftypes`       | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                      |
-| `g:minimap_close_filetypes`      | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                          |
-| `g:minimap_close_buftypes`       | `[]`                                                      | close minimap for specific buffer types                        |
-| `g:minimap_left`                 | `0`                                                       | if set minimap window will append left                         |
-| `g:minimap_highlight_range`      | `0`                                                       | if set minimap will highlight range of visible lines           |
+| Flag                             | Default                                                   | Description                                                          |
+|----------------------------------|-----------------------------------------------------------|----------------------------------------------------------------------|
+| `g:minimap_auto_start`           | `0`                                                       | if set minimap will show at startup                                  |
+| `g:minimap_auto_start_win_enter` | `0`                                                       | if set with `g:minimap_auto_start` minimap shows on `WinEnter`       |
+| `g:minimap_width`                | `10`                                                      | the width of the minimap window in characters                        |
+| `g:minimap_highlight`            | `Title`                                                   | the color group for current position                                 |
+| `g:minimap_base_highlight`       | `Normal`                                                  | the base color group for minimap                                     |
+| `g:minimap_block_filetypes`      | `['fugitive', 'nerdtree', 'tagbar' ]`                     | disable minimap for specific file types                              |
+| `g:minimap_block_buftypes`       | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                            |
+| `g:minimap_close_filetypes`      | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                                |
+| `g:minimap_close_buftypes`       | `[]`                                                      | close minimap for specific buffer types                              |
+| `g:minimap_left`                 | `0`                                                       | if set minimap window will append left                               |
+| `g:minimap_highlight_range`      | `0`                                                       | if set minimap will highlight range of visible lines                 |
+| `g:minimap_win_scrolled_exists`  | `0`                                                       | if set with `g:minimap_highlight_range` highlight updates on scroll  |
 
 ### 💬 F.A.Q
 
