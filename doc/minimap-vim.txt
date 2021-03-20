@@ -64,16 +64,6 @@ g:minimap_highlight_range                           *g:minimap_highlight_range*
   If set to `1`, the minimap window will highlight over a range of lines
   representing the visible lines in the buffer.
 
-g:minimap_win_scrolled_exists                   *g:minimap_win_scrolled_exists*
-
-  Type: |Number|
-  Default: `0`
-
-  If both this and `g:minimap_highlight_range` are set to `1`, the minimap
-  will update on the autocmd event `WinScrolled`.  This autocmd was only
-  added into versions of Neovim after November 7, 2020.  Use this only
-  if you have a version of Neovim with the autocmd!
-
 g:minimap_auto_start                                     *g:minimap_auto_start*
 
   Type: |Number|

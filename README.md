@@ -87,7 +87,6 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_close_buftypes`       | `[]`                                                      | close minimap for specific buffer types                              |
 | `g:minimap_left`                 | `0`                                                       | if set minimap window will append left                               |
 | `g:minimap_highlight_range`      | `0`                                                       | if set minimap will highlight range of visible lines                 |
-| `g:minimap_win_scrolled_exists`  | `0`                                                       | if set with `g:minimap_highlight_range` highlight updates on scroll  |
 
 ### 💬 F.A.Q
 
