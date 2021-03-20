@@ -319,11 +319,22 @@ function! s:source_move() abort
     endif
 
     let winid = win_getid(mmwinnr)
-    let curr = line('.') - 1
     let total = line('$')
     let mmheight = getwininfo(winid)[0].botline
-    let pos = float2nr(1.0 * curr / total * mmheight) + 1
-    call s:highlight_line(winid, pos)
+
+    if g:minimap_highlight_range
+        let startln = line('w0') - 1
+        let endln = line('w$') - 1
+        " The -/+ 1 compensates for the exclusive ranges we use in the
+        " patterns for matchadd.
+        let pos1 = s:buffer_to_map(startln, total, mmheight) - 1
+        let pos2 = s:buffer_to_map(endln, total, mmheight) + 1
+        call s:highlight_range(winid, pos1, pos2)
+    else
+        let curr = line('.') - 1
+        let pos = s:buffer_to_map(curr, total, mmheight)
+        call s:highlight_line(winid, pos)
+    endif
 endfunction
 
 " botline is broken and this works.  However, it's slow, so we call this function less.
@@ -339,7 +350,6 @@ function! s:update_highlight() abort
     endif
 
     let winid = win_getid(mmwinnr)
-    let curr = line('.') - 1
     let total = line('$')
 
     let curwinview = winsaveview()
@@ -348,13 +358,32 @@ function! s:update_highlight() abort
     execute 'wincmd p'
     call winrestview(curwinview)
 
-    let pos = float2nr(1.0 * curr / total * mmheight) + 1
-    call s:highlight_line(winid, pos)
+    if g:minimap_highlight_range
+        let startln = line('w0') - 1
+        let endln = line('w$') - 1
+        let pos1 = s:buffer_to_map(startln, total, mmheight) - 1
+        let pos2 = s:buffer_to_map(endln, total, mmheight) + 1
+        call s:highlight_range(winid, pos1, pos2)
+    else
+        let curr = line('.') - 1
+        let pos = s:buffer_to_map(curr, total, mmheight)
+        call s:highlight_line(winid, pos)
+    endif
+endfunction
+
+" Translates a line in a buffer to its respective pos in the map.
+function! s:buffer_to_map(lnnum, buftotal, mmheight) abort
+    return float2nr(1.0 * a:lnnum / a:buftotal * a:mmheight) + 1
 endfunction
 
 function! s:highlight_line(winid, pos) abort
     silent! call matchdelete(g:minimap_cursorline_matchid, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
     call matchadd(g:minimap_highlight, '\%' . a:pos . 'l', 100, g:minimap_cursorline_matchid, { 'window': a:winid })
+endfunction
+
+function! s:highlight_range(winid, startpos, endpos) abort
+    silent! call matchdelete(g:minimap_cursorline_matchid, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
+    call matchadd(g:minimap_highlight, '\%>' . a:startpos . 'l\%<' . a:endpos . 'l', 100, g:minimap_cursorline_matchid, { 'window': a:winid })
 endfunction
 
 " Clears matches of current window only.
