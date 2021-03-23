@@ -136,6 +136,7 @@ by setting `g:minimap_highlight_range`.  If you use Neovim, and your version
 is recent enough (after November 7, 2020), you can set this option to update
 the highlight when the window is scrolled.
 
+![screenshot-highlight-range](https://raw.githubusercontent.com/wfxr/i/master/minimap-vim-highlight-range.png)
 ---
 
 ### 📦 Related Projects
