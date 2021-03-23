@@ -165,7 +165,7 @@ g:minimap_base_highlight                             *g:minimap_base_highlight*
 
 
 |Q:|
-  What is `g:minimap_win_scrolled_exists` and how do you use it?
+  What is `g:minimap_highlight_range` and how do you use it?
 
 |A:|
   You can have the minimap highlight all the visible lines in your current window
