@@ -1,3 +1,12 @@
+---
+name: Question / bug report
+about: Question or bug report for this project
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 <!-- ISSUES NOT FOLLOWING THIS TEMPLATE WILL BE CLOSED AND DELETED -->
 
 <!-- Check all that apply [x] -->
@@ -19,4 +28,4 @@
 
 <!-- get by running `vim --version` or `nvim --version` -->
 
-## Problem and steps to reproduce
+## Question / Problem and steps to reproduce
