@@ -101,9 +101,9 @@ function! s:close_auto() abort
         silent! call s:quit_last()
     else
         bwipeout
-        " In case the plugin accidentally highlights the main buffer.
-        call s:clear_highlights()
     endif
+    " In case the plugin accidentally highlights the main buffer.
+    call s:clear_highlights()
 endfunction
 
 function! s:open_window() abort
