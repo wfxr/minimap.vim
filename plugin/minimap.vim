@@ -78,6 +78,22 @@ if !exists('g:minimap_highlight_range')
     let g:minimap_highlight_range = 0
 endif
 
+if !exists('g:minimap_git_colors')
+    let g:minimap_git_colors = 0
+endif
+
+if !exists('g:minimap_diffadd_color')
+    let g:minimap_diffadd_color = 'diffAdded'
+endif
+
+if !exists('g:minimap_diffremove_color')
+    let g:minimap_diffremove_color = 'diffRemoved'
+endif
+
+if !exists('g:minimap_diff_color')
+    let g:minimap_diff_color = 'diffLine'
+endif
+
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
         au!

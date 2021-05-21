@@ -63,6 +63,7 @@ function! s:toggle_window() abort
         return
     endif
 
+    let g:id_list = []
     call s:open_window()
 endfunction
 
@@ -374,6 +375,70 @@ function! s:update_highlight() abort
         let pos = s:buffer_to_map(curr, total, mmheight)
         call s:highlight_line(winid, pos)
     endif
+
+    if g:minimap_git_colors
+        " Get git info
+        let git_call = 'git diff -U0 -- ' . expand('%')
+        let git_diff = substitute(system(git_call), '\n\+&', '', '') | silent echo strtrans(git_diff)
+
+        let lines = split(git_diff, '\n')
+        let diff_list = []
+        for line in lines
+            if line[0] ==? "@"
+                let this_diff = {}
+
+                let blobs = split(line, ' ')
+                let del_info = blobs[1]
+                let add_info = blobs[2]
+
+                " Parse newfile info
+                let add_info = split(add_info, ',')
+                let add_start = str2nr(add_info[0])
+                let add_len = 0
+                if len(add_info) > 1
+                    let add_len = abs(str2nr(add_info[1]))
+                endif
+                " Parse oldfile info
+                let del_info = split(del_info, ',')
+                let del_len = 0
+                if len(del_info) > 1
+                    let del_len = abs(str2nr(del_info[1]))
+                endif
+
+                " Get diff type + end line
+                let this_diff["start"] = add_start
+                let this_diff["end"] = this_diff["start"] + add_len
+                if add_len != 0 && del_len != 0
+                    let this_diff["color"] = g:minimap_diff_color
+                elseif add_len != 0
+                    let this_diff["color"] = g:minimap_diffadd_color
+                elseif del_len != 0
+                    let this_diff["color"] = g:minimap_diffremove_color
+                    let this_diff["end"] = this_diff["start"] + 1
+                else
+                    let this_diff["color"] = g:minimap_diff_color
+                    let this_diff["end"] = this_diff["start"] + 1
+                endif
+
+                " Map locations to minimap
+                let this_diff["start"] = s:buffer_to_map(this_diff["start"], total, mmheight) - 1
+                let this_diff["end"] = s:buffer_to_map(this_diff["end"], total, mmheight) + 1
+                " Add to list
+                let diff_list = add(diff_list, this_diff)
+            endif
+        endfor
+
+        " Delete the old lines before drawing the new ones
+        for id in g:id_list
+            silent! call matchdelete(id, winid) " require vim 8.1.1084+ or neovim 0.5.0+
+        endfor
+        " Color lines, creating a new id for each section
+        let g:id_list = []
+        for a_diff in diff_list
+            call add(g:id_list, g:minimap_cursorline_matchid  + (1 + len(g:id_list)))
+            call s:set_range_color(winid, a_diff["start"], max([a_diff["start"]+1, a_diff["end"]]), a_diff["color"], g:id_list[-1])
+        endfor
+    endif
 endfunction
 
 " Translates a line in a buffer to its respective pos in the map.
@@ -386,9 +451,22 @@ function! s:highlight_line(winid, pos) abort
     call matchadd(g:minimap_highlight, '\%' . a:pos . 'l', 100, g:minimap_cursorline_matchid, { 'window': a:winid })
 endfunction
 
+function! s:set_range_color(winid, startpos, endpos, set_color, match_id) abort
+    call matchadd(a:set_color, '\%>' . a:startpos . 'l\%<' . a:endpos . 'l', 100, a:match_id, { 'window': a:winid })
+endfunction
 function! s:highlight_range(winid, startpos, endpos) abort
+    " Delete the old one before drawing
     silent! call matchdelete(g:minimap_cursorline_matchid, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
-    call matchadd(g:minimap_highlight, '\%>' . a:startpos . 'l\%<' . a:endpos . 'l', 100, g:minimap_cursorline_matchid, { 'window': a:winid })
+    call s:set_range_color(a:winid, a:startpos, a:endpos, g:minimap_highlight, g:minimap_cursorline_matchid)
+endfunction
+function! s:set_diffadd_range(winid, startpos, endpos) abort
+    call s:set_range_color(a:winid, a:startpos, a:endpos, g:minimap_diffadd_color, g:minimap_add_matchid)
+endfunction
+function! s:set_diffremove_range(winid, startpos, endpos) abort
+    call s:set_range_color(a:winid, a:startpos, a:endpos, g:minimap_diffremove_color, g:minimap_rem_matchid)
+endfunction
+function! s:set_diff_range(winid, startpos, endpos) abort
+    call s:set_range_color(a:winid, a:startpos, a:endpos, g:minimap_diff_color, g:minimap_diff_matchid)
 endfunction
 
 " Clears matches of current window only.

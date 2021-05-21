@@ -87,6 +87,10 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_close_buftypes`       | `[]`                                                      | close minimap for specific buffer types                              |
 | `g:minimap_left`                 | `0`                                                       | if set minimap window will append left                               |
 | `g:minimap_highlight_range`      | `0`                                                       | if set minimap will highlight range of visible lines                 |
+| `g:minimap_git_colors`           | `0`                                                       | if set minimap will highlight range of changes as reported by git    |
+| `g:minimap_diffadd_color`        | `diffAdded`                                               | the color group for added lines (if git_colors is enabled)           |
+| `g:minimap_diffremove_color`     | `diffRemoved`                                             | the color group for removed lines (if git_colors is enabled)         |
+| `g:minimap_diff_color`           | `diffLine`                                                | the color group for modified lines (if git_colors is enabled)        |
 
 ### 💬 F.A.Q
 
