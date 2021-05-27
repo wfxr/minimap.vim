@@ -384,7 +384,7 @@ function! s:update_highlight() abort
         let lines = split(git_diff, '\n')
         let diff_list = []
         for line in lines
-            if line[0] ==? "@"
+            if line[0] ==? '@'
                 let this_diff = {}
 
                 let blobs = split(line, ' ')
@@ -406,23 +406,23 @@ function! s:update_highlight() abort
                 endif
 
                 " Get diff type + end line
-                let this_diff["start"] = add_start
-                let this_diff["end"] = this_diff["start"] + add_len
+                let this_diff['start'] = add_start
+                let this_diff['end'] = this_diff['start'] + add_len
                 if add_len != 0 && del_len != 0
-                    let this_diff["color"] = g:minimap_diff_color
+                    let this_diff['color'] = g:minimap_diff_color
                 elseif add_len != 0
-                    let this_diff["color"] = g:minimap_diffadd_color
+                    let this_diff['color'] = g:minimap_diffadd_color
                 elseif del_len != 0
-                    let this_diff["color"] = g:minimap_diffremove_color
-                    let this_diff["end"] = this_diff["start"] + 1
+                    let this_diff['color'] = g:minimap_diffremove_color
+                    let this_diff['end'] = this_diff['start'] + 1
                 else
-                    let this_diff["color"] = g:minimap_diff_color
-                    let this_diff["end"] = this_diff["start"] + 1
+                    let this_diff['color'] = g:minimap_diff_color
+                    let this_diff['end'] = this_diff['start'] + 1
                 endif
 
                 " Map locations to minimap
-                let this_diff["start"] = s:buffer_to_map(this_diff["start"], total, mmheight) - 1
-                let this_diff["end"] = s:buffer_to_map(this_diff["end"], total, mmheight) + 1
+                let this_diff['start'] = s:buffer_to_map(this_diff['start'], total, mmheight) - 1
+                let this_diff['end'] = s:buffer_to_map(this_diff['end'], total, mmheight) + 1
                 " Add to list
                 let diff_list = add(diff_list, this_diff)
             endif
@@ -436,7 +436,7 @@ function! s:update_highlight() abort
         let g:id_list = []
         for a_diff in diff_list
             call add(g:id_list, g:minimap_cursorline_matchid  + (1 + len(g:id_list)))
-            call s:set_range_color(winid, a_diff["start"], max([a_diff["start"]+1, a_diff["end"]]), a_diff["color"], g:id_list[-1])
+            call s:set_range_color(winid, a_diff['start'], max([a_diff['start']+1, a_diff['end']]), a_diff['color'], g:id_list[-1])
         endfor
     endif
 endfunction
