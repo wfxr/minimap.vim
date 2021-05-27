@@ -83,15 +83,15 @@ if !exists('g:minimap_git_colors')
 endif
 
 if !exists('g:minimap_diffadd_color')
-    let g:minimap_diffadd_color = 'diffAdded'
+    let g:minimap_diffadd_color = 'DiffAdd'
 endif
 
 if !exists('g:minimap_diffremove_color')
-    let g:minimap_diffremove_color = 'diffRemoved'
+    let g:minimap_diffremove_color = 'DiffDelete'
 endif
 
 if !exists('g:minimap_diff_color')
-    let g:minimap_diff_color = 'diffLine'
+    let g:minimap_diff_color = 'DiffChange'
 endif
 
 if g:minimap_auto_start == 1

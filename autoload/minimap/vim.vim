@@ -63,7 +63,6 @@ function! s:toggle_window() abort
         return
     endif
 
-    let g:id_list = []
     call s:open_window()
 endfunction
 
@@ -176,6 +175,7 @@ function! s:open_window() abort
 
     let &cpoptions = cpoptions_save
 
+    let g:id_list = []
     execute 'wincmd p'
     call s:refresh_minimap(1)
     call s:update_highlight()
