@@ -105,6 +105,8 @@ Check the vim version you are using. `minimap.vim` requires [vim 8.2+](https://g
 Not implemented currently but it should be possible.
 Welcome to contribute!
 
+**update**: Git support has been implemented [#72](https://github.com/wfxr/minimap.vim/pull/72).
+
 ---
 #### Minimap window is too wide for me, how to use it as a simple scrollbar?
 
