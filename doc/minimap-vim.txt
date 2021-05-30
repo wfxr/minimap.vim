@@ -118,6 +118,43 @@ g:minimap_base_highlight                             *g:minimap_base_highlight*
 
   The base color group for minimap. Possible values are any |group-name|.
 
+g:minimap_git_colors                                     *g:minimap_git_colors*
+
+  Type: |Number|
+  Default: `0`
+
+  If set to 1, the minimap will highlight changes as reported by git.
+  The highlight groups `g:minimap_diffadd_color`, `g:minimiap_diffremove_color`,
+  and `g:minimap_diff_color` are used for additions, deletions, and line changes
+  respectively.
+
+g:minimap_diffadd_color                               *g:minimap_diffadd_color*
+
+  Type: |String|
+  Default: `'DiffAdd'`
+
+  The color group for added lines (as reported by git).
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
+g:minimap_diffremove_color                         *g:minimap_diffremove_color*
+
+  Type: |String|
+  Default: `'DiffDelete'`
+
+  The color group for removed/deleted lines (as reported by git).
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
+g:minimap_diff_color                                     *g:minimap_diff_color*
+
+  Type: |String|
+  Default: `'DiffChange'`
+
+  The color group for changed lines (as reported by git).
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
 =============================================================================
 3. FAQ                                                            *minimap-FAQ*
 
@@ -133,7 +170,7 @@ g:minimap_base_highlight                             *g:minimap_base_highlight*
   Integrated with diagnostics or git status plugins?
 
 |A:|
-  Not implemented currently but it should be possible in the future.
+  Git integration is supported. See `g:minimap_git_colors`.
 
 
 |Q:|
