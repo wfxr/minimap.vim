@@ -93,7 +93,10 @@ function! s:quit_last() abort
 endfunction
 
 function! s:close_auto() abort
-    if winnr('$') != 1
+    if winnr('$') == 3 && exists('g:coc_last_float_win')
+        " This addresses an issue where the minimap will not close
+        " if CoC has a diagnostic window open - GH-74
+    elseif winnr('$') != 1
         return
     endif
 
