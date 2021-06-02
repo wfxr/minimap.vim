@@ -397,13 +397,13 @@ function! s:update_highlight() abort
                 " Parse newfile info
                 let add_info = split(add_info, ',')
                 let add_start = str2nr(add_info[0])
-                let add_len = 0
+                let add_len = 1
                 if len(add_info) > 1
                     let add_len = abs(str2nr(add_info[1]))
                 endif
                 " Parse oldfile info
                 let del_info = split(del_info, ',')
-                let del_len = 0
+                let del_len = 1
                 if len(del_info) > 1
                     let del_len = abs(str2nr(del_info[1]))
                 endif
