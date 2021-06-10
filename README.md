@@ -91,6 +91,11 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_diffadd_color`        | `DiffAdd`                                                 | the color group for added lines (if git_colors is enabled)           |
 | `g:minimap_diffremove_color`     | `DiffDelete`                                              | the color group for removed lines (if git_colors is enabled)         |
 | `g:minimap_diff_color`           | `DiffChange`                                              | the color group for modified lines (if git_colors is enabled)        |
+| `g:minimap_highlight_search`     | `0`                                                       | if set minimap will highlight searched patterns                      |
+| `g:minimap_search_color`         | `Search`                                                  | the color group for highlighted search patterns in the minimap       |
+| `g:minimap_search_color_priority`| `120`                                                     | the priority for the search highlight colors                         |
+| `g:minimap_cursor_color_priority`| `110`                                                     | the priority for the cursor highlight colors                         |
+| `g:minimap_git_color_priority`   | `100`                                                     | the priority for the git grouping of colors                          |
 
 ### 💬 F.A.Q
 
@@ -116,6 +121,12 @@ let g:minimap_width = 2
 ```
 Or use [scrollbar.nvim](https://github.com/Xuyuanp/scrollbar.nvim) instead if what you want
 is a pure scrollbar indicator.
+
+---
+#### How do the color priorities work?
+
+A higher priority color group will override a lower priority color group.
+By default, search > cursor/window position > git colors
 
 ---
 #### I don't like the default highlight group, how to change it?
@@ -144,7 +155,15 @@ the highlight when the window is scrolled.
 
 ![screenshot-highlight-range](https://raw.githubusercontent.com/wfxr/i/master/minimap-vim-highlight-range.png)
 ---
+#### I'm using `g:minimap_highlight_search` and the highlighted searches don't go away until I `:nohlsearch` and save!
 
+It is recommended that you create a mapping to run `:nohlsearch` and clear the
+minimap all in one action. For example:
+```
+nnoremap <silent> `` :nohlsearch<CR>:call minimap#vim#ClearColorSearch()<CR>
+```
+
+---
 ### 📦 Related Projects
 
 * [code-minimap](https://github.com/wfxr/code-minimap): A high performance code minimap render.
