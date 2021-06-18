@@ -411,10 +411,217 @@ function! s:update_highlight() abort
     endif
 endfunction
 
+" Translates a position in a buffer to its respective position in the map.
+function! s:buffer_to_map(lnnum, buftotal, mmtotal) abort
+    return float2nr(1.0 * a:lnnum / a:buftotal * a:mmtotal) + 1
+endfunction
+
+function! s:highlight_line(winid, pos) abort
+    call s:clear_id_list_colors(a:winid, g:minimap_range_id_list)
+    let g:minimap_range_id_list = []
+    call add(g:minimap_range_id_list, s:get_next_range_matchid())
+    call s:set_line_color(g:minimap_highlight, a:pos,
+        \ g:minimap_cursor_color_priority, g:minimap_range_id_list[-1], a:winid)
+endfunction
+
+function! s:highlight_range(winid, startpos, endpos) abort
+    " Delete the old ones before drawing
+    call s:clear_id_list_colors(a:winid, g:minimap_range_id_list)
+    let g:minimap_range_id_list = []
+    let idx = a:startpos
+    while idx <= a:endpos
+        call add(g:minimap_range_id_list, s:get_next_range_matchid())
+        call matchaddpos(g:minimap_highlight, [idx], g:minimap_cursor_color_priority,
+                    \ g:minimap_range_id_list[-1], { 'window': a:winid })
+        let idx = idx+1
+    endwhile
+endfunction
+
+" Clears the specified match id list
+function! s:clear_id_list_colors(winid, id_list) abort
+    for id in a:id_list
+        silent! call matchdelete(id, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
+    endfor
+endfunction
+
+" Manages doling out match ids based on list sizes
+function! s:get_next_range_matchid() abort
+    return g:minimap_range_matchid_safe_range + len(g:minimap_range_id_list)
+endfunction
+function! s:get_next_search_matchid() abort
+    return g:minimap_search_matchid_safe_range + len(g:minimap_search_id_list)
+endfunction
+
+function! s:set_span_color(set_color, spans, priority, match_id, winid) abort
+    call matchaddpos(a:set_color, a:spans, a:priority,
+        \ a:match_id, { 'window': a:winid })
+endfunction
+
+function! s:set_line_color(set_color, pos, priority, match_id, winid) abort
+    call matchaddpos(a:set_color, [a:pos], a:priority, a:match_id, { 'window': a:winid })
+endfunction
+
+" Clears matches of current window only.
+function! s:clear_highlights() abort
+    silent! call matchdelete(g:minimap_base_matchid)
+    call s:clear_id_list_colors(winnr(), g:minimap_range_id_list)
+    let g:minimap_range_id_list = []
+    call s:clear_id_list_colors(winnr(), g:minimap_git_id_list)
+    let g:minimap_git_id_list = []
+    call s:clear_id_list_colors(winnr(), g:minimap_search_id_list)
+    let g:minimap_search_id_list = []
+endfunction
+
+function! s:minimap_move() abort
+    let mmwinnr = winnr()
+    let curr = line('.')
+    let mmlines = line('$')
+
+    execute 'wincmd p'
+    let pos = float2nr(1.0 * curr / mmlines * line('$'))
+    execute pos
+    execute 'wincmd p'
+    let winid = win_getid(mmwinnr)
+    call s:highlight_line(winid, curr)
+endfunction
+
+" Only called if g:minimap_highlight_range is set.
+function! s:source_win_scroll() abort
+    let mmwinnr = bufwinnr('-MINIMAP-')
+    if mmwinnr == -1
+        return
+    endif
+
+    if winnr() == mmwinnr
+        return
+    endif
+
+    let winid = win_getid(mmwinnr)
+    let total = line('$')
+    let mmheight = getwininfo(winid)[0].botline
+
+    let start = line('w0') - 1
+    let end = line('w$') - 1
+    " The -/+ 1 compensates for the exclusive ranges we use in the
+    " patterns for matchadd.
+    let pos1 = s:buffer_to_map(start, total, mmheight) - 1
+    let pos2 = s:buffer_to_map(end, total, mmheight) + 1
+    call s:highlight_range(winid, pos1, pos2)
+endfunction
+
+function! s:minimap_win_enter() abort
+    execute 'wincmd p'
+    let curr = line('.') - 1
+    let srclines = line('$')
+    execute 'wincmd p'
+    let pos = float2nr(1.0 * curr / srclines * line('$')) + 1
+    execute pos
+    call s:minimap_move()
+endfunction
+
+function! s:source_win_enter() abort
+    call s:update_highlight()
+endfunction
+
+function! s:minimap_buffer_enter_handler() abort
+    " do nothing
+endfunction
+
+function! s:source_buffer_enter_handler() abort
+    call s:refresh_minimap(0)
+    call s:update_highlight()
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Git Stuff
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! minimap#vim#MinimapParseGitDiffLine(line, buffer_lines, mmheight)
+    return s:minimap_parse_git_diff_line(a:line, a:buffer_lines, a:mmheight)
+endfunction
+function! s:minimap_parse_git_diff_line(line, buffer_lines, mmheight) abort
+    let this_diff = {}
+
+    let blobs = split(a:line, ' ')
+    let del_info = blobs[1]
+    let add_info = blobs[2]
+
+    " Parse newfile info
+    let add_info = split(add_info, ',')
+    let add_start = str2nr(add_info[0])
+    let add_len = 1
+    if len(add_info) > 1
+        let add_len = abs(str2nr(add_info[1]))
+    endif
+    " Parse oldfile info
+    let del_info = split(del_info, ',')
+    let del_len = 1
+    if len(del_info) > 1
+        let del_len = abs(str2nr(del_info[1]))
+    endif
+
+    " Get diff type + end line
+    let this_diff['start'] = add_start
+    let this_diff['end'] = this_diff['start'] + add_len
+    if add_len != 0 && del_len != 0
+        let this_diff['color'] = g:minimap_diff_color
+    elseif add_len != 0
+        let this_diff['color'] = g:minimap_diffadd_color
+    elseif del_len != 0
+        let this_diff['color'] = g:minimap_diffremove_color
+        let this_diff['end'] = this_diff['start']
+    else
+        let this_diff['color'] = g:minimap_diff_color
+        let this_diff['end'] = this_diff['start']
+    endif
+
+    " Map locations to minimap
+    " echo 'buf: ' . join([this_diff['start'], this_diff['end']]) " DEBUG
+    let this_diff['start'] = s:buffer_to_map(this_diff['start'] - 1, a:buffer_lines, a:mmheight)
+    let this_diff['end']   = s:buffer_to_map(this_diff['end']   - 1, a:buffer_lines, a:mmheight)
+    " echo 'mm : ' . join([this_diff['start'], this_diff['end']]) " DEBUG
+
+    return this_diff
+endfunction
+
+function! s:minimap_color_git(winid, total_lines, mmheight) abort
+    " Get git info
+    let git_call = 'git diff -U0 -- ' . expand('%')
+    let git_diff = substitute(system(git_call), '\n\+&', '', '') | silent echo strtrans(git_diff)
+
+    let lines = split(git_diff, '\n')
+    let diff_list = []
+    for line in lines
+        if line[0] ==? '@'
+            let this_diff = s:minimap_parse_git_diff_line(line, a:total_lines, a:mmheight)
+            " Add to list
+            let diff_list = add(diff_list, this_diff)
+        endif
+    endfor
+
+    " Clear colors before writing new ones
+    call s:clear_id_list_colors(a:winid, g:minimap_git_id_list)
+    let g:minimap_git_id_list = []
+    " Color lines, creating a new id for each section
+    for a_diff in diff_list
+        let idx = a_diff['start']
+        while idx <= a_diff['end']
+            call add(g:minimap_git_id_list, s:get_next_git_matchid())
+            call matchaddpos(a_diff['color'], [idx], g:minimap_git_color_priority, g:minimap_git_id_list[-1], { 'window': a:winid })
+            let idx = idx+1
+        endwhile
+    endfor
+endfunction
+
+function! s:get_next_git_matchid() abort
+    return g:minimap_git_matchid_safe_range + len(g:minimap_git_id_list)
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Search Highlight Stuff
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! minimap#vim#ClearColorSearch() abort
     if exists('g:minimap_search_id_list')
-        let win_info = s:get_window_info()
-        call s:clear_id_list_colors(win_info['winid'], g:minimap_search_id_list)
+        call s:clear_id_list_colors(0, g:minimap_search_id_list)
         let g:minimap_search_id_list = []
     endif
 endfunction
@@ -432,12 +639,7 @@ endfunction
 
 " Query argument is either the query string, or a number representing how far
 " back into the search history we need to grab (it varies by context)
-function! s:minimap_color_search(winid, total_lines, mmheight, query) abort
-    if eval('v:hlsearch') == 0 || eval('&hlsearch') == 0
-        " Don't bother doing anything if any search highlighting is turned off
-        return
-    endif
-
+function s:minimap_color_search_get_spans(winid, total_lines, mmheight, query) abort
     " Get the last search the user searched for
     if type(a:query) != type(0)
         let last_search = a:query
@@ -522,6 +724,17 @@ function! s:minimap_color_search(winid, total_lines, mmheight, query) abort
         call add(mm_spans, [mm_line, mm_col, mm_len])
     endfor
 
+    return mm_spans
+endfunction
+
+function! s:minimap_color_search(winid, total_lines, mmheight, query) abort
+    if eval('v:hlsearch') == 0 || eval('&hlsearch') == 0
+        " Don't bother doing anything if any search highlighting is turned off
+        return
+    endif
+
+    let mm_spans = s:minimap_color_search_get_spans(a:winid, a:total_lines, a:mmheight, a:query)
+
     " Clear old colors before writing new ones
     call s:clear_id_list_colors(a:winid, g:minimap_search_id_list)
     let g:minimap_search_id_list = []
@@ -532,196 +745,4 @@ function! s:minimap_color_search(winid, total_lines, mmheight, query) abort
         call s:set_span_color(g:minimap_search_color, [a_span],
             \ g:minimap_search_color_priority, g:minimap_search_id_list[-1], a:winid)
     endfor
-endfunction
-
-function! s:minimap_color_git(winid, total_lines, mmheight) abort
-    " Get git info
-    let git_call = 'git diff -U0 -- ' . expand('%')
-    let git_diff = substitute(system(git_call), '\n\+&', '', '') | silent echo strtrans(git_diff)
-
-    let lines = split(git_diff, '\n')
-    let diff_list = []
-    for line in lines
-        if line[0] ==? '@'
-            let this_diff = {}
-
-            let blobs = split(line, ' ')
-            let del_info = blobs[1]
-            let add_info = blobs[2]
-
-            " Parse newfile info
-            let add_info = split(add_info, ',')
-            let add_start = str2nr(add_info[0])
-            let add_len = 0
-            if len(add_info) > 1
-                let add_len = abs(str2nr(add_info[1]))
-            endif
-            " Parse oldfile info
-            let del_info = split(del_info, ',')
-            let del_len = 0
-            if len(del_info) > 1
-                let del_len = abs(str2nr(del_info[1]))
-            endif
-
-            " Get diff type + end line
-            let this_diff['start'] = add_start
-            let this_diff['end'] = this_diff['start'] + add_len
-            if add_len != 0 && del_len != 0
-                let this_diff['color'] = g:minimap_diff_color
-            elseif add_len != 0
-                let this_diff['color'] = g:minimap_diffadd_color
-            elseif del_len != 0
-                let this_diff['color'] = g:minimap_diffremove_color
-                let this_diff['end'] = this_diff['start']
-            else
-                let this_diff['color'] = g:minimap_diff_color
-                let this_diff['end'] = this_diff['start']
-            endif
-
-            " Map locations to minimap
-            " echo 'buf: ' . join([this_diff['start'], this_diff['end']]) " DEBUG
-            let this_diff['start'] = s:buffer_to_map(this_diff['start'] - 1, a:total_lines, a:mmheight)
-            let this_diff['end']   = s:buffer_to_map(this_diff['end']   - 1, a:total_lines, a:mmheight)
-            " echo 'mm : ' . join([this_diff['start'], this_diff['end']]) " DEBUG
-            " Add to list
-            let diff_list = add(diff_list, this_diff)
-        endif
-    endfor
-
-    " Clear colors before writing new ones
-    call s:clear_id_list_colors(a:winid, g:minimap_git_id_list)
-    let g:minimap_git_id_list = []
-    " Color lines, creating a new id for each section
-    for a_diff in diff_list
-        let idx = a_diff['start']
-        while idx <= a_diff['end']
-            call add(g:minimap_git_id_list, s:get_next_git_matchid())
-            call matchaddpos(a_diff['color'], [idx], g:minimap_git_color_priority, g:minimap_git_id_list[-1], { 'window': a:winid })
-            let idx = idx+1
-        endwhile
-    endfor
-endfunction
-
-" Translates a position in a buffer to its respective position in the map.
-function! s:buffer_to_map(lnnum, buftotal, mmtotal) abort
-    return float2nr(1.0 * a:lnnum / a:buftotal * a:mmtotal) + 1
-endfunction
-
-function! s:highlight_line(winid, pos) abort
-    call s:clear_id_list_colors(a:winid, g:minimap_range_id_list)
-    let g:minimap_range_id_list = []
-    call add(g:minimap_range_id_list, s:get_next_range_matchid())
-    call s:set_line_color(g:minimap_highlight, a:pos,
-        \ g:minimap_cursor_color_priority, g:minimap_range_id_list[-1], a:winid)
-endfunction
-
-function! s:highlight_range(winid, startpos, endpos) abort
-    " Delete the old ones before drawing
-    call s:clear_id_list_colors(a:winid, g:minimap_range_id_list)
-    let g:minimap_range_id_list = []
-    let idx = a:startpos
-    while idx <= a:endpos
-        call add(g:minimap_range_id_list, s:get_next_range_matchid())
-        call matchaddpos(g:minimap_highlight, [idx], g:minimap_cursor_color_priority,
-                    \ g:minimap_range_id_list[-1], { 'window': a:winid })
-        let idx = idx+1
-    endwhile
-endfunction
-
-" Clears the specified match id list
-function! s:clear_id_list_colors(winid, id_list) abort
-    for id in a:id_list
-        silent! call matchdelete(id, a:winid) " require vim 8.1.1084+ or neovim 0.5.0+
-    endfor
-endfunction
-
-" Manages doling out match ids based on list sizes
-function! s:get_next_range_matchid() abort
-    return g:minimap_range_matchid_safe_range + len(g:minimap_range_id_list)
-endfunction
-function! s:get_next_git_matchid() abort
-    return g:minimap_git_matchid_safe_range + len(g:minimap_git_id_list)
-endfunction
-function! s:get_next_search_matchid() abort
-    return g:minimap_search_matchid_safe_range + len(g:minimap_search_id_list)
-endfunction
-
-function! s:set_span_color(set_color, spans, priority, match_id, winid) abort
-    call matchaddpos(a:set_color, a:spans, a:priority,
-        \ a:match_id, { 'window': a:winid })
-endfunction
-
-function! s:set_line_color(set_color, pos, priority, match_id, winid) abort
-    call matchaddpos(a:set_color, [a:pos], a:priority, a:match_id, { 'window': a:winid })
-endfunction
-
-" Clears matches of current window only.
-function! s:clear_highlights() abort
-    silent! call matchdelete(g:minimap_base_matchid)
-    call s:clear_id_list_colors(winnr(), g:minimap_range_id_list)
-    let g:minimap_range_id_list = []
-    call s:clear_id_list_colors(winnr(), g:minimap_git_id_list)
-    let g:minimap_git_id_list = []
-    call s:clear_id_list_colors(winnr(), g:minimap_search_id_list)
-    let g:minimap_search_id_list = []
-endfunction
-
-function! s:minimap_move() abort
-    let mmwinnr = winnr()
-    let curr = line('.')
-    let mmlines = line('$')
-
-    execute 'wincmd p'
-    let pos = float2nr(1.0 * curr / mmlines * line('$'))
-    execute pos
-    execute 'wincmd p'
-    let winid = win_getid(mmwinnr)
-    call s:highlight_line(winid, curr)
-endfunction
-
-" Only called if g:minimap_highlight_range is set.
-function! s:source_win_scroll() abort
-    let mmwinnr = bufwinnr('-MINIMAP-')
-    if mmwinnr == -1
-        return
-    endif
-
-    if winnr() == mmwinnr
-        return
-    endif
-
-    let winid = win_getid(mmwinnr)
-    let total = line('$')
-    let mmheight = getwininfo(winid)[0].botline
-
-    let start = line('w0') - 1
-    let end = line('w$') - 1
-    " The -/+ 1 compensates for the exclusive ranges we use in the
-    " patterns for matchadd.
-    let pos1 = s:buffer_to_map(start, total, mmheight) - 1
-    let pos2 = s:buffer_to_map(end, total, mmheight) + 1
-    call s:highlight_range(winid, pos1, pos2)
-endfunction
-
-function! s:minimap_win_enter() abort
-    execute 'wincmd p'
-    let curr = line('.') - 1
-    let srclines = line('$')
-    execute 'wincmd p'
-    let pos = float2nr(1.0 * curr / srclines * line('$')) + 1
-    execute pos
-    call s:minimap_move()
-endfunction
-
-function! s:source_win_enter() abort
-    call s:update_highlight()
-endfunction
-
-function! s:minimap_buffer_enter_handler() abort
-    " do nothing
-endfunction
-
-function! s:source_buffer_enter_handler() abort
-    call s:refresh_minimap(0)
-    call s:update_highlight()
 endfunction
