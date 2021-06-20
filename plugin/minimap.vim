@@ -122,6 +122,10 @@ endif
 
 " Define mutex
 let g:minimap_getting_window_info = 0
+" Define id lists - used for storing matchids of color groups
+let g:minimap_range_id_list = []
+let g:minimap_git_id_list = []
+let g:minimap_search_id_list = []
 
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
