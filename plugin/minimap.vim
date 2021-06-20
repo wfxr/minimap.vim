@@ -42,12 +42,20 @@ if !exists('g:minimap_base_matchid')
     let g:minimap_base_matchid = 9265454 " magic number
 endif
 
-if !exists('g:minimap_highlight')
-    let g:minimap_highlight = 'Title'
+if !exists('g:minimap_range_matchid_safe_range')
+    let g:minimap_range_matchid_safe_range = g:minimap_base_matchid + 10000
 endif
 
-if !exists('g:minimap_cursorline_matchid')
-    let g:minimap_cursorline_matchid = 9265455
+if !exists('g:minimap_git_matchid_safe_range')
+    let g:minimap_git_matchid_safe_range = g:minimap_base_matchid + 20000
+endif
+
+if !exists('g:minimap_search_matchid_safe_range')
+    let g:minimap_search_matchid_safe_range = g:minimap_base_matchid + 30000
+endif
+
+if !exists('g:minimap_highlight')
+    let g:minimap_highlight = 'Title'
 endif
 
 if !exists('g:minimap_block_filetypes')
@@ -82,6 +90,10 @@ if !exists('g:minimap_git_colors')
     let g:minimap_git_colors = 0
 endif
 
+if !exists('g:minimap_highlight_search')
+    let g:minimap_highlight_search = 0
+endif
+
 if !exists('g:minimap_diffadd_color')
     let g:minimap_diffadd_color = 'DiffAdd'
 endif
@@ -94,6 +106,23 @@ if !exists('g:minimap_diff_color')
     let g:minimap_diff_color = 'DiffChange'
 endif
 
+if !exists('g:minimap_search_color')
+    let g:minimap_search_color = 'Search'
+endif
+
+if !exists('g:minimap_cursor_color_priority')
+    let g:minimap_cursor_color_priority = 110
+endif
+if !exists('g:minimap_git_color_priority')
+    let g:minimap_git_color_priority = 100
+endif
+if !exists('g:minimap_search_color_priority')
+    let g:minimap_search_color_priority = 120
+endif
+
+" Define mutex
+let g:minimap_getting_window_info = 0
+
 if g:minimap_auto_start == 1
     augroup MinimapAutoStart
         au!
@@ -102,4 +131,12 @@ if g:minimap_auto_start == 1
             au WinEnter * Minimap
         endif
     augroup end
+endif
+
+" Mappings to make searching update with * or #
+if g:minimap_highlight_search != 0
+    nnoremap <silent> * *:call minimap#vim#UpdateColorSearch(1)<CR>
+    nnoremap <silent> # #:call minimap#vim#UpdateColorSearch(1)<CR>
+    " Example mapping for nohlsearch to also clear the minimap search highlighting
+    " nnoremap <silent> `` :nohlsearch<CR>:call minimap#vim#ClearColorSearch()<CR>
 endif

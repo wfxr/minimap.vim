@@ -155,6 +155,49 @@ g:minimap_diff_color                                     *g:minimap_diff_color*
   Possible values are any |group-name|.
   Requires `g:minimap_git_colors` to be enabled.
 
+g:minimap_highlight_search                         *g:minimap_highlight_search*
+
+  Type: |Number|
+  Default: `0`
+
+  If set to 1, the minimap will highlight matches to the last search done by
+  the user. The highlight group `g:minimap_search_color` will be used for
+  highlighting matches.
+
+g:minimap_search_color                                 *g:minimap_search_color*
+
+  Type: |String|
+  Default: `'Search'`
+
+  The color group for matched seaches shown in the minimap.
+  Possible values are any |group-name|.
+  Requires `g:minimap_highlight_search` to be enabled.
+
+
+g:minimap_cursor_color_priority               *g:minimap_cursor_color_priority*
+
+  Type: |Number|
+  Default: `110`
+
+  The priority for the cursor color group in the minimap.
+  A higher valued priority will overwrite a lower valued priority.
+
+g:minimap_git_color_priority                     *g:minimap_git_color_priority*
+
+  Type: |Number|
+  Default: `100`
+
+  The priority for the git color groups in the minimap.
+  A higher valued priority will overwrite a lower valued priority.
+
+g:minimap_search_color_priority               *g:minimap_search_color_priority*
+
+  Type: |Number|
+  Default: `120`
+
+  The priority for the search color group in the minimap.
+  A higher valued priority will overwrite a lower valued priority.
+
 =============================================================================
 3. FAQ                                                            *minimap-FAQ*
 
@@ -181,6 +224,12 @@ g:minimap_diff_color                                     *g:minimap_diff_color*
 
       let g:minimap_width = 2
 
+|Q:|
+  How do the color priorities work?
+
+|A:|
+  A higher priority color group will override a lower priority color group.
+  By default, search > cursor/window position > git colors
 
 |Q:|
   I don't like the default highlight group, how to change it?
@@ -209,6 +258,17 @@ g:minimap_diff_color                                     *g:minimap_diff_color*
   by setting `g:minimap_highlight_range`.  If you use Neovim, and your version
   is recent enough (after November 7, 2020), you can set this option to update
   the highlight when the window is scrolled.
+
+
+|Q:|
+  `g:minimap_highlight_search` searches don't go away until writing to buffer.
+
+|A:|
+  Not a question, but I'll help you anyway. It is recommended that you create
+  a mapping to run `:nohlsearch` and clear the minimap all in one action.
+  For example:
+
+      nnoremap <silent> `` :nohlsearch<CR>:call minimap#vim#ClearColorSearch()<CR>`
 
 
 LICENSE                                                       *minimap-license*
