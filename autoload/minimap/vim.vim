@@ -639,7 +639,10 @@ endfunction
 
 " Query argument is either the query string, or a number representing how far
 " back into the search history we need to grab (it varies by context)
-function s:minimap_color_search_get_spans(winid, total_lines, mmheight, query) abort
+function! minimap#vim#MinimapColorSearchGetSpans(total_lines, mmheight, query) abort
+    return s:minimap_color_search_get_spans(a:total_lines, a:mmheight, a:query)
+endfunction
+function s:minimap_color_search_get_spans(total_lines, mmheight, query) abort
     " Get the last search the user searched for
     if type(a:query) != type(0)
         let last_search = a:query
@@ -733,7 +736,7 @@ function! s:minimap_color_search(winid, total_lines, mmheight, query) abort
         return
     endif
 
-    let mm_spans = s:minimap_color_search_get_spans(a:winid, a:total_lines, a:mmheight, a:query)
+    let mm_spans = s:minimap_color_search_get_spans(a:total_lines, a:mmheight, a:query)
 
     " Clear old colors before writing new ones
     call s:clear_id_list_colors(a:winid, g:minimap_search_id_list)
