@@ -413,7 +413,8 @@ endfunction
 
 function! minimap#vim#ClearColorSearch() abort
     if exists('g:minimap_search_id_list')
-        call s:clear_id_list_colors(0, g:minimap_search_id_list)
+        let win_info = s:get_window_info()
+        call s:clear_id_list_colors(win_info['winid'], g:minimap_search_id_list)
         let g:minimap_search_id_list = []
     endif
 endfunction
