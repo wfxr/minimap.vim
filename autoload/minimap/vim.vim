@@ -341,11 +341,11 @@ function! s:source_move() abort
     endif
 
     let winid = win_getid(mmwinnr)
-    let total = line('$')
-    let mmheight = getwininfo(winid)[0].botline
+    let height = line('$')
+    let mm_height = getwininfo(winid)[0].botline
 
     let curr = line('.') - 1
-    let pos = s:buffer_to_map(curr, total, mmheight)
+    let pos = s:buffer_to_map(curr, height, mm_height)
     call s:highlight_line(winid, pos)
 endfunction
 
@@ -368,17 +368,50 @@ function! s:get_window_info() abort
         let curwinview = winsaveview()
 
         let winid = win_getid(mmwinnr)
-        let total = line('$')
+        let height = line('$')
+        let max_width = 0
+        if g:minimap_highlight_search
+            " Get the max width of this buffer
+            let line_num = 1
+            while line_num <= line('$')
+                call setpos('.', [0, line_num, 1])
+                " Move cursor to the last non-blank character on the line
+                normal g_
+                let max_width = max([max_width, col('.')])
+                let line_num = line_num + 1
+            endwhile
+        endif
 
         " Go to the minimap
         call win_gotoid(winid)
-        let mmheight = line('w$')
+        let mm_height = line('w$')
+        let mm_max_width = 0
+        if g:minimap_highlight_search
+            " Get max width of the minimap (characters, not window)
+            let line_num = 1
+            while line_num <= line('$')
+                call setpos('.', [0, line_num, 1])
+                " Move cursor to the last non-blank character on the line
+                normal g_
+                let mm_max_width = max([mm_max_width, col('.')])
+                let line_num = line_num + 1
+            endwhile
+
+            " Scale to cursor positions, not bytes
+            let mm_max_width = (mm_max_width / 3) + 1
+            " The window can be smaller than the max width, so rail to the smaller
+            " value.
+            let mm_max_width = min([mm_max_width, g:minimap_width])
+            " echom 'max_width, mm_max_width: ' . join([max_width, mm_max_width])
+        endif
+
         " Go back to previous window and reset the view
         execute 'wincmd p'
         call winrestview(curwinview)
 
         let g:minimap_getting_window_info = 0
-        return {'winid': winid, 'total': total, 'mmheight': mmheight}
+        return {'winid': winid, 'height': height, 'mm_height': mm_height,
+                    \ 'max_width': max_width, 'mm_max_width': mm_max_width}
     endif
     return {}
 endfunction
@@ -394,20 +427,20 @@ function! s:update_highlight() abort
     if g:minimap_highlight_range
         let startln = line('w0') - 1
         let endln = line('w$') - 1
-        let pos1 = s:buffer_to_map(startln, win_info['total'], win_info['mmheight']) - 1
-        let pos2 = s:buffer_to_map(endln, win_info['total'], win_info['mmheight']) + 1
+        let pos1 = s:buffer_to_map(startln, win_info['height'], win_info['mm_height']) - 1
+        let pos2 = s:buffer_to_map(endln, win_info['height'], win_info['mm_height']) + 1
         call s:highlight_range(win_info['winid'], pos1, pos2)
     else
         let curr = line('.') - 1
-        let pos = s:buffer_to_map(curr, win_info['total'], win_info['mmheight'])
+        let pos = s:buffer_to_map(curr, win_info['height'], win_info['mm_height'])
         call s:highlight_line(win_info['winid'], pos)
     endif
 
     if g:minimap_git_colors
-        call s:minimap_color_git(win_info['winid'], win_info['total'], win_info['mmheight'])
+        call s:minimap_color_git(win_info)
     endif
     if g:minimap_highlight_search
-        call s:minimap_color_search(win_info['winid'], win_info['total'], win_info['mmheight'], 2)
+        call s:minimap_color_search(win_info, 2)
     endif
 endfunction
 
@@ -447,9 +480,6 @@ endfunction
 " Manages doling out match ids based on list sizes
 function! s:get_next_range_matchid() abort
     return g:minimap_range_matchid_safe_range + len(g:minimap_range_id_list)
-endfunction
-function! s:get_next_search_matchid() abort
-    return g:minimap_search_matchid_safe_range + len(g:minimap_search_id_list)
 endfunction
 
 function! s:set_span_color(set_color, spans, priority, match_id, winid) abort
@@ -497,15 +527,15 @@ function! s:source_win_scroll() abort
     endif
 
     let winid = win_getid(mmwinnr)
-    let total = line('$')
-    let mmheight = getwininfo(winid)[0].botline
+    let height = line('$')
+    let mm_height = getwininfo(winid)[0].botline
 
     let start = line('w0') - 1
     let end = line('w$') - 1
     " The -/+ 1 compensates for the exclusive ranges we use in the
     " patterns for matchadd.
-    let pos1 = s:buffer_to_map(start, total, mmheight) - 1
-    let pos2 = s:buffer_to_map(end, total, mmheight) + 1
+    let pos1 = s:buffer_to_map(start, height, mm_height) - 1
+    let pos2 = s:buffer_to_map(end, height, mm_height) + 1
     call s:highlight_range(winid, pos1, pos2)
 endfunction
 
@@ -535,10 +565,10 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Git Stuff
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! minimap#vim#MinimapParseGitDiffLine(line, buffer_lines, mmheight)
-    return s:minimap_parse_git_diff_line(a:line, a:buffer_lines, a:mmheight)
+function! minimap#vim#MinimapParseGitDiffLine(line, buffer_lines, mm_height)
+    return s:minimap_parse_git_diff_line(a:line, a:buffer_lines, a:mm_height)
 endfunction
-function! s:minimap_parse_git_diff_line(line, buffer_lines, mmheight) abort
+function! s:minimap_parse_git_diff_line(line, buffer_lines, mm_height) abort
     let this_diff = {}
 
     let blobs = split(a:line, ' ')
@@ -575,15 +605,15 @@ function! s:minimap_parse_git_diff_line(line, buffer_lines, mmheight) abort
     endif
 
     " Map locations to minimap
-    " echo 'buf: ' . join([this_diff['start'], this_diff['end']]) " DEBUG
-    let this_diff['start'] = s:buffer_to_map(this_diff['start'] - 1, a:buffer_lines, a:mmheight)
-    let this_diff['end']   = s:buffer_to_map(this_diff['end']   - 1, a:buffer_lines, a:mmheight)
-    " echo 'mm : ' . join([this_diff['start'], this_diff['end']]) " DEBUG
+    " echom 'buf: ' . join([this_diff['start'], this_diff['end']])
+    let this_diff['start'] = s:buffer_to_map(this_diff['start'] - 1, a:buffer_lines, a:mm_height)
+    let this_diff['end']   = s:buffer_to_map(this_diff['end']   - 1, a:buffer_lines, a:mm_height)
+    " echom 'mm : ' . join([this_diff['start'], this_diff['end']])
 
     return this_diff
 endfunction
 
-function! s:minimap_color_git(winid, total_lines, mmheight) abort
+function! s:minimap_color_git(win_info) abort
     " Get git info
     let git_call = 'git diff -U0 -- ' . expand('%')
     let git_diff = substitute(system(git_call), '\n\+&', '', '') | silent echo strtrans(git_diff)
@@ -592,21 +622,23 @@ function! s:minimap_color_git(winid, total_lines, mmheight) abort
     let diff_list = []
     for line in lines
         if line[0] ==? '@'
-            let this_diff = s:minimap_parse_git_diff_line(line, a:total_lines, a:mmheight)
+            let this_diff = s:minimap_parse_git_diff_line(line,
+                        \ a:win_info['height'], a:win_info['mm_height'])
             " Add to list
             let diff_list = add(diff_list, this_diff)
         endif
     endfor
 
     " Clear colors before writing new ones
-    call s:clear_id_list_colors(a:winid, g:minimap_git_id_list)
+    call s:clear_id_list_colors(a:win_info['winid'], g:minimap_git_id_list)
     let g:minimap_git_id_list = []
     " Color lines, creating a new id for each section
     for a_diff in diff_list
         let idx = a_diff['start']
         while idx <= a_diff['end']
             call add(g:minimap_git_id_list, s:get_next_git_matchid())
-            call matchaddpos(a_diff['color'], [idx], g:minimap_git_color_priority, g:minimap_git_id_list[-1], { 'window': a:winid })
+            call matchaddpos(a_diff['color'], [idx], g:minimap_git_color_priority,
+                        \ g:minimap_git_id_list[-1], { 'window': a:win_info['winid'] })
             let idx = idx+1
         endwhile
     endfor
@@ -621,7 +653,8 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! minimap#vim#ClearColorSearch() abort
     if exists('g:minimap_search_id_list')
-        call s:clear_id_list_colors(0, g:minimap_search_id_list)
+        let win_info = s:get_window_info()
+        call s:clear_id_list_colors(win_info['winid'], g:minimap_search_id_list)
         let g:minimap_search_id_list = []
     endif
 endfunction
@@ -631,18 +664,18 @@ endfunction
 
 function! s:minimap_update_color_search(query) abort
     let win_info = s:get_window_info()
-    if len(win_info) == 0
-        return
+    if len(win_info) > 0
+        call s:minimap_color_search(win_info, a:query)
     endif
-    call s:minimap_color_search(win_info['winid'], win_info['total'], win_info['mmheight'], a:query)
 endfunction
 
+" Hook function for unit tests
+function! minimap#vim#MinimapColorSearchGetSpans(win_info, query) abort
+    return s:minimap_color_search_get_spans(a:win_info, a:query)
+endfunction
 " Query argument is either the query string, or a number representing how far
 " back into the search history we need to grab (it varies by context)
-function! minimap#vim#MinimapColorSearchGetSpans(total_lines, mmheight, query) abort
-    return s:minimap_color_search_get_spans(a:total_lines, a:mmheight, a:query)
-endfunction
-function s:minimap_color_search_get_spans(total_lines, mmheight, query) abort
+function s:minimap_color_search_get_spans(win_info, query) abort
     " Get the last search the user searched for
     if type(a:query) != type(0)
         let last_search = a:query
@@ -654,8 +687,8 @@ function s:minimap_color_search_get_spans(total_lines, mmheight, query) abort
     endif
     " echom 'last_search: ' . last_search
 
-    " Save cursor position so we can return it.
-    let saved_cursor = getpos('.')
+    " Save the current view so we can return to it after searching
+    let curwinview = winsaveview()
     " Start at top, save all match positions until we hit the bottom
     call cursor(1, 1)
     " The 'c' in this string lets the search match at the current cursor
@@ -693,59 +726,52 @@ function s:minimap_color_search_get_spans(total_lines, mmheight, query) abort
             let done = 1
         endif
     endwhile
-
-    " Get the max width of this buffer
-    let max_width = 0
-    let line_num = 1
-    while line_num <= line('$')
-        call setpos('.', [saved_cursor[0], line_num, 1])
-        let max_width = max([max_width, col('$')])
-        let line_num = line_num + 1
-    endwhile
-    " echo 'max_width, g:minimap_width: ' . join([max_width, g:minimap_width]) " DEBUG
-
-    " Return the cursor to the saved position
-    call setpos('.', saved_cursor)
+    " Restore window view
+    call winrestview(curwinview)
 
     " Convert all positions to mm
     let mm_spans = []
     for this_location in locations
-        let mm_line = s:buffer_to_map(this_location['line'] - 1, a:total_lines, a:mmheight)
+        let mm_line = s:buffer_to_map(this_location['line'] - 1, a:win_info['height'], a:win_info['mm_height'])
         " Braille takes 3 bytes when using UTF-8. Column position is specified
         " in number of bytes offset, so to calculate horizontal position to
         " pass to the highlighting function, we need to multiply by 3
-        let mm_col = 3 * (s:buffer_to_map(this_location['col'] - 1,       max_width, g:minimap_width))
-        let mm_len = 3 * (s:buffer_to_map(this_location['match_len'] - 1, max_width, g:minimap_width))
+        let mm_col = 3 * (s:buffer_to_map(this_location['col'] - 1,       a:win_info['max_width'], a:win_info['mm_max_width']))
+        let mm_len = 3 * (s:buffer_to_map(this_location['match_len'] - 1, a:win_info['max_width'], a:win_info['mm_max_width']))
         " If we don't land directly on an integer value of ([byte length]x + 1),
         " the highlight will not show up. Make sure the values land in those
         " bins. Above scaling gives 3 as a minimum. We take off any
         " remainder, then bump it down to the leftmost column (which is
         " offset by 1, hence the -2)
         let mm_col = (mm_col - (mm_col % 3)) - 2
-        " echo 'buf: ' . join([this_location['line'], this_location['col'], this_location['match_len']]) " DEBUG
-        " echo 'mm : ' . join([mm_line, mm_col, mm_len]) " DEBUG
+        " echom 'buf: ' . join([this_location['line'], this_location['col'], this_location['match_len']])
+        " echom 'mm : ' . join([mm_line, mm_col, mm_len])
         call add(mm_spans, [mm_line, mm_col, mm_len])
     endfor
 
     return mm_spans
 endfunction
 
-function! s:minimap_color_search(winid, total_lines, mmheight, query) abort
+function! s:minimap_color_search(win_info, query) abort
     if eval('v:hlsearch') == 0 || eval('&hlsearch') == 0
         " Don't bother doing anything if any search highlighting is turned off
         return
     endif
 
-    let mm_spans = s:minimap_color_search_get_spans(a:total_lines, a:mmheight, a:query)
+    let mm_spans = s:minimap_color_search_get_spans(a:win_info, a:query)
 
     " Clear old colors before writing new ones
-    call s:clear_id_list_colors(a:winid, g:minimap_search_id_list)
+    call s:clear_id_list_colors(a:win_info['winid'], g:minimap_search_id_list)
     let g:minimap_search_id_list = []
     " Color lines, creating a new id for each group
     for a_span in mm_spans
         " span_list item: [line_number, column_number, length]
         call add(g:minimap_search_id_list, s:get_next_search_matchid())
         call s:set_span_color(g:minimap_search_color, [a_span],
-            \ g:minimap_search_color_priority, g:minimap_search_id_list[-1], a:winid)
+            \ g:minimap_search_color_priority, g:minimap_search_id_list[-1], a:win_info['winid'])
     endfor
+endfunction
+
+function! s:get_next_search_matchid() abort
+    return g:minimap_search_matchid_safe_range + len(g:minimap_search_id_list)
 endfunction
