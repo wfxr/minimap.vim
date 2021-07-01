@@ -445,6 +445,9 @@ function! s:update_highlight() abort
 endfunction
 
 " Translates a position in a buffer to its respective position in the map.
+function! minimap#vim#BufferToMap(lnnum, buftotal, mmtotal) abort
+    return s:buffer_to_map(a:lnnum, a:buftotal, a:mmtotal)
+endfunction
 function! s:buffer_to_map(lnnum, buftotal, mmtotal) abort
     return float2nr(1.0 * a:lnnum / a:buftotal * a:mmtotal) + 1
 endfunction
