@@ -91,5 +91,3 @@ function! s:minimap_test_search()
 endfunction
 
 call testify#it('Search tests', function('s:minimap_test_search'))
-
-
