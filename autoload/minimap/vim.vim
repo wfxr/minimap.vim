@@ -376,7 +376,7 @@ function! s:get_window_info() abort
             while line_num <= line('$')
                 call setpos('.', [0, line_num, 1])
                 " Move cursor to the last non-blank character on the line
-                normal g_
+                normal! g_
                 let max_width = max([max_width, col('.')])
                 let line_num = line_num + 1
             endwhile
@@ -392,7 +392,7 @@ function! s:get_window_info() abort
             while line_num <= line('$')
                 call setpos('.', [0, line_num, 1])
                 " Move cursor to the last non-blank character on the line
-                normal g_
+                normal! g_
                 let mm_max_width = max([mm_max_width, col('.')])
                 let line_num = line_num + 1
             endwhile
@@ -568,7 +568,7 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Git Stuff
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! minimap#vim#MinimapParseGitDiffLine(line, buffer_lines, mm_height)
+function! minimap#vim#MinimapParseGitDiffLine(line, buffer_lines, mm_height) abort
     return s:minimap_parse_git_diff_line(a:line, a:buffer_lines, a:mm_height)
 endfunction
 function! s:minimap_parse_git_diff_line(line, buffer_lines, mm_height) abort
@@ -678,7 +678,7 @@ function! minimap#vim#MinimapColorSearchGetSpans(win_info, query) abort
 endfunction
 " Query argument is either the query string, or a number representing how far
 " back into the search history we need to grab (it varies by context)
-function s:minimap_color_search_get_spans(win_info, query) abort
+function! s:minimap_color_search_get_spans(win_info, query) abort
     " Get the last search the user searched for
     if type(a:query) != type(0)
         let last_search = a:query
