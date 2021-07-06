@@ -70,8 +70,8 @@ function! s:minimap_test_search()
 
     " Verify that we are grabbing the correct one when we pass in an argument
     " (We only use 1 and 2, so only those need to be tested)
-    normal /test
-    normal /height
+    normal! /test
+    normal! /height
 
     " height
     let expected_list = [ [1, 1, 3], [1, 1, 3], [1, 1, 3],
