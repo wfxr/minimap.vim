@@ -162,6 +162,17 @@ minimap all in one action. For example:
 ```
 nnoremap <silent> `` :nohlsearch<CR>:call minimap#vim#ClearColorSearch()<CR>
 ```
+---
+### 📋 Running Unit Tests
+- Install [Testify](https://github.com/dhruvasagar/vim-testify).
+- From the top level directory (minimap.vim/) `vim +TestifySuite` for a yay/nay
+  from your shell.
+- For a more detailed run, open vim at the top level and run `:TestifySuite`.
+  `README.md` works, but an empty buffer at the top level works too.
+- To hone in on one test file, open that file (located in the `t/` directory)
+  and run `:TestifyFile`.
+  - (As a note, the `t/` directory is named such as a requirement from [Testify](https://github.com/dhruvasagar/vim-testify).
+    `:TestifySuite` runs all the tests in the `t/` directory)
 
 ---
 ### 📦 Related Projects
