@@ -116,6 +116,10 @@ function! s:open_window() abort
         return
     endif
 
+    " Preserve 'previous buffer' when opening the minimap
+    let prev_buffer = bufnr('#')
+    let curr_buffer = bufnr()
+
     let openpos = g:minimap_left ? 'topleft vertical ' : 'botright vertical '
     noautocmd execute 'silent! ' . openpos . g:minimap_width . 'split ' . '-MINIMAP-'
 
@@ -185,6 +189,10 @@ function! s:open_window() abort
     execute 'wincmd p'
     call s:refresh_minimap(1)
     call s:update_highlight()
+
+    " Restore buffer orders
+    execute(prev_buffer . 'buffer')
+    execute(curr_buffer . 'buffer')
 endfunction
 
 function! s:handle_autocmd(cmd) abort
