@@ -30,7 +30,9 @@ jobs:
       - name: Create a fake code-minimap executable
         # Necessary for minimap.vim to start up
         run: |
-          ln -s /bin/echo /usr/bin/code-minimap
+          mkdir -p "$HOME/bin"
+          ln -s /bin/echo "$HOME/bin/code-minimap"
+          echo "$HOME/bin" >> $GITHUB_PATH
       - name: Checkout Testify
         run: |
           git clone --depth 1 https://github.com/dhruvasagar/vim-testify $HOME/.config/nvim/plugins/vim-testify
