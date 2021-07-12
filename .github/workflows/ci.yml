@@ -20,10 +20,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Install neovim
-        run: |
-          apt update
-          apt install -y neovim
+      - name: Setup Vim
+        uses: rhysd/action-setup-vim@v1.2.6
+        with:
+          neovim: true
       - name: Ensure plugins directory exists
         run: |
           mkdir -p $HOME/.config/nvim/plugins
