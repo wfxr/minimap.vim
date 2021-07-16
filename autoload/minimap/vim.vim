@@ -437,6 +437,9 @@ function! s:update_highlight() abort
         return
     endif
 
+    " For unit tests. Very little ovehead so not gating it
+    let g:minimap_run_update_highlight_count = g:minimap_run_update_highlight_count + 1
+
     if g:minimap_highlight_range
         let startln = line('w0') - 1
         let endln = line('w$') - 1

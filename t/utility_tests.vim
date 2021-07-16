@@ -12,4 +12,21 @@ function! s:minimap_test_utility()
     call testify#assert#equals(actual_mm, expected_mm)
 endfunction
 
-call testify#it('Utility tests', function('s:minimap_test_utility'))
+function! s:minimap_test_calls_to_update_minimap()
+    " Save minimap state
+    let mmwinnr = bufwinnr('-MINIMAP-')
+
+    call minimap#vim#MinimapClose()
+    let g:minimap_run_update_highlight_count = 0
+    call minimap#vim#MinimapOpen()
+    call testify#assert#equals(1, g:minimap_run_update_highlight_count)
+
+    if mmwinnr == -1
+        call minimap#vim#MinimapClose()
+    endif
+endfunction
+
+call testify#it('Minimap conversion math works as expected',
+            \ function('s:minimap_test_utility'))
+call testify#it('Opening minimap restults in only one call to update_minimap',
+            \ function('s:minimap_test_calls_to_update_minimap'))
