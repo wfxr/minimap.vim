@@ -120,8 +120,9 @@ if !exists('g:minimap_search_color_priority')
     let g:minimap_search_color_priority = 120
 endif
 
-" Define mutex
+" Define mutexes
 let g:minimap_getting_window_info = 0
+let g:minimap_opening = 0
 " Define id lists - used for storing matchids of color groups
 let g:minimap_range_id_list = []
 let g:minimap_git_id_list = []
