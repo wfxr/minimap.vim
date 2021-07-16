@@ -108,8 +108,8 @@ function! s:minimap_test_git_string_extras()
     call testify#assert#equals(actual_dictionary, expected_dictionary)
 endfunction
 
-call testify#it('Multiline git diff',           function('s:minimap_test_git_multiline'))
-call testify#it('Short file git diff',          function('s:minimap_test_git_short_file'))
-call testify#it('Long file git diff',           function('s:minimap_test_git_long_file'))
-call testify#it('Git diff spans minimap lines', function('s:minimap_test_git_span_mm_border'))
-call testify#it('Extras in string are ignored', function('s:minimap_test_git_string_extras'))
+call testify#it('Git - Multiline diff',               function('s:minimap_test_git_multiline'))
+call testify#it('Git - Short file diff',              function('s:minimap_test_git_short_file'))
+call testify#it('Git - Long file diff',               function('s:minimap_test_git_long_file'))
+call testify#it('Git - Diff spans minimap lines',     function('s:minimap_test_git_span_mm_border'))
+call testify#it('Git - Extras in string are ignored', function('s:minimap_test_git_string_extras'))
