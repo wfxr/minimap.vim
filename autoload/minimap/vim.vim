@@ -116,6 +116,8 @@ function! s:open_window() abort
         return
     endif
 
+    let g:minimap_opening = 1
+
     " Preserve 'previous buffer' when opening the minimap
     let prev_buffer = bufnr('#')
     let curr_buffer = bufnr()
@@ -193,33 +195,37 @@ function! s:open_window() abort
     " Restore buffer orders
     execute(prev_buffer . 'buffer')
     execute(curr_buffer . 'buffer')
+
+    let g:minimap_opening = 0
 endfunction
 
 function! s:handle_autocmd(cmd) abort
-    if s:closed_on()
-        let mmwinnr = bufwinnr('-MINIMAP-')
-        if mmwinnr != -1
-            call s:close_window()
+    if g:minimap_opening == 0
+        if s:closed_on()
+            let mmwinnr = bufwinnr('-MINIMAP-')
+            if mmwinnr != -1
+                call s:close_window()
+            endif
+        elseif s:ignored()
+            return
+        elseif a:cmd == 0           " WinEnter <buffer>
+            call s:close_auto()
+        elseif a:cmd == 1           " WinEnter *
+            " If previously triggered minimap_did_quit, untrigger it
+            let g:minimap_did_quit = 0
+            call s:win_enter_handler()
+        elseif a:cmd == 2           " BufWritePost,VimResized *
+            call s:refresh_minimap(1)
+            call s:update_highlight()
+        elseif a:cmd == 3           " BufEnter,FileType *
+            call s:buffer_enter_handler()
+        elseif a:cmd == 4           " FocusGained,CursorMoved,CursorMovedI <buffer>
+            call s:minimap_move()
+        elseif a:cmd == 5           " FocusGained,WinScrolled * (neovim); else same autocmds as below
+            call s:source_win_scroll()
+        elseif a:cmd == 6           " FocusGained,CursorMoved,CursorMovedI *
+            call s:source_move()
         endif
-    elseif s:ignored()
-        return
-    elseif a:cmd == 0           " WinEnter <buffer>
-        call s:close_auto()
-    elseif a:cmd == 1           " WinEnter *
-        " If previously triggered minimap_did_quit, untrigger it
-        let g:minimap_did_quit = 0
-        call s:win_enter_handler()
-    elseif a:cmd == 2           " BufWritePost,VimResized *
-        call s:refresh_minimap(1)
-        call s:update_highlight()
-    elseif a:cmd == 3           " BufEnter,FileType *
-        call s:buffer_enter_handler()
-    elseif a:cmd == 4           " FocusGained,CursorMoved,CursorMovedI <buffer>
-        call s:minimap_move()
-    elseif a:cmd == 5           " FocusGained,WinScrolled * (neovim); else same autocmds as below
-        call s:source_win_scroll()
-    elseif a:cmd == 6           " FocusGained,CursorMoved,CursorMovedI *
-        call s:source_move()
     endif
 endfunction
 
@@ -247,7 +253,6 @@ function! s:refresh_minimap(force) abort
     let bufnr = bufnr('%')
     let fname = fnamemodify(bufname('%'), ':p')
     let mmwinnr = bufwinnr('-MINIMAP-')
-
     if mmwinnr == -1
         return
     endif
@@ -431,6 +436,9 @@ function! s:update_highlight() abort
     if len(win_info) == 0
         return
     endif
+
+    " For unit tests. Very little ovehead so not gating it
+    let g:minimap_run_update_highlight_count = g:minimap_run_update_highlight_count + 1
 
     if g:minimap_highlight_range
         let startln = line('w0') - 1
