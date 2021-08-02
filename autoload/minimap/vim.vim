@@ -274,13 +274,13 @@ function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
     let userflag = &shellcmdflag
     let &shell = s:default_shell
     let &shellcmdflag = s:default_shellflag
-
+    let minimap_cmd = '"'.s:minimap_gen.'"'
     if has('nvim')
-        let minimap_cmd = 'w !'.s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width
+        let minimap_cmd = 'w !'.minimap_cmd.' '.hscale.' '.vscale.' '.g:minimap_width
         " echom minimap_cmd
         let minimap_output = execute(minimap_cmd) " Not work for vim 8.2 ?
     else
-        let minimap_cmd = s:minimap_gen.' '.hscale.' '.vscale.' '.g:minimap_width
+        let minimap_cmd = minimap_cmd.' '.hscale.' '.vscale.' '.g:minimap_width
         " echom minimap_cmd
         let minimap_output = system(minimap_cmd, join(getline(1, '$'), "\n"))
     endif
