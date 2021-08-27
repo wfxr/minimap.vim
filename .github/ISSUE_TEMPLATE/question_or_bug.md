@@ -29,3 +29,5 @@ assignees: ''
 <!-- get by running `vim --version` or `nvim --version` -->
 
 ## Question / Problem and steps to reproduce
+
+<!-- A screen recording of the issue is a HUGE help. It's highly recommended that you include one. -->
