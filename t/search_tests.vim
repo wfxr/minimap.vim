@@ -11,19 +11,23 @@ let s:testfile = expand('%')
 
 " Search tests
 function! s:minimap_test_search()
-    " Create the subjest of our search
+    " Create the subject of our search
+    let newline_char = '\n'
+    if has('win32')
+        let newline_char = '\r\n'
+    endif
     let test_file = '/tmp/minimap_search_unit_test_file'
-    let text =        'This is a test line and it needs to be long enough to register as multiple braille characters.\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'And another, this one is shorter\n'
+    let text =        'This is a test line and it needs to be long enough to register as multiple braille characters.' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'pad height' . newline_char
+    let text = text . 'And another, this one is shorter' . newline_char
     let text = text . 'and flows to the numbers line, this one, this one has some numbers 1234 numbers'
     execute 'silent !echo "' . text . '" > ' . test_file
     execute 'edit ' . test_file
@@ -61,7 +65,11 @@ function! s:minimap_test_search_multi_per_line()
 endfunction
 function! s:minimap_test_search_spanning_a_line()
     " Spanning a line (should be empty, not supported yet)
-    let search = 'shorter\nand flows'
+    let newline_char = '\n'
+    if has('win32')
+        let newline_char = '\r\n'
+    endif
+    let search = 'shorter' . newline_char . 'and flows'
     let expected_list = [ ]
     let actual_list = minimap#vim#MinimapColorSearchGetSpans(s:win_info, search)
     call testify#assert#equals(actual_list, expected_list)

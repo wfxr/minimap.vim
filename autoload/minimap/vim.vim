@@ -785,9 +785,17 @@ endfunction
 function! s:minimap_color_git(win_info) abort
     " Get git info
     let git_call = 'git diff -U0 -- ' . expand('%')
-    let git_diff = substitute(system(git_call), '\n\+&', '', '') | silent echo strtrans(git_diff)
+    let newline_char = '\n'
+    if has('win32')
+        let newline_char = '\r\n'
+    endif
+    let git_diff = substitute(system(git_call), newline_char . '\+&', '', '') | silent echo strtrans(git_diff)
 
-    let lines = split(git_diff, '\n')
+    let split_char = '\n'
+    if has('win32')
+        let split_char = '\r\n'
+    endif
+    let lines = split(git_diff, split_char)
     let diff_list = []
     for line in lines
         if line[0] ==? '@'
@@ -855,7 +863,11 @@ function! s:minimap_color_search_get_spans(win_info, query) abort
     if type(a:query) != type(0)
         let last_search = a:query
     else
-        let tmp = split(execute('his /'), '\n')
+        let split_char = '\n'
+        if has('win32')
+            let split_char = '\r\n'
+        endif
+        let tmp = split(execute('his /'), split_char)
         let tmp = split(tmp[len(tmp)-a:query], '', 1)
         " echom 'tmp: ' . join(tmp)
         let last_search = join(tmp[2:-1])
