@@ -110,6 +110,18 @@ if !exists('g:minimap_search_color')
     let g:minimap_search_color = 'Search'
 endif
 
+if !exists('g:minimap_cursor_diffremove_color')
+    let g:minimap_cursor_diffremove_color = 'DiffDelete'
+endif
+
+if !exists('g:minimap_cursor_diffadd_color')
+    let g:minimap_cursor_diffadd_color = 'DiffAdd'
+endif
+
+if !exists('g:minimap_cursor_diff_color')
+    let g:minimap_cursor_diff_color = 'DiffChange'
+endif
+
 if !exists('g:minimap_cursor_color_priority')
     let g:minimap_cursor_color_priority = 110
 endif
@@ -119,6 +131,9 @@ endif
 if !exists('g:minimap_search_color_priority')
     let g:minimap_search_color_priority = 120
 endif
+if !exists('g:minimap_cursor_diff_color_priority')
+    let g:minimap_cursor_diff_color_priority = 110
+endif
 
 " Declare mutexes
 let g:minimap_getting_window_info = 0
@@ -127,6 +142,8 @@ let g:minimap_opening = 0
 let g:minimap_range_id_list = []
 let g:minimap_git_id_list = []
 let g:minimap_search_id_list = []
+let g:minimap_match_id_list = []
+let g:minimap_line_state_map = {}
 " Declare unit test specific items
 let g:minimap_run_update_highlight_count = 0
 
