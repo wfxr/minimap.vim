@@ -143,7 +143,7 @@ let g:minimap_range_id_list = []
 let g:minimap_git_id_list = []
 let g:minimap_search_id_list = []
 let g:minimap_match_id_list = []
-let g:minimap_line_state_map = {}
+let g:minimap_line_state_table = {}
 " Declare unit test specific items
 let g:minimap_run_update_highlight_count = 0
 
