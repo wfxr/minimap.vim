@@ -143,8 +143,9 @@ let g:minimap_range_id_list = []
 let g:minimap_git_id_list = []
 let g:minimap_search_id_list = []
 let g:minimap_match_id_list = []
+" key: winid, val: { key: mm_line, val: { 'state': state bitmap, 'id': match id for this coloring } }
 let g:minimap_line_state_table = {}
-" Declare unit test specific items
+
 let g:minimap_run_update_highlight_count = 0
 
 if g:minimap_auto_start == 1
