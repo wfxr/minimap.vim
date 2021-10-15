@@ -554,7 +554,6 @@ function! s:update_highlight() abort
 
     " Search does its own sub-line highlighting
     if g:minimap_highlight_search
-        " TODO - I broke search highlighting
         call s:minimap_color_search(s:win_info, 2)
     endif
 
@@ -881,7 +880,7 @@ function! minimap#vim#UpdateColorSearch(query) abort
 endfunction
 
 function! s:minimap_update_color_search(query) abort
-    if win_getid() == s:win_info['mmwinid']
+    if win_getid() != s:win_info['mmwinid']
         call s:minimap_color_search(s:win_info, a:query)
     endif
 endfunction
