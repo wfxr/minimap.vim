@@ -1,4 +1,4 @@
-" MIT (c) Wenxuan Zhang
+" MIT (c) Wenxuan Zhang and Zach Nielsen
 
 " Script-scoped constants
 let s:STATE_CURSOR       = 0b00001

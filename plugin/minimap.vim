@@ -1,4 +1,4 @@
-" MIT (c) Wenxuan Zhang
+" MIT (c) Wenxuan Zhang and Zach Nielsen
 
 if exists('g:loaded_minimap')
     finish
@@ -22,6 +22,9 @@ command! MinimapToggle          call minimap#vim#MinimapToggle()
 command! MinimapRefresh         call minimap#vim#MinimapRefresh()
 command! MinimapUpdateHighlight call minimap#vim#MinimapUpdateHighlight()
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Configuration
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if !exists('g:minimap_auto_start')
     let g:minimap_auto_start = 0
 endif
@@ -34,28 +37,16 @@ if !exists('g:minimap_width')
     let g:minimap_width = 10
 endif
 
-if !exists('g:minimap_base_highlight')
-    let g:minimap_base_highlight = 'Normal'
+if !exists('g:minimap_auto_start_win_enter')
+    let g:minimap_auto_start_win_enter = 0
 endif
 
 if !exists('g:minimap_base_matchid')
     let g:minimap_base_matchid = 9265454 " magic number
 endif
 
-if !exists('g:minimap_range_matchid_safe_range')
-    let g:minimap_range_matchid_safe_range = g:minimap_base_matchid + 10000
-endif
-
-if !exists('g:minimap_git_matchid_safe_range')
-    let g:minimap_git_matchid_safe_range = g:minimap_base_matchid + 20000
-endif
-
 if !exists('g:minimap_search_matchid_safe_range')
     let g:minimap_search_matchid_safe_range = g:minimap_base_matchid + 30000
-endif
-
-if !exists('g:minimap_highlight')
-    let g:minimap_highlight = 'Title'
 endif
 
 if !exists('g:minimap_block_filetypes')
@@ -74,14 +65,9 @@ if !exists('g:minimap_close_buftypes')
     let g:minimap_close_buftypes = []
 endif
 
-if !exists('g:minimap_did_quit')
-    let g:minimap_did_quit = 0
-endif
-
-if !exists('g:minimap_auto_start_win_enter')
-    let g:minimap_auto_start_win_enter = 0
-endif
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Feature Flags
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if !exists('g:minimap_highlight_range')
     let g:minimap_highlight_range = 0
 endif
@@ -92,6 +78,21 @@ endif
 
 if !exists('g:minimap_highlight_search')
     let g:minimap_highlight_search = 0
+endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Colors
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if !exists('g:minimap_base_highlight')
+    let g:minimap_base_highlight = 'Normal'
+endif
+
+if !exists('g:minimap_highlight')
+    let g:minimap_highlight = 'Title'
+endif
+
+if !exists('g:minimap_range_color')
+    let g:minimap_range_color = 'Title'
 endif
 
 if !exists('g:minimap_diffadd_color')
@@ -134,25 +135,22 @@ if !exists('g:minimap_range_diff_color')
     let g:minimap_range_diff_color = 'DiffChange'
 endif
 
-if !exists('g:minimap_range_color')
-    let g:minimap_range_color = 'Title'
-endif
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Priorities
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if !exists('g:minimap_cursor_color_priority')
     let g:minimap_cursor_color_priority = 110
-endif
-if !exists('g:minimap_git_color_priority')
-    let g:minimap_git_color_priority = 100
 endif
 if !exists('g:minimap_search_color_priority')
     let g:minimap_search_color_priority = 120
 endif
-if !exists('g:minimap_cursor_diff_color_priority')
-    let g:minimap_cursor_diff_color_priority = 110
-endif
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Global variables and containers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Declare mutexes
 let g:minimap_getting_window_info = 0
+let g:minimap_did_quit = 0
 let g:minimap_opening = 0
 " Declare id lists - used for storing matchids of color groups
 let g:minimap_range_id_list = []
