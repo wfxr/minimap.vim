@@ -460,13 +460,10 @@ function! s:make_state_table_with_range(range,...) abort
 endfunction
 
 function! s:get_highlight_range(win_info) abort
-    " TODO - range overshoots by 1, fix that
     let startln = line('w0') - 1
     let endln = line('w$') - 1
-    " The -/+ 1 compensates for the exclusive ranges we use in the
-    " patterns for matchadd.
-    let pos1 = s:buffer_to_map(startln, a:win_info['height'], a:win_info['mm_height']) - 1
-    let pos2 = s:buffer_to_map(endln, a:win_info['height'], a:win_info['mm_height']) + 1
+    let pos1 = s:buffer_to_map(startln, a:win_info['height'], a:win_info['mm_height'])
+    let pos2 = s:buffer_to_map(endln, a:win_info['height'], a:win_info['mm_height'])
     return { 'pos1': pos1, 'pos2': pos2 }
 endfunction
 
