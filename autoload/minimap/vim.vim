@@ -588,7 +588,6 @@ function! s:update_highlight() abort
 endfunction
 
 function! s:render_highlight_table(win_info, table) abort
-    " echom 'render_highlight_table BT: ' . expand('<sfile>')
     let mmwinid = a:win_info['mmwinid']
     let bufnr = s:win_info['source_bufnr']
 
@@ -664,27 +663,6 @@ function! s:buffer_to_map(lnnum, buftotal, mmtotal) abort
     return float2nr(1.0 * a:lnnum / a:buftotal * a:mmtotal) + 1
 endfunction
 
-" function! s:highlight_line(mmwinid, pos) abort
-"     call s:clear_id_list_colors(a:mmwinid, g:minimap_range_id_list)
-"     let g:minimap_range_id_list = []
-"     call add(g:minimap_range_id_list, s:get_next_range_matchid())
-"     call s:set_line_color(g:minimap_highlight, a:pos,
-"         \ g:minimap_cursor_color_priority, g:minimap_range_id_list[-1], a:mmwinid)
-" endfunction
-
-" function! s:highlight_range(mmwinid, startpos, endpos) abort
-"     " Delete the old ones before drawing
-"     call s:clear_id_list_colors(a:mmwinid, g:minimap_range_id_list)
-"     let g:minimap_range_id_list = []
-"     let idx = a:startpos
-"     while idx <= a:endpos
-"         call add(g:minimap_range_id_list, s:get_next_range_matchid())
-"         call matchaddpos(g:minimap_highlight, [idx], g:minimap_cursor_color_priority,
-"                     \ g:minimap_range_id_list[-1], { 'window': a:mmwinid })
-"         let idx = idx+1
-"     endwhile
-" endfunction
-
 " Clears the specified match id list
 function! s:clear_id_list_colors(mmwinid, id_list) abort
     for id in a:id_list
@@ -692,25 +670,9 @@ function! s:clear_id_list_colors(mmwinid, id_list) abort
     endfor
 endfunction
 
-" Manages doling out match ids based on list sizes
-" function! s:get_next_range_matchid() abort
-"     return g:minimap_range_matchid_safe_range + len(g:minimap_range_id_list)
-" endfunction
-
-function! s:set_span_color(set_color, spans, priority, match_id, mmwinid) abort
-    call matchaddpos(a:set_color, a:spans, a:priority,
-        \ a:match_id, { 'window': a:mmwinid })
-endfunction
-
-" function! s:set_line_color(set_color, pos, priority, match_id, mmwinid) abort
-"     call matchaddpos(a:set_color, [a:pos], a:priority, a:match_id, { 'window': a:mmwinid })
-" endfunction
-
 " Clears matches of current window only.
 function! s:clear_highlights() abort
     silent! call clearmatches(s:win_info['mmwinid'])
-    let g:minimap_range_id_list = []
-    let g:minimap_git_id_list = []
     let g:minimap_search_id_list = []
 endfunction
 
@@ -824,17 +786,11 @@ function! s:minimap_color_git(win_info) abort
         endif
     endfor
 
-    " Clear colors before writing new ones
-    " call s:clear_id_list_colors(a:win_info['mmwinid'], g:minimap_git_id_list)
-    " let g:minimap_git_id_list = []
     " Color lines, creating a new id for each section
     let bufnr = s:win_info['source_bufnr']
     for a_diff in diff_list
         let idx = a_diff['start']
         while idx <= a_diff['end']
-            " call add(g:minimap_git_id_list, s:get_next_git_matchid())
-            " call matchaddpos(a_diff['color'], [idx], g:minimap_git_color_priority,
-                        " \ g:minimap_git_id_list[-1], { 'window': a:win_info['mmwinid'] })
             " Override the other diff states
             let current_info = get(g:minimap_line_state_table[bufnr], idx, {})
             let current_state = and(get(current_info, 'state'), invert(or(s:STATE_DIFF_RM, or(s:STATE_DIFF_ADD, s:STATE_DIFF_MOD))))
@@ -856,16 +812,11 @@ function! s:get_diff_state_flag(state) abort
     return 0xFFFF
 endfunction
 
-" function! s:get_next_git_matchid() abort
-"     return g:minimap_git_matchid_safe_range + len(g:minimap_git_id_list)
-" endfunction
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Search Highlight Stuff
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! minimap#vim#ClearColorSearch() abort
     if exists('g:minimap_search_id_list')
-        " let s:win_info = s:get_window_info()
         if s:win_info != {}
             call s:clear_id_list_colors(s:win_info['mmwinid'], g:minimap_search_id_list)
             let g:minimap_search_id_list = []
@@ -984,6 +935,12 @@ function! s:minimap_color_search(win_info, query) abort
             \ g:minimap_search_color_priority, g:minimap_search_id_list[-1], a:win_info['mmwinid'])
     endfor
 endfunction
+
+function! s:set_span_color(set_color, spans, priority, match_id, mmwinid) abort
+    call matchaddpos(a:set_color, a:spans, a:priority,
+        \ a:match_id, { 'window': a:mmwinid })
+endfunction
+
 
 function! s:get_next_search_matchid() abort
     return g:minimap_search_matchid_safe_range + len(g:minimap_search_id_list)
