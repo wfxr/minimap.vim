@@ -431,13 +431,13 @@ endfunction
 
 " botline is broken and this works.  However, it's slow, so we call this function less.
 " Remove this function when `getwininfo().botline` is fixed.
-function! s:update_highlight() abort
+function! s:update_highlight(...) abort
     let win_info = s:get_window_info()
     if len(win_info) == 0
         return
     endif
 
-    " For unit tests. Very little ovehead so not gating it
+    " For unit tests. Very little overhead so not gating it
     let g:minimap_run_update_highlight_count = g:minimap_run_update_highlight_count + 1
 
     if g:minimap_highlight_range
@@ -456,7 +456,11 @@ function! s:update_highlight() abort
         call s:minimap_color_git(win_info)
     endif
     if g:minimap_highlight_search
-        call s:minimap_color_search(win_info, 2)
+        let his_idx = 2
+        if a:0 > 0 && a:1 ==? 'source_buffer_enter_handler'
+            let his_idx = 1
+        endif
+        call s:minimap_color_search(win_info, his_idx)
     endif
 endfunction
 
@@ -578,7 +582,7 @@ endfunction
 
 function! s:source_buffer_enter_handler() abort
     call s:refresh_minimap(0)
-    call s:update_highlight()
+    call s:update_highlight('source_buffer_enter_handler')
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
