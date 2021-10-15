@@ -223,21 +223,15 @@ function! s:handle_autocmd(cmd) abort
             let g:minimap_did_quit = 0
             call s:win_enter_handler()
         elseif a:cmd == 2           " BufWritePost,VimResized *
-            echom 'autocmd:  " BufWritePost,VimResized *'
             call s:refresh_minimap(1)
             call s:update_highlight()
         elseif a:cmd == 3           " BufEnter,FileType *
-            " TODO - fires 3 times when first entering a new buffer
-            echom 'autocmd:  " BufEnter,FileType *'
             call s:buffer_enter_handler()
         elseif a:cmd == 4           " FocusGained,CursorMoved,CursorMovedI <buffer>
-            echom 'autocmd:  " FocusGained,CursorMoved,CursorMovedI <buffer>'
             call s:minimap_move()
         elseif a:cmd == 5           " FocusGained,WinScrolled * (neovim); else same autocmds as below
-            echom 'autocmd:  " FocusGained,WinScrolled * (neovim); else same autocmds as below'
             call s:source_win_scroll()
         elseif a:cmd == 6           " FocusGained,CursorMoved,CursorMovedI *
-            echom 'autocmd:  " FocusGained,CursorMoved,CursorMovedI *'
             call s:source_move()
         endif
     endif
@@ -361,17 +355,17 @@ function! s:source_move() abort
     if win_getid() == s:win_info['mmwinid']
         return
     endif
+    let bufnr = bufnr()
 
     let curr = line('.') - 1
     let pos = s:buffer_to_map(curr, s:win_info['height'], s:win_info['mm_height'])
 
-    let last_pos = get(s:last_pos, s:win_info['winid'])
+    let last_pos = get(s:last_pos, bufnr)
     if last_pos != pos
         let this_map = s:make_state_table_with_position(pos)
 
-        echom 'calling render_highlight_table from source_move winid: ' . s:win_info['winid']
         call s:render_highlight_table(s:win_info, this_map)
-        let s:last_pos[s:win_info['winid']] = pos
+        let s:last_pos[bufnr] = pos
     endif
 endfunction
 
@@ -380,9 +374,10 @@ function! s:source_win_scroll() abort
     if win_getid() == s:win_info['mmwinid']
         return
     endif
+    let bufnr = bufnr()
 
     let range = s:get_highlight_range(s:win_info)
-    let last_range = get(s:last_range, s:win_info['winid'], {'pos1':0, 'pos2':0})
+    let last_range = get(s:last_range, bufnr, {'pos1':0, 'pos2':0})
 
     if last_range['pos1'] == range['pos1'] && last_range['pos2'] == range['pos2']
         " Range is the same, no need to update anything
@@ -391,17 +386,16 @@ function! s:source_win_scroll() abort
 
     let this_map = s:make_state_table_with_range(range)
 
-    echom 'calling render_highlight_table from source_win_scroll. winid: ' . s:win_info['winid']
     call s:render_highlight_table(s:win_info, this_map)
-    let s:last_range[s:win_info['winid']] = range
+    let s:last_range[bufnr] = range
 endfunction
 
 " Pos is the new minimap line we are on
 function! s:make_state_table_with_position(pos) abort
-    echom 'in make_state_table_with_position: ' . a:pos
-    let last_pos = get(s:last_pos, s:win_info['winid'])
+    let bufnr = bufnr()
+    let last_pos = get(s:last_pos, bufnr)
     let this_map = {}
-    let current_window_table = get(g:minimap_line_state_table, s:win_info['winid'], {})
+    let current_window_table = get(g:minimap_line_state_table, bufnr, {})
 
     " Clear cursor state for last pos
     let current_info = get(current_window_table, last_pos, {})
@@ -418,9 +412,10 @@ endfunction
 
 " Build the update map - only includes lines that have changed
 function! s:make_state_table_with_range(range) abort
-    let last_range = get(s:last_range, s:win_info['winid'], {'pos1':0, 'pos2':0})
+    let bufnr = bufnr()
+    let last_range = get(s:last_range, bufnr, {'pos1':0, 'pos2':0})
     let this_map = {}
-    let current_window_table = get(g:minimap_line_state_table, s:win_info['winid'], {})
+    let current_window_table = get(g:minimap_line_state_table, bufnr, {})
 
     for mm_line_num in range(a:range['pos1'], a:range['pos2'])
         " Only do items outside the last range (everything else is the same,
@@ -517,8 +512,7 @@ function! s:get_window_info() abort
         call winrestview(curwinview)
 
         let g:minimap_getting_window_info = 0
-        return {'mmwinid': mmwinid, 'winid': win_getid(),
-                    \ 'height': height, 'mm_height': mm_height,
+        return {'mmwinid': mmwinid, 'height': height, 'mm_height': mm_height,
                     \ 'max_width': max_width, 'mm_max_width': mm_max_width}
     endif
     return {}
@@ -535,7 +529,7 @@ function! s:update_highlight() abort
     if len(s:win_info) == 0
         return
     endif
-    let winid = s:win_info['winid']
+    let bufnr = bufnr()
 
     " For unit tests. Very little ovehead so not gating it
     let g:minimap_run_update_highlight_count = g:minimap_run_update_highlight_count + 1
@@ -546,27 +540,27 @@ function! s:update_highlight() abort
     endif
 
     " Clear all table highlights (search handles its own)
-    for key in keys(get(g:minimap_line_state_table, winid, {}))
-        silent! call matchdelete(g:minimap_line_state_table[winid][key]['id'], s:win_info['mmwinid'])
+    for key in keys(get(g:minimap_line_state_table, bufnr, {}))
+        silent! call matchdelete(g:minimap_line_state_table[bufnr][key]['id'], s:win_info['mmwinid'])
     endfor
 
     " Build the global highlight state table
-    let g:minimap_line_state_table[winid] = {}
+    let g:minimap_line_state_table[bufnr] = {}
     if g:minimap_highlight_range
         let pos_range =  s:get_highlight_range(s:win_info)
         for mm_line_number in range(pos_range['pos1'], pos_range['pos2'])
-            let current_info = get(g:minimap_line_state_table[winid], mm_line_number, {})
+            let current_info = get(g:minimap_line_state_table[bufnr], mm_line_number, {})
             let current_state = get(current_info, 'state')
-            let g:minimap_line_state_table[winid][mm_line_number] = {'state': or(current_state, s:STATE_CURSOR) }
+            let g:minimap_line_state_table[bufnr][mm_line_number] = {'state': or(current_state, s:STATE_CURSOR) }
         endfor
-        let s:last_range[s:win_info['winid']] = pos_range
+        let s:last_range[bufnr] = pos_range
     else
         let curr = line('.') - 1
         let pos = s:buffer_to_map(curr, s:win_info['height'], s:win_info['mm_height'])
-        let current_info = get(g:minimap_line_state_table[winid], pos, {})
+        let current_info = get(g:minimap_line_state_table[bufnr], pos, {})
         let current_state = get(current_info, 'state')
-        let g:minimap_line_state_table[winid][pos] = { 'state': or(current_state, s:STATE_CURSOR) }
-        let s:last_pos[s:win_info['winid']] = pos
+        let g:minimap_line_state_table[bufnr][pos] = { 'state': or(current_state, s:STATE_CURSOR) }
+        let s:last_pos[bufnr] = pos
     endif
 
     if g:minimap_git_colors
@@ -574,24 +568,20 @@ function! s:update_highlight() abort
     endif
 
     " Render the state map
-    echom 'calling render_highlight_table from update_highlight. winid: ' . winid
-    call s:render_highlight_table(s:win_info, g:minimap_line_state_table[winid])
+    call s:render_highlight_table(s:win_info, g:minimap_line_state_table[bufnr])
 endfunction
 
 function! s:render_highlight_table(win_info, table) abort
     let mmwinid = a:win_info['mmwinid']
-    let winid = a:win_info['winid']
-
-    echom 'table: ' . string(a:table)
-
+    let bufnr = bufnr()
 
     " Loop over all entries of the passed in table
     for [mm_line_number, info] in items(a:table)
         " Request to remove from the table.
         if info['state'] == 0
             " Clear highlighting, then remove it
-            silent! call matchdelete(g:minimap_line_state_table[winid][mm_line_number]['id'], mmwinid)
-            silent! unlet! g:minimap_line_state_table[winid][mm_line_number]
+            silent! call matchdelete(g:minimap_line_state_table[bufnr][mm_line_number]['id'], mmwinid)
+            silent! unlet! g:minimap_line_state_table[bufnr][mm_line_number]
             continue
         endif
 
@@ -617,10 +607,9 @@ function! s:render_highlight_table(win_info, table) abort
 
         " TODO - remove hardcoded 150 - replace with a user settable variable
         let id = get(info, 'id', -1)
-        let id = matchaddpos(line_color, [str2nr(mm_line_number)], 150, id, { 'window': mmwinid })
-        let g:minimap_line_state_table[winid][mm_line_number] = { 'state': info['state'], 'id': id }
+        let id = matchaddpos(line_color, [str2nr(mm_line_number)], g:minimap_cursor_color_priority, id, { 'window': mmwinid })
+        let g:minimap_line_state_table[bufnr][mm_line_number] = { 'state': info['state'], 'id': id }
     endfor
-    echom 'global table keys: ' . string(keys(g:minimap_line_state_table))
 endfunction
 
 " Translates a position in a buffer to its respective position in the map.
@@ -675,7 +664,7 @@ endfunction
 
 " Clears matches of current window only.
 function! s:clear_highlights() abort
-    silent! call clearmatches()
+    silent! call clearmatches(s:win_info['mmwinid'])
     let g:minimap_range_id_list = []
     let g:minimap_git_id_list = []
     let g:minimap_search_id_list = []
@@ -693,19 +682,17 @@ function! s:minimap_move() abort
     execute 'wincmd p'
 
     if g:minimap_highlight_range
-        echom 's:win_info: ' . string(s:win_info) . ', range: ' . range['pos1'] . ', ' . range['pos2']
         let this_map = s:make_state_table_with_range(range)
     else
         let this_map = s:make_state_table_with_position(curr)
     endif
 
-    echom 'calling render_highlight_table from minimap_move winid: ' . s:win_info['winid']
     call s:render_highlight_table(s:win_info, this_map)
 
     if g:minimap_highlight_range
-        let s:last_range[s:win_info['winid']] = range
+        let s:last_range[bufnr] = range
     else
-        let s:last_pos[s:win_info['winid']] = curr
+        let s:last_pos[bufnr] = curr
     endif
 endfunction
 
@@ -728,6 +715,7 @@ function! s:minimap_buffer_enter_handler() abort
 endfunction
 
 function! s:source_buffer_enter_handler() abort
+    silent! call clearmatches(s:win_info['mmwinid'])
     call s:refresh_minimap(0)
     call s:update_highlight()
 endfunction
@@ -803,6 +791,7 @@ function! s:minimap_color_git(win_info) abort
     " call s:clear_id_list_colors(a:win_info['mmwinid'], g:minimap_git_id_list)
     " let g:minimap_git_id_list = []
     " Color lines, creating a new id for each section
+    let bufnr = bufnr()
     for a_diff in diff_list
         let idx = a_diff['start']
         while idx <= a_diff['end']
@@ -810,9 +799,9 @@ function! s:minimap_color_git(win_info) abort
             " call matchaddpos(a_diff['color'], [idx], g:minimap_git_color_priority,
                         " \ g:minimap_git_id_list[-1], { 'window': a:win_info['mmwinid'] })
             " Only carry over the cursor state, override the color state
-            let current_info = get(g:minimap_line_state_table[s:win_info['winid']], idx, {})
+            let current_info = get(g:minimap_line_state_table[bufnr], idx, {})
             let current_state = and(get(current_info, 'state'), s:STATE_CURSOR)
-            let g:minimap_line_state_table[s:win_info['winid']][idx] = { 'state': or(current_state, s:get_diff_state_flag(a_diff['color'])) }
+            let g:minimap_line_state_table[bufnr][idx] = { 'state': or(current_state, s:get_diff_state_flag(a_diff['color'])) }
             let idx = idx+1
         endwhile
     endfor

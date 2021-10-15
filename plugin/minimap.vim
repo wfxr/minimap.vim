@@ -59,7 +59,7 @@ if !exists('g:minimap_highlight')
 endif
 
 if !exists('g:minimap_block_filetypes')
-    let g:minimap_block_filetypes = ['fugitive', 'nerdtree', 'tagbar']
+    let g:minimap_block_filetypes = ['fugitive', 'nerdtree', 'tagbar', 'fzf']
 endif
 
 if !exists('g:minimap_block_buftypes')
@@ -143,7 +143,7 @@ let g:minimap_range_id_list = []
 let g:minimap_git_id_list = []
 let g:minimap_search_id_list = []
 let g:minimap_match_id_list = []
-" key: winid, val: { key: mm_line, val: { 'state': state bitmap, 'id': match id for this coloring } }
+" key: bufnr, val: { key: mm_line, val: { 'state': state bitmap, 'id': match id for this coloring } }
 let g:minimap_line_state_table = {}
 
 let g:minimap_run_update_highlight_count = 0
