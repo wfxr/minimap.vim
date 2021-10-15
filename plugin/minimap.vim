@@ -122,6 +122,22 @@ if !exists('g:minimap_cursor_diff_color')
     let g:minimap_cursor_diff_color = 'DiffChange'
 endif
 
+if !exists('g:minimap_range_diffremove_color')
+    let g:minimap_range_diffremove_color = 'DiffDelete'
+endif
+
+if !exists('g:minimap_range_diffadd_color')
+    let g:minimap_range_diffadd_color = 'DiffAdd'
+endif
+
+if !exists('g:minimap_range_diff_color')
+    let g:minimap_range_diff_color = 'DiffChange'
+endif
+
+if !exists('g:minimap_range_color')
+    let g:minimap_range_color = 'Title'
+endif
+
 if !exists('g:minimap_cursor_color_priority')
     let g:minimap_cursor_color_priority = 110
 endif
