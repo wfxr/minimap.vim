@@ -637,7 +637,7 @@ function! s:render_highlight_table(win_info, table) abort
 
         " Cursor
         elseif and(info['state'], s:STATE_CURSOR) == s:STATE_CURSOR
-            let line_color = g:minimap_highlight
+            let line_color = g:minimap_cursor_color
 
         " Range
         elseif and(info['state'], s:STATE_WINDOW_RANGE) == s:STATE_WINDOW_RANGE
