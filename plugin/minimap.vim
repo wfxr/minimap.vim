@@ -97,7 +97,10 @@ highlight mmRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87F
 
 " Need the autocmd because some colorschemes clear all colors, so we need to
 " re-add them so they stay valid
-autocmd ColorScheme *
+
+augroup MinimapColorSchemes
+    autocmd!
+    autocmd ColorScheme *
         \ highlight mmCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
         \ highlight mmRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
         \ highlight mmDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
@@ -109,6 +112,7 @@ autocmd ColorScheme *
         \ highlight mmRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
         \ highlight mmRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
         \ highlight mmRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
+augroup END
 
 if !exists('g:minimap_base_highlight')
     let g:minimap_base_highlight = 'Normal'
