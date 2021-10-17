@@ -1,4 +1,4 @@
-" MIT (c) Wenxuan Zhang
+" MIT (c) Wenxuan Zhang and Zach Nielsen
 
 if exists('g:loaded_minimap')
     finish
@@ -22,6 +22,9 @@ command! MinimapToggle          call minimap#vim#MinimapToggle()
 command! MinimapRefresh         call minimap#vim#MinimapRefresh()
 command! MinimapUpdateHighlight call minimap#vim#MinimapUpdateHighlight()
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Configuration
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if !exists('g:minimap_auto_start')
     let g:minimap_auto_start = 0
 endif
@@ -34,32 +37,20 @@ if !exists('g:minimap_width')
     let g:minimap_width = 10
 endif
 
-if !exists('g:minimap_base_highlight')
-    let g:minimap_base_highlight = 'Normal'
+if !exists('g:minimap_auto_start_win_enter')
+    let g:minimap_auto_start_win_enter = 0
 endif
 
 if !exists('g:minimap_base_matchid')
     let g:minimap_base_matchid = 9265454 " magic number
 endif
 
-if !exists('g:minimap_range_matchid_safe_range')
-    let g:minimap_range_matchid_safe_range = g:minimap_base_matchid + 10000
-endif
-
-if !exists('g:minimap_git_matchid_safe_range')
-    let g:minimap_git_matchid_safe_range = g:minimap_base_matchid + 20000
-endif
-
 if !exists('g:minimap_search_matchid_safe_range')
     let g:minimap_search_matchid_safe_range = g:minimap_base_matchid + 30000
 endif
 
-if !exists('g:minimap_highlight')
-    let g:minimap_highlight = 'Title'
-endif
-
 if !exists('g:minimap_block_filetypes')
-    let g:minimap_block_filetypes = ['fugitive', 'nerdtree', 'tagbar']
+    let g:minimap_block_filetypes = ['fugitive', 'nerdtree', 'tagbar', 'fzf']
 endif
 
 if !exists('g:minimap_block_buftypes')
@@ -74,14 +65,9 @@ if !exists('g:minimap_close_buftypes')
     let g:minimap_close_buftypes = []
 endif
 
-if !exists('g:minimap_did_quit')
-    let g:minimap_did_quit = 0
-endif
-
-if !exists('g:minimap_auto_start_win_enter')
-    let g:minimap_auto_start_win_enter = 0
-endif
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Feature Flags
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if !exists('g:minimap_highlight_range')
     let g:minimap_highlight_range = 0
 endif
@@ -94,40 +80,121 @@ if !exists('g:minimap_highlight_search')
     let g:minimap_highlight_search = 0
 endif
 
-if !exists('g:minimap_diffadd_color')
-    let g:minimap_diffadd_color = 'DiffAdd'
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Colors
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+highlight mmCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
+highlight mmRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
+highlight mmDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
+highlight mmDiffAdded                     ctermfg=148               guifg=#A4E400 |
+highlight mmDiffLine                      ctermfg=141               guifg=#AF87FF |
+highlight mmCursorDiffRemoved ctermbg=59  ctermfg=197 guibg=#5F5F5F guifg=#FC1A70 |
+highlight mmCursorDiffAdded   ctermbg=59  ctermfg=148 guibg=#5F5F5F guifg=#A4E400 |
+highlight mmCursorDiffLine    ctermbg=59  ctermfg=141 guibg=#5F5F5F guifg=#AF87FF |
+highlight mmRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
+highlight mmRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
+highlight mmRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
+
+" Need the autocmd because some colorschemes clear all colors, so we need to
+" re-add them so they stay valid
+
+augroup MinimapColorSchemes
+    autocmd!
+    autocmd ColorScheme *
+        \ highlight mmCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
+        \ highlight mmRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
+        \ highlight mmDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
+        \ highlight mmDiffAdded                     ctermfg=148               guifg=#A4E400 |
+        \ highlight mmDiffLine                      ctermfg=141               guifg=#AF87FF |
+        \ highlight mmCursorDiffRemoved ctermbg=59  ctermfg=197 guibg=#5F5F5F guifg=#FC1A70 |
+        \ highlight mmCursorDiffAdded   ctermbg=59  ctermfg=148 guibg=#5F5F5F guifg=#A4E400 |
+        \ highlight mmCursorDiffLine    ctermbg=59  ctermfg=141 guibg=#5F5F5F guifg=#AF87FF |
+        \ highlight mmRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
+        \ highlight mmRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
+        \ highlight mmRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
+augroup END
+
+if !exists('g:minimap_base_highlight')
+    let g:minimap_base_highlight = 'Normal'
 endif
 
-if !exists('g:minimap_diffremove_color')
-    let g:minimap_diffremove_color = 'DiffDelete'
+" Change setting name, backwards compatibility
+if exists('g:minimap_highlight')
+    let g:minimap_cursor_color = g:minimap_highlight
+endif
+if !exists('g:minimap_cursor_color')
+    let g:minimap_cursor_color = 'mmCursor'
 endif
 
-if !exists('g:minimap_diff_color')
-    let g:minimap_diff_color = 'DiffChange'
+if !exists('g:minimap_range_color')
+    let g:minimap_range_color = 'mmRange'
 endif
 
 if !exists('g:minimap_search_color')
     let g:minimap_search_color = 'Search'
 endif
 
+if !exists('g:minimap_diffremove_color')
+    let g:minimap_diffremove_color = 'mmDiffRemoved'
+endif
+
+if !exists('g:minimap_diffadd_color')
+    let g:minimap_diffadd_color = 'mmDiffAdded'
+endif
+
+if !exists('g:minimap_diff_color')
+    let g:minimap_diff_color = 'mmDiffLine'
+endif
+
+if !exists('g:minimap_cursor_diffremove_color')
+    let g:minimap_cursor_diffremove_color = 'mmCursorDiffRemoved'
+endif
+
+if !exists('g:minimap_cursor_diffadd_color')
+    let g:minimap_cursor_diffadd_color = 'mmCursorDiffAdded'
+endif
+
+if !exists('g:minimap_cursor_diff_color')
+    let g:minimap_cursor_diff_color = 'mmCursorDiffLine'
+endif
+
+if !exists('g:minimap_range_diffremove_color')
+    let g:minimap_range_diffremove_color = 'mmRangeDiffRemoved'
+endif
+
+if !exists('g:minimap_range_diffadd_color')
+    let g:minimap_range_diffadd_color = 'mmRangeDiffAdded'
+endif
+
+if !exists('g:minimap_range_diff_color')
+    let g:minimap_range_diff_color = 'mmRangeDiffLine'
+endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Priorities
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if !exists('g:minimap_cursor_color_priority')
     let g:minimap_cursor_color_priority = 110
-endif
-if !exists('g:minimap_git_color_priority')
-    let g:minimap_git_color_priority = 100
 endif
 if !exists('g:minimap_search_color_priority')
     let g:minimap_search_color_priority = 120
 endif
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Global variables and containers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Declare mutexes
 let g:minimap_getting_window_info = 0
+let g:minimap_did_quit = 0
 let g:minimap_opening = 0
 " Declare id lists - used for storing matchids of color groups
 let g:minimap_range_id_list = []
 let g:minimap_git_id_list = []
 let g:minimap_search_id_list = []
-" Declare unit test specific items
+let g:minimap_match_id_list = []
+" key: bufnr, val: { key: mm_line, val: { 'state': state bitmap, 'id': match id for this coloring } }
+let g:minimap_line_state_table = {}
+
 let g:minimap_run_update_highlight_count = 0
 
 if g:minimap_auto_start == 1
