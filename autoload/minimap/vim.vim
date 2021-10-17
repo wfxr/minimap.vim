@@ -539,19 +539,23 @@ endfunction
 " Remove this function when `getwininfo().botline` is fixed. <- still relevent?
 " This function builds a new line state table from scratch, clearing out the
 " old one.
-function! s:update_highlight() abort
+function! s:update_highlight(...) abort
     let s:win_info = s:get_window_info()
     if len(s:win_info) == 0
         return
     endif
     let bufnr = s:win_info['source_bufnr']
 
-    " For unit tests. Very little ovehead so not gating it
+    " For unit tests. Very little overhead so not gating it
     let g:minimap_run_update_highlight_count = g:minimap_run_update_highlight_count + 1
 
     " Search does its own sub-line highlighting
     if g:minimap_highlight_search
-        call s:minimap_color_search(s:win_info, 2)
+        let his_idx = 2
+        if a:0 > 0 && a:1 ==? 'source_buffer_enter_handler'
+            let his_idx = 1
+        endif
+        call s:minimap_color_search(s:win_info, his_idx)
     endif
 
     " Clear all table highlights (search handles its own)
@@ -716,7 +720,7 @@ endfunction
 function! s:source_buffer_enter_handler() abort
     silent! call clearmatches(s:win_info['mmwinid'])
     call s:refresh_minimap(0)
-    call s:update_highlight()
+    call s:update_highlight('source_buffer_enter_handler')
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
