@@ -89,9 +89,11 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_highlight_search`        | `0`                                                       | if set minimap will highlight searched patterns                      |
 | `g:minimap_git_colors`              | `0`                                                       | if set minimap will highlight range of changes as reported by git    |
 
-### ⚙  Options - Color Options
+### ⚙  Color Options
 Minimap.vim sets its own color groups to give a reasonable default.
 
+| Flag                                | Default                                                   | Description                                                          |
+|-------------------------------------|-----------------------------------------------------------|----------------------------------------------------------------------|
 | `g:minimap_search_color_priority`   | `120`                                                     | the priority for the search highlight colors                         |
 | `g:minimap_cursor_color_priority`   | `110`                                                     | the priority for the cursor highlight colors                         |
 | `g:minimap_cursor_color`            | `mmCursor`                                                | the color group for current position                                 |
