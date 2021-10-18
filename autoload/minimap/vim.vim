@@ -351,7 +351,7 @@ function! s:render_minimap(mmwinnr, bufnr, fname, ftype) abort
 endfunction
 
 function! s:source_move() abort
-    if win_getid() == s:win_info['mmwinid']
+    if !exists('s:win_info["mmwinid"]') || win_getid() == s:win_info['mmwinid']
         return
     endif
     let bufnr = s:win_info['source_bufnr']
@@ -370,7 +370,7 @@ endfunction
 
 " Only called if g:minimap_highlight_range is set.
 function! s:source_win_scroll() abort
-    if win_getid() == s:win_info['mmwinid']
+    if !exists('s:win_info["mmwinid"]') || win_getid() == s:win_info['mmwinid']
         return
     endif
     let bufnr = s:win_info['source_bufnr']
