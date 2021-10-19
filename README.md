@@ -96,18 +96,18 @@ Minimap.vim sets its own color groups to give a reasonable default.
 |-------------------------------------|-----------------------------------------------------------|----------------------------------------------------------------------|
 | `g:minimap_search_color_priority`   | `120`                                                     | the priority for the search highlight colors                         |
 | `g:minimap_cursor_color_priority`   | `110`                                                     | the priority for the cursor highlight colors                         |
-| `g:minimap_cursor_color`            | `mmCursor`                                                | the color group for current position                                 |
-| `g:minimap_range_color`             | `mmRange`                                                 | the color group for window range (if highlight_range is enabled)     |
+| `g:minimap_cursor_color`            | `minimapCursor`                                           | the color group for current position                                 |
+| `g:minimap_range_color`             | `minimapRange`                                            | the color group for window range (if highlight_range is enabled)     |
 | `g:minimap_search_color`            | `Search`                                                  | the color group for highlighted search patterns in the minimap       |
-| `g:minimap_diffadd_color`           | `mmDiffAdded`                                             | the color group for added lines (if git_colors is enabled)           |
-| `g:minimap_diffremove_color`        | `mmDiffRemoved`                                           | the color group for removed lines (if git_colors is enabled)         |
-| `g:minimap_diff_color`              | `mmDiffLine`                                              | the color group for modified lines (if git_colors is enabled)        |
-| `g:minimap_cursor_diffadd_color`    | `mmCursorDiffAdded`                                       | the color group for the cursor over added lines                      |
-| `g:minimap_cursor_diffremove_color` | `mmCursorDiffRemoved`                                     | the color group for the cursor over removed lines                    |
-| `g:minimap_cursor_diff_color`       | `mmCursorDiffLine`                                        | the color group for the cursor over modified lines                   |
-| `g:minimap_range_diffadd_color`     | `mmRangeDiffAdded`                                        | the color group for the window range encompassing added lines        |
-| `g:minimap_range_diffremove_color`  | `mmRangeDiffRemoved`                                      | the color group for the window range encompassing removed lines      |
-| `g:minimap_range_diff_color`        | `mmRangeDiffLine`                                         | the color group for the window range encompassing modified lines     |
+| `g:minimap_diffadd_color`           | `minimapDiffAdded`                                        | the color group for added lines (if git_colors is enabled)           |
+| `g:minimap_diffremove_color`        | `minimapDiffRemoved`                                      | the color group for removed lines (if git_colors is enabled)         |
+| `g:minimap_diff_color`              | `minimapDiffLine`                                         | the color group for modified lines (if git_colors is enabled)        |
+| `g:minimap_cursor_diffadd_color`    | `minimapCursorDiffAdded`                                  | the color group for the cursor over added lines                      |
+| `g:minimap_cursor_diffremove_color` | `minimapCursorDiffRemoved`                                | the color group for the cursor over removed lines                    |
+| `g:minimap_cursor_diff_color`       | `minimapCursorDiffLine`                                   | the color group for the cursor over modified lines                   |
+| `g:minimap_range_diffadd_color`     | `minimapRangeDiffAdded`                                   | the color group for the window range encompassing added lines        |
+| `g:minimap_range_diffremove_color`  | `minimapRangeDiffRemoved`                                 | the color group for the window range encompassing removed lines      |
+| `g:minimap_range_diff_color`        | `minimapRangeDiffLine`                                    | the color group for the window range encompassing modified lines     |
 
 You can create your own colorgroup by specifying the foreground and background colors for the cterm or gui:
 ```

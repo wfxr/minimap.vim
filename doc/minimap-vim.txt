@@ -132,7 +132,7 @@ g:minimap_base_highlight                             *g:minimap_base_highlight*
 g:minimap_cursor_color           *g:minimap_cursor_color* *g:minimap_highlight*
 
   Type: |String|
-  Default: `'mmCursor'`
+  Default: `'minimapCursor'`
 
   The color of the highlighting for the current position. Possible values
   are any |group-name|.
@@ -149,7 +149,7 @@ g:minimap_search_color                                 *g:minimap_search_color*
 g:minimap_diffadd_color                               *g:minimap_diffadd_color*
 
   Type: |String|
-  Default: `'mmDiffAdded'`
+  Default: `'minimapDiffAdded'`
 
   The color group for added lines (as reported by git).
   Possible values are any |group-name|.
@@ -158,7 +158,7 @@ g:minimap_diffadd_color                               *g:minimap_diffadd_color*
 g:minimap_diffremove_color                         *g:minimap_diffremove_color*
 
   Type: |String|
-  Default: `'mmDiffRemoved'`
+  Default: `'minimapDiffRemoved'`
 
   The color group for removed/deleted lines (as reported by git).
   Possible values are any |group-name|.
@@ -167,7 +167,7 @@ g:minimap_diffremove_color                         *g:minimap_diffremove_color*
 g:minimap_diff_color                                     *g:minimap_diff_color*
 
   Type: |String|
-  Default: `'mmDiffLine'`
+  Default: `'minimapDiffLine'`
 
   The color group for changed lines (as reported by git).
   Possible values are any |group-name|.
@@ -176,7 +176,7 @@ g:minimap_diff_color                                     *g:minimap_diff_color*
 g:minimap_range_color                                   *g:minimap_range_color*
 
   Type:  |String|
-  Default: `mmRange`
+  Default: `'minimapRange'`
 
   The color group for window range (if highlight_range is enabled).
   Possible values are any |group-name|.
@@ -185,7 +185,7 @@ g:minimap_range_color                                   *g:minimap_range_color*
 g:minimap_cursor_diffadd_color                 *g:minimap_cursor_diffadd_color*
 
   Type:  |String|
-  Default: `mmCursorDiffAdded`
+  Default: `'minimapCursorDiffAdded'`
 
   The color group for the cursor over added lines
   Possible values are any |group-name|.
@@ -194,7 +194,7 @@ g:minimap_cursor_diffadd_color                 *g:minimap_cursor_diffadd_color*
 g:minimap_cursor_diffremove_color           *g:minimap_cursor_diffremove_color*
 
   Type:  |String|
-  Default: `mmCursorDiffRemoved`
+  Default: `'minimapCursorDiffRemoved'`
 
   The color group for the cursor over removed lines
   Possible values are any |group-name|.
@@ -203,7 +203,7 @@ g:minimap_cursor_diffremove_color           *g:minimap_cursor_diffremove_color*
 g:minimap_cursor_diff_color                       *g:minimap_cursor_diff_color*
 
   Type:  |String|
-  Default: `mmCursorDiffLine`
+  Default: `'minimapCursorDiffLine'`
 
   The color group for the cursor over modified lines
   Possible values are any |group-name|.
@@ -212,7 +212,7 @@ g:minimap_cursor_diff_color                       *g:minimap_cursor_diff_color*
 g:minimap_range_diffadd_color                   *g:minimap_range_diffadd_color*
 
   Type:  |String|
-  Default: `mmRangeDiffAdded`
+  Default: `'minimapRangeDiffAdded'`
 
   The color group for the window range encompassing added lines
   Possible values are any |group-name|.
@@ -222,7 +222,7 @@ g:minimap_range_diffadd_color                   *g:minimap_range_diffadd_color*
 g:minimap_range_diffremove_color             *g:minimap_range_diffremove_color*
 
   Type:  |String|
-  Default: `mmRangeDiffRemoved`
+  Default: `'minimapRangeDiffRemoved'`
 
   The color group for the window range encompassing removed lines
   Possible values are any |group-name|.
@@ -232,7 +232,7 @@ g:minimap_range_diffremove_color             *g:minimap_range_diffremove_color*
 g:minimap_range_diff_color                         *g:minimap_range_diff_color*
 
   Type:  |String|
-  Default: `mmRangeDiffLine`
+  Default: `'minimapRangeDiffLine'`
 
   The color group for the window range encompassing modified lines
   Possible values are any |group-name|.

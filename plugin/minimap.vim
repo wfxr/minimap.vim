@@ -83,17 +83,17 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Colors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-highlight mmCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
-highlight mmRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
-highlight mmDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
-highlight mmDiffAdded                     ctermfg=148               guifg=#A4E400 |
-highlight mmDiffLine                      ctermfg=141               guifg=#AF87FF |
-highlight mmCursorDiffRemoved ctermbg=59  ctermfg=197 guibg=#5F5F5F guifg=#FC1A70 |
-highlight mmCursorDiffAdded   ctermbg=59  ctermfg=148 guibg=#5F5F5F guifg=#A4E400 |
-highlight mmCursorDiffLine    ctermbg=59  ctermfg=141 guibg=#5F5F5F guifg=#AF87FF |
-highlight mmRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
-highlight mmRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
-highlight mmRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
+highlight minimapCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
+highlight minimapRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
+highlight minimapDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
+highlight minimapDiffAdded                     ctermfg=148               guifg=#A4E400 |
+highlight minimapDiffLine                      ctermfg=141               guifg=#AF87FF |
+highlight minimapCursorDiffRemoved ctermbg=59  ctermfg=197 guibg=#5F5F5F guifg=#FC1A70 |
+highlight minimapCursorDiffAdded   ctermbg=59  ctermfg=148 guibg=#5F5F5F guifg=#A4E400 |
+highlight minimapCursorDiffLine    ctermbg=59  ctermfg=141 guibg=#5F5F5F guifg=#AF87FF |
+highlight minimapRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
+highlight minimapRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
+highlight minimapRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
 
 " Need the autocmd because some colorschemes clear all colors, so we need to
 " re-add them so they stay valid
@@ -101,17 +101,17 @@ highlight mmRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87F
 augroup MinimapColorSchemes
     autocmd!
     autocmd ColorScheme *
-        \ highlight mmCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
-        \ highlight mmRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
-        \ highlight mmDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
-        \ highlight mmDiffAdded                     ctermfg=148               guifg=#A4E400 |
-        \ highlight mmDiffLine                      ctermfg=141               guifg=#AF87FF |
-        \ highlight mmCursorDiffRemoved ctermbg=59  ctermfg=197 guibg=#5F5F5F guifg=#FC1A70 |
-        \ highlight mmCursorDiffAdded   ctermbg=59  ctermfg=148 guibg=#5F5F5F guifg=#A4E400 |
-        \ highlight mmCursorDiffLine    ctermbg=59  ctermfg=141 guibg=#5F5F5F guifg=#AF87FF |
-        \ highlight mmRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
-        \ highlight mmRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
-        \ highlight mmRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
+        \ highlight minimapCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
+        \ highlight minimapRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
+        \ highlight minimapDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
+        \ highlight minimapDiffAdded                     ctermfg=148               guifg=#A4E400 |
+        \ highlight minimapDiffLine                      ctermfg=141               guifg=#AF87FF |
+        \ highlight minimapCursorDiffRemoved ctermbg=59  ctermfg=197 guibg=#5F5F5F guifg=#FC1A70 |
+        \ highlight minimapCursorDiffAdded   ctermbg=59  ctermfg=148 guibg=#5F5F5F guifg=#A4E400 |
+        \ highlight minimapCursorDiffLine    ctermbg=59  ctermfg=141 guibg=#5F5F5F guifg=#AF87FF |
+        \ highlight minimapRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
+        \ highlight minimapRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
+        \ highlight minimapRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
 augroup END
 
 if !exists('g:minimap_base_highlight')
@@ -123,11 +123,11 @@ if exists('g:minimap_highlight')
     let g:minimap_cursor_color = g:minimap_highlight
 endif
 if !exists('g:minimap_cursor_color')
-    let g:minimap_cursor_color = 'mmCursor'
+    let g:minimap_cursor_color = 'minimapCursor'
 endif
 
 if !exists('g:minimap_range_color')
-    let g:minimap_range_color = 'mmRange'
+    let g:minimap_range_color = 'minimapRange'
 endif
 
 if !exists('g:minimap_search_color')
@@ -135,39 +135,39 @@ if !exists('g:minimap_search_color')
 endif
 
 if !exists('g:minimap_diffremove_color')
-    let g:minimap_diffremove_color = 'mmDiffRemoved'
+    let g:minimap_diffremove_color = 'minimapDiffRemoved'
 endif
 
 if !exists('g:minimap_diffadd_color')
-    let g:minimap_diffadd_color = 'mmDiffAdded'
+    let g:minimap_diffadd_color = 'minimapDiffAdded'
 endif
 
 if !exists('g:minimap_diff_color')
-    let g:minimap_diff_color = 'mmDiffLine'
+    let g:minimap_diff_color = 'minimapDiffLine'
 endif
 
 if !exists('g:minimap_cursor_diffremove_color')
-    let g:minimap_cursor_diffremove_color = 'mmCursorDiffRemoved'
+    let g:minimap_cursor_diffremove_color = 'minimapCursorDiffRemoved'
 endif
 
 if !exists('g:minimap_cursor_diffadd_color')
-    let g:minimap_cursor_diffadd_color = 'mmCursorDiffAdded'
+    let g:minimap_cursor_diffadd_color = 'minimapCursorDiffAdded'
 endif
 
 if !exists('g:minimap_cursor_diff_color')
-    let g:minimap_cursor_diff_color = 'mmCursorDiffLine'
+    let g:minimap_cursor_diff_color = 'minimapCursorDiffLine'
 endif
 
 if !exists('g:minimap_range_diffremove_color')
-    let g:minimap_range_diffremove_color = 'mmRangeDiffRemoved'
+    let g:minimap_range_diffremove_color = 'minimapRangeDiffRemoved'
 endif
 
 if !exists('g:minimap_range_diffadd_color')
-    let g:minimap_range_diffadd_color = 'mmRangeDiffAdded'
+    let g:minimap_range_diffadd_color = 'minimapRangeDiffAdded'
 endif
 
 if !exists('g:minimap_range_diff_color')
-    let g:minimap_range_diff_color = 'mmRangeDiffLine'
+    let g:minimap_range_diff_color = 'minimapRangeDiffLine'
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
