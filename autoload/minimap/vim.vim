@@ -273,9 +273,21 @@ function! s:refresh_minimap(force) abort
 endfunction
 
 function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
-    let mmwinid = win_getid(a:mmwinnr)
-    let hscale = string(2.0 * g:minimap_width / min([winwidth('%'), 120]))
-    let vscale = string(4.0 * winheight(mmwinid) / line('$'))
+    if !exists('s:win_info')
+        let s:win_info = s:get_window_info()
+    endif
+    let winwidth = winwidth('%')
+    if s:win_info['max_width'] > winwidth
+        " The buffer wraps, so scale it way down so the minimap doesn't scroll
+        let denom = s:win_info['max_width']
+    else
+        " The minimap loses detail if we go beyond 120, so cap it there.
+        " It's ok to cap it smaller because we don't wrap.
+        let denom = min([winwidth, 120])
+    endif
+
+    let hscale = string(2.0 * g:minimap_width / denom)
+    let vscale = string(4.0 * winheight(s:win_info['mmwinid']) / line('$'))
 
     " Users that have custom shells and shell flags may face problems.
     let usershell = &shell
