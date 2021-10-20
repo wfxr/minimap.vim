@@ -91,6 +91,7 @@ function! s:close_window() abort
     else
         exe mmwinnr . 'wincmd c'
     endif
+    let s:win_info = {}
 endfunction
 
 function! s:quit_last() abort
@@ -98,6 +99,7 @@ function! s:quit_last() abort
     if tabnum == tabpagenr('$') && tabnum == 1
         doautocmd ExitPre,VimLeavePre,VimLeave
     endif
+    let s:win_info = {}
     execute 'quit'
 endfunction
 
@@ -112,6 +114,8 @@ function! s:close_auto() abort
     if g:minimap_did_quit
         silent! call s:quit_last()
     else
+        " Since we just closed a buffer, we want to completely wipe out
+        " the minimap tied to that buffer.
         bwipeout
     endif
     " In case the plugin accidentally highlights the main buffer.
@@ -273,7 +277,7 @@ function! s:refresh_minimap(force) abort
 endfunction
 
 function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
-    if !exists('s:win_info')
+    if !exists('s:win_info') || s:win_info == {}
         let s:win_info = s:get_window_info()
     endif
     let winwidth = winwidth('%')
@@ -375,7 +379,7 @@ function! s:source_move() abort
     if last_pos != pos
         let this_table = s:make_state_table_with_position(pos)
 
-        call s:render_highlight_table(s:win_info, this_table)
+        call s:render_highlight_table(this_table)
         let s:last_pos[bufnr] = pos
     endif
 endfunction
@@ -397,7 +401,7 @@ function! s:source_win_scroll() abort
 
     let this_table = s:make_state_table_with_range(range)
 
-    call s:render_highlight_table(s:win_info, this_table)
+    call s:render_highlight_table(this_table)
     let s:last_range[bufnr] = range
 endfunction
 
@@ -600,11 +604,14 @@ function! s:update_highlight(...) abort
     endif
 
     " Render the state map
-    call s:render_highlight_table(s:win_info, g:minimap_line_state_table[bufnr])
+    call s:render_highlight_table(g:minimap_line_state_table[bufnr])
 endfunction
 
-function! s:render_highlight_table(win_info, table) abort
-    let mmwinid = a:win_info['mmwinid']
+function! s:render_highlight_table(table) abort
+    if s:win_info == {}
+        return
+    endif
+    let mmwinid = s:win_info['mmwinid']
     let bufnr = s:win_info['source_bufnr']
 
     " Loop over all entries of the passed in table
@@ -709,7 +716,7 @@ function! s:minimap_move() abort
         let this_table = s:make_state_table_with_range(range, this_table)
     endif
 
-    call s:render_highlight_table(s:win_info, this_table)
+    call s:render_highlight_table(this_table)
 
     let s:last_pos[s:win_info['source_bufnr']] = curr
     if g:minimap_highlight_range
