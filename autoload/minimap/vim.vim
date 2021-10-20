@@ -449,7 +449,7 @@ function! s:make_state_table_with_range(range,...) abort
         if mm_line_num < last_range['pos1'] || mm_line_num > last_range['pos2']
             " Add the range state
             if a:0 >= 1 && has_key(a:1, mm_line_num)
-                let current_state = or(current_state, a:1[mm_line_num]['state'])
+                let current_state = a:1[mm_line_num]['state']
             else
                 let current_info = get(current_window_table, mm_line_num, {})
                 let current_state = get(current_info, 'state')
