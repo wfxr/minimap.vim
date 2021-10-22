@@ -427,9 +427,9 @@ function! s:make_state_table_with_range(range,...) abort
 
     " Only do items outside the last range
     " (everything else is the same, so don't waste time updating it)
+    " Clear out the range state
     for mm_line_num in range(s:last_range['pos1'], s:last_range['pos2'])
         if mm_line_num < a:range['pos1'] || mm_line_num > a:range['pos2']
-            " Clear out the range state
             if a:0 >= 1 && has_key(a:1, mm_line_num)
                 let current_state = a:1[mm_line_num]['state']
             else
@@ -441,9 +441,9 @@ function! s:make_state_table_with_range(range,...) abort
     endfor
     " Separate for loops, to account for the case when jumping around file
     " would result in processing a bunch of lines that we never touched
+    " Add the range state
     for mm_line_num in range(a:range['pos1'], a:range['pos2'])
         if mm_line_num < s:last_range['pos1'] || mm_line_num > s:last_range['pos2']
-            " Add the range state
             if a:0 >= 1 && has_key(a:1, mm_line_num)
                 let current_state = a:1[mm_line_num]['state']
             else
@@ -454,13 +454,12 @@ function! s:make_state_table_with_range(range,...) abort
         endif
     endfor
 
-    " Merge items from the passed in table - entries inside the old range will
-    " be skipped in the loop above.
+    " Merge items from the passed in table if it wasn't addressed in the loop above.
     if a:0 >= 1
         for mm_line_num in keys(a:1)
-            let current_info = get(this_table, mm_line_num, {})
-            let current_state = get(current_info, 'state')
-            let this_table[mm_line_num] = { 'state': or(current_state, a:1[mm_line_num]['state']) }
+            if !has_key(this_table, mm_line_num)
+                let this_table[mm_line_num] = { 'state': a:1[mm_line_num]['state'] }
+            endif
         endfor
     endif
 
