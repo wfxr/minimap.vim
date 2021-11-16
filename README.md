@@ -74,28 +74,54 @@ let g:minimap_auto_start_win_enter = 1
 
 ### ⚙  Options
 
-| Flag                             | Default                                                   | Description                                                          |
-|----------------------------------|-----------------------------------------------------------|----------------------------------------------------------------------|
-| `g:minimap_auto_start`           | `0`                                                       | if set minimap will show at startup                                  |
-| `g:minimap_auto_start_win_enter` | `0`                                                       | if set with `g:minimap_auto_start` minimap shows on `WinEnter`       |
-| `g:minimap_width`                | `10`                                                      | the width of the minimap window in characters                        |
-| `g:minimap_highlight`            | `Title`                                                   | the color group for current position                                 |
-| `g:minimap_base_highlight`       | `Normal`                                                  | the base color group for minimap                                     |
-| `g:minimap_block_filetypes`      | `['fugitive', 'nerdtree', 'tagbar' ]`                     | disable minimap for specific file types                              |
-| `g:minimap_block_buftypes`       | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                            |
-| `g:minimap_close_filetypes`      | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                                |
-| `g:minimap_close_buftypes`       | `[]`                                                      | close minimap for specific buffer types                              |
-| `g:minimap_left`                 | `0`                                                       | if set minimap window will append left                               |
-| `g:minimap_highlight_range`      | `0`                                                       | if set minimap will highlight range of visible lines                 |
-| `g:minimap_git_colors`           | `0`                                                       | if set minimap will highlight range of changes as reported by git    |
-| `g:minimap_diffadd_color`        | `DiffAdd`                                                 | the color group for added lines (if git_colors is enabled)           |
-| `g:minimap_diffremove_color`     | `DiffDelete`                                              | the color group for removed lines (if git_colors is enabled)         |
-| `g:minimap_diff_color`           | `DiffChange`                                              | the color group for modified lines (if git_colors is enabled)        |
-| `g:minimap_highlight_search`     | `0`                                                       | if set minimap will highlight searched patterns                      |
-| `g:minimap_search_color`         | `Search`                                                  | the color group for highlighted search patterns in the minimap       |
-| `g:minimap_search_color_priority`| `120`                                                     | the priority for the search highlight colors                         |
-| `g:minimap_cursor_color_priority`| `110`                                                     | the priority for the cursor highlight colors                         |
-| `g:minimap_git_color_priority`   | `100`                                                     | the priority for the git grouping of colors                          |
+| Flag                                | Default                                                   | Description                                                          |
+|-------------------------------------|-----------------------------------------------------------|----------------------------------------------------------------------|
+| `g:minimap_auto_start`              | `0`                                                       | if set minimap will show at startup                                  |
+| `g:minimap_auto_start_win_enter`    | `0`                                                       | if set with `g:minimap_auto_start` minimap shows on `WinEnter`       |
+| `g:minimap_width`                   | `10`                                                      | the width of the minimap window in characters                        |
+| `g:minimap_base_highlight`          | `Normal`                                                  | the base color group for minimap                                     |
+| `g:minimap_block_filetypes`         | `['fugitive', 'nerdtree', 'tagbar', 'fzf' ]`              | disable minimap for specific file types                              |
+| `g:minimap_block_buftypes`          | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                            |
+| `g:minimap_close_filetypes`         | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                                |
+| `g:minimap_close_buftypes`          | `[]`                                                      | close minimap for specific buffer types                              |
+| `g:minimap_left`                    | `0`                                                       | if set minimap window will append left                               |
+| `g:minimap_highlight_range`         | `0`                                                       | if set minimap will highlight range of visible lines                 |
+| `g:minimap_highlight_search`        | `0`                                                       | if set minimap will highlight searched patterns                      |
+| `g:minimap_git_colors`              | `0`                                                       | if set minimap will highlight range of changes as reported by git    |
+
+### ⚙  Color Options
+Minimap.vim sets its own color groups to give a reasonable default.
+
+| Flag                                | Default                                                   | Description                                                          |
+|-------------------------------------|-----------------------------------------------------------|----------------------------------------------------------------------|
+| `g:minimap_search_color_priority`   | `120`                                                     | the priority for the search highlight colors                         |
+| `g:minimap_cursor_color_priority`   | `110`                                                     | the priority for the cursor highlight colors                         |
+| `g:minimap_cursor_color`            | `minimapCursor`                                           | the color group for current position                                 |
+| `g:minimap_range_color`             | `minimapRange`                                            | the color group for window range (if highlight_range is enabled)     |
+| `g:minimap_search_color`            | `Search`                                                  | the color group for highlighted search patterns in the minimap       |
+| `g:minimap_diffadd_color`           | `minimapDiffAdded`                                        | the color group for added lines (if git_colors is enabled)           |
+| `g:minimap_diffremove_color`        | `minimapDiffRemoved`                                      | the color group for removed lines (if git_colors is enabled)         |
+| `g:minimap_diff_color`              | `minimapDiffLine`                                         | the color group for modified lines (if git_colors is enabled)        |
+| `g:minimap_cursor_diffadd_color`    | `minimapCursorDiffAdded`                                  | the color group for the cursor over added lines                      |
+| `g:minimap_cursor_diffremove_color` | `minimapCursorDiffRemoved`                                | the color group for the cursor over removed lines                    |
+| `g:minimap_cursor_diff_color`       | `minimapCursorDiffLine`                                   | the color group for the cursor over modified lines                   |
+| `g:minimap_range_diffadd_color`     | `minimapRangeDiffAdded`                                   | the color group for the window range encompassing added lines        |
+| `g:minimap_range_diffremove_color`  | `minimapRangeDiffRemoved`                                 | the color group for the window range encompassing removed lines      |
+| `g:minimap_range_diff_color`        | `minimapRangeDiffLine`                                    | the color group for the window range encompassing modified lines     |
+
+You can create your own colorgroup by specifying the foreground and background colors for the cterm or gui:
+```
+:highlight mmCursor ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87
+```
+
+For more information, see `:help highlight`
+
+note: some colorschemes will clear all previous colors, so you may have to add an `autocmd` to ensure your custom colorgroups are added back:
+```
+autocmd ColorScheme *
+        \ highlight mmCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
+        \ highlight mmRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87
+```
 
 ### 💬 F.A.Q
 
@@ -134,7 +160,7 @@ By default, search > cursor/window position > git colors
 Choose any one of the highlight groups (or define a new one) and just set it for minimap like this:
 ```vim
 hi MinimapCurrentLine ctermfg=Green guifg=#50FA7B guibg=#32302f
-let g:minimap_highlight = 'MinimapCurrentLine'
+let g:minimap_cursor_color = 'MinimapCurrentLine'
 ```
 
 *All existed Highlight groups can be displayed by `:hi`.*

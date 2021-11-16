@@ -48,14 +48,6 @@ g:minimap_width                                               *g:minimap_width*
 
   The width of the minimap window in characters.
 
-g:minimap_highlight                                       *g:minimap_highlight*
-
-  Type: |String|
-  Default: `'Title'`
-
-  The color of the highlighting for the current position. Possible values
-  are any |group-name|.
-
 g:minimap_highlight_range                           *g:minimap_highlight_range*
 
   Type: |Number|
@@ -111,12 +103,14 @@ g:minimap_close_buftypes                             *g:minimap_close_buftypes*
   present in `g:minimap_block_buftypes`, the minimap will prefer to close
   rather than disable.
 
-g:minimap_base_highlight                             *g:minimap_base_highlight*
+g:minimap_highlight_search                         *g:minimap_highlight_search*
 
-  Type: |String|
-  Default: `'Normal'`
+  Type: |Number|
+  Default: `0`
 
-  The base color group for minimap. Possible values are any |group-name|.
+  If set to 1, the minimap will highlight matches to the last search done by
+  the user. The highlight group `g:minimap_search_color` will be used for
+  highlighting matches.
 
 g:minimap_git_colors                                     *g:minimap_git_colors*
 
@@ -128,41 +122,20 @@ g:minimap_git_colors                                     *g:minimap_git_colors*
   and `g:minimap_diff_color` are used for additions, deletions, and line changes
   respectively.
 
-g:minimap_diffadd_color                               *g:minimap_diffadd_color*
+g:minimap_base_highlight                             *g:minimap_base_highlight*
 
   Type: |String|
-  Default: `'DiffAdd'`
+  Default: `'Normal'`
 
-  The color group for added lines (as reported by git).
-  Possible values are any |group-name|.
-  Requires `g:minimap_git_colors` to be enabled.
+  The base color group for minimap. Possible values are any |group-name|.
 
-g:minimap_diffremove_color                         *g:minimap_diffremove_color*
+g:minimap_cursor_color           *g:minimap_cursor_color* *g:minimap_highlight*
 
   Type: |String|
-  Default: `'DiffDelete'`
+  Default: `'minimapCursor'`
 
-  The color group for removed/deleted lines (as reported by git).
-  Possible values are any |group-name|.
-  Requires `g:minimap_git_colors` to be enabled.
-
-g:minimap_diff_color                                     *g:minimap_diff_color*
-
-  Type: |String|
-  Default: `'DiffChange'`
-
-  The color group for changed lines (as reported by git).
-  Possible values are any |group-name|.
-  Requires `g:minimap_git_colors` to be enabled.
-
-g:minimap_highlight_search                         *g:minimap_highlight_search*
-
-  Type: |Number|
-  Default: `0`
-
-  If set to 1, the minimap will highlight matches to the last search done by
-  the user. The highlight group `g:minimap_search_color` will be used for
-  highlighting matches.
+  The color of the highlighting for the current position. Possible values
+  are any |group-name|.
 
 g:minimap_search_color                                 *g:minimap_search_color*
 
@@ -173,6 +146,99 @@ g:minimap_search_color                                 *g:minimap_search_color*
   Possible values are any |group-name|.
   Requires `g:minimap_highlight_search` to be enabled.
 
+g:minimap_diffadd_color                               *g:minimap_diffadd_color*
+
+  Type: |String|
+  Default: `'minimapDiffAdded'`
+
+  The color group for added lines (as reported by git).
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
+g:minimap_diffremove_color                         *g:minimap_diffremove_color*
+
+  Type: |String|
+  Default: `'minimapDiffRemoved'`
+
+  The color group for removed/deleted lines (as reported by git).
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
+g:minimap_diff_color                                     *g:minimap_diff_color*
+
+  Type: |String|
+  Default: `'minimapDiffLine'`
+
+  The color group for changed lines (as reported by git).
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
+g:minimap_range_color                                   *g:minimap_range_color*
+
+  Type:  |String|
+  Default: `'minimapRange'`
+
+  The color group for window range (if highlight_range is enabled).
+  Possible values are any |group-name|.
+  Requires `g:minimap_highlight_range` to be enabled.
+
+g:minimap_cursor_diffadd_color                 *g:minimap_cursor_diffadd_color*
+
+  Type:  |String|
+  Default: `'minimapCursorDiffAdded'`
+
+  The color group for the cursor over added lines
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
+g:minimap_cursor_diffremove_color           *g:minimap_cursor_diffremove_color*
+
+  Type:  |String|
+  Default: `'minimapCursorDiffRemoved'`
+
+  The color group for the cursor over removed lines
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
+g:minimap_cursor_diff_color                       *g:minimap_cursor_diff_color*
+
+  Type:  |String|
+  Default: `'minimapCursorDiffLine'`
+
+  The color group for the cursor over modified lines
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+
+g:minimap_range_diffadd_color                   *g:minimap_range_diffadd_color*
+
+  Type:  |String|
+  Default: `'minimapRangeDiffAdded'`
+
+  The color group for the window range encompassing added lines
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+  Requires `g:minimap_highlight_range` to be enabled.
+
+g:minimap_range_diffremove_color             *g:minimap_range_diffremove_color*
+
+  Type:  |String|
+  Default: `'minimapRangeDiffRemoved'`
+
+  The color group for the window range encompassing removed lines
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+  Requires `g:minimap_highlight_range` to be enabled.
+
+g:minimap_range_diff_color                         *g:minimap_range_diff_color*
+
+  Type:  |String|
+  Default: `'minimapRangeDiffLine'`
+
+  The color group for the window range encompassing modified lines
+  Possible values are any |group-name|.
+  Requires `g:minimap_git_colors` to be enabled.
+  Requires `g:minimap_highlight_range` to be enabled.
+
 
 g:minimap_cursor_color_priority               *g:minimap_cursor_color_priority*
 
@@ -180,14 +246,6 @@ g:minimap_cursor_color_priority               *g:minimap_cursor_color_priority*
   Default: `110`
 
   The priority for the cursor color group in the minimap.
-  A higher valued priority will overwrite a lower valued priority.
-
-g:minimap_git_color_priority                     *g:minimap_git_color_priority*
-
-  Type: |Number|
-  Default: `100`
-
-  The priority for the git color groups in the minimap.
   A higher valued priority will overwrite a lower valued priority.
 
 g:minimap_search_color_priority               *g:minimap_search_color_priority*
