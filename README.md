@@ -111,7 +111,7 @@ Minimap.vim sets its own color groups to give a reasonable default.
 
 You can create your own colorgroup by specifying the foreground and background colors for the cterm or gui:
 ```
-:highlight mmCursor ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87
+:highlight minimapCursor ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87
 ```
 
 For more information, see `:help highlight`
@@ -119,8 +119,8 @@ For more information, see `:help highlight`
 note: some colorschemes will clear all previous colors, so you may have to add an `autocmd` to ensure your custom colorgroups are added back:
 ```
 autocmd ColorScheme *
-        \ highlight mmCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
-        \ highlight mmRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87
+        \ highlight minimapCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
+        \ highlight minimapRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87
 ```
 
 ### 💬 F.A.Q
