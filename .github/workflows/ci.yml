@@ -37,19 +37,18 @@ jobs:
           NEOVIM_CONFIG_PATH: '${{ matrix.NEOVIM_CONFIG_PATH }}'
         run: |
           mkdir -p $NEOVIM_CONFIG_PATH/plugins
-      - name: Create a fake code-minimap executable
+      - if: ${{ !contains(matrix.os, 'windows') }}
+        name: Create a fake code-minimap executable
         # Necessary for minimap.vim to start up
         run: |
           mkdir -p "$HOME/bin"
           ln -s /bin/echo "$HOME/bin/code-minimap"
           echo "$HOME/bin" >> $GITHUB_PATH
-        if: ${{ !contains(matrix.os, 'windows') }}
-
-      - name: Create a fake code-minimap executable (Windows)
+      - if: ${{ contains(matrix.os, 'windows') }}
+        name: Create a fake code-minimap executable (Windows)
         run: |
           mkdir -p ~/bin
           cp  C:/Windows/System32/doskey.exe ~/bin/code-minimap.exe
-        if: ${{ contains(matrix.os, 'windows') }}
 
       - name: Checkout Testify
         run: |
