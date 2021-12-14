@@ -287,8 +287,10 @@ function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
     else
         " The minimap loses detail if we go beyond 120, so cap it there.
         " It's ok to cap it smaller because we don't wrap.
-        let denom = min([winwidth, 120])
+        let denom = min([winwidth, g:minimap_window_width_cap])
     endif
+    " Let users override the max width. By default, this does nothing.
+    let denom = min([denom, g:minimap_window_width_override_for_scaling])
 
     let hscale = string(2.0 * g:minimap_width / denom)
     let vscale = string(4.0 * winheight(s:win_info['mmwinid']) / line('$'))
@@ -495,17 +497,15 @@ function! s:get_window_info() abort
         let mmwinid = win_getid(mmwinnr)
         let height = line('$')
         let max_width = 0
-        if g:minimap_highlight_search
-            " Get the max width of this buffer
-            let line_num = 1
-            while line_num <= line('$')
-                call setpos('.', [0, line_num, 1])
-                " Move cursor to the last non-blank character on the line
-                normal! g_
-                let max_width = max([max_width, col('.')])
-                let line_num = line_num + 1
-            endwhile
-        endif
+        " Get the max width of this buffer
+        let line_num = 1
+        while line_num <= line('$')
+            call setpos('.', [0, line_num, 1])
+            " Move cursor to the last non-blank character on the line
+            normal! g_
+            let max_width = max([max_width, col('.')])
+            let line_num = line_num + 1
+        endwhile
 
         " Go to the minimap
         call win_gotoid(mmwinid)

@@ -74,20 +74,22 @@ let g:minimap_auto_start_win_enter = 1
 
 ### ⚙  Options
 
-| Flag                                | Default                                                   | Description                                                          |
-|-------------------------------------|-----------------------------------------------------------|----------------------------------------------------------------------|
-| `g:minimap_auto_start`              | `0`                                                       | if set minimap will show at startup                                  |
-| `g:minimap_auto_start_win_enter`    | `0`                                                       | if set with `g:minimap_auto_start` minimap shows on `WinEnter`       |
-| `g:minimap_width`                   | `10`                                                      | the width of the minimap window in characters                        |
-| `g:minimap_base_highlight`          | `Normal`                                                  | the base color group for minimap                                     |
-| `g:minimap_block_filetypes`         | `['fugitive', 'nerdtree', 'tagbar', 'fzf' ]`              | disable minimap for specific file types                              |
-| `g:minimap_block_buftypes`          | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                            |
-| `g:minimap_close_filetypes`         | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                                |
-| `g:minimap_close_buftypes`          | `[]`                                                      | close minimap for specific buffer types                              |
-| `g:minimap_left`                    | `0`                                                       | if set minimap window will append left                               |
-| `g:minimap_highlight_range`         | `0`                                                       | if set minimap will highlight range of visible lines                 |
-| `g:minimap_highlight_search`        | `0`                                                       | if set minimap will highlight searched patterns                      |
-| `g:minimap_git_colors`              | `0`                                                       | if set minimap will highlight range of changes as reported by git    |
+| Flag                                          | Default                                                   | Description                                                          |
+|-------------------------------------------    |-----------------------------------------------------------|----------------------------------------------------------------------|
+| `g:minimap_auto_start`                        | `0`                                                       | if, set minimap will show at startup                                 |
+| `g:minimap_auto_start_win_enter`              | `0`                                                       | if, set with `g:minimap_auto_start` minimap shows on `WinEnter`      |
+| `g:minimap_width`                             | `10`                                                      | the width of the minimap window in characters                        |
+| `g:minimap_window_width_cap`                  | `120`                                                     | the width cap for scaling the minimap (see minimap.txt help file)    |
+| `g:minimap_window_width_override_for_scaling` | `2147483647`                                              | tunes the behavior of long lines (see minimap.txt help file)         |
+| `g:minimap_base_highlight`                    | `Normal`                                                  | the base color group for minimap                                     |
+| `g:minimap_block_filetypes`                   | `['fugitive', 'nerdtree', 'tagbar', 'fzf' ]`              | disable minimap for specific file types                              |
+| `g:minimap_block_buftypes`                    | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                            |
+| `g:minimap_close_filetypes`                   | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                                |
+| `g:minimap_close_buftypes`                    | `[]`                                                      | close minimap for specific buffer types                              |
+| `g:minimap_left`                              | `0`                                                       | if set, minimap window will append left                              |
+| `g:minimap_highlight_range`                   | `0`                                                       | if set, minimap will highlight range of visible lines                |
+| `g:minimap_highlight_search`                  | `0`                                                       | if set, minimap will highlight searched patterns                     |
+| `g:minimap_git_colors`                        | `0`                                                       | if set, minimap will highlight range of changes as reported by git   |
 
 ### ⚙  Color Options
 Minimap.vim sets its own color groups to give a reasonable default.
