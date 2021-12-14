@@ -291,6 +291,8 @@ function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
     endif
     " Let users override the max width. By default, this does nothing.
     let denom = min([denom, g:minimap_window_width_override_for_scaling])
+    " Protect against divide by 0 or negative hscale - denom must be > 0
+    let denom = max([denom, 1])
 
     let hscale = string(2.0 * g:minimap_width / denom)
     let vscale = string(4.0 * winheight(s:win_info['mmwinid']) / line('$'))
