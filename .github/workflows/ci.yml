@@ -19,10 +19,11 @@ jobs:
     name: Unit Tests
     strategy:
       matrix:
-        os: [ windows-2022, ubuntu-20.04 ]
+        # os: [ windows-2022, ubuntu-20.04 ]
+        os: [ ubuntu-20.04 ]
         include:
-          - os: windows-2022
-            NEOVIM_CONFIG_PATH: ~/AppData/Local/nvim
+          # - os: windows-2022
+          #   NEOVIM_CONFIG_PATH: ~/AppData/Local/nvim
           - os: ubuntu-20.04
             NEOVIM_CONFIG_PATH: $HOME/.config/nvim
     runs-on: ${{ matrix.os }}
@@ -44,11 +45,11 @@ jobs:
           mkdir -p "$HOME/bin"
           ln -s /bin/echo "$HOME/bin/code-minimap"
           echo "$HOME/bin" >> $GITHUB_PATH
-      - if: ${{ contains(matrix.os, 'windows') }}
-        name: Create a fake code-minimap executable (Windows)
-        run: |
-          mkdir -p ~/bin
-          cp  C:/Windows/System32/doskey.exe ~/bin/code-minimap.exe
+      # - if: ${{ contains(matrix.os, 'windows') }}
+      #   name: Create a fake code-minimap executable (Windows)
+      #   run: |
+      #     mkdir -p ~/bin
+      #     cp  C:/Windows/System32/doskey.exe ~/bin/code-minimap.exe
 
       - name: Checkout Testify
         run: |
