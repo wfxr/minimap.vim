@@ -37,6 +37,14 @@ if !exists('g:minimap_width')
     let g:minimap_width = 10
 endif
 
+if !exists('g:minimap_window_width_override_for_scaling')
+    let g:minimap_window_width_override_for_scaling = 2147483647
+endif
+
+if !exists('g:minimap_window_width_cap')
+    let g:minimap_window_width_cap = 120
+endif
+
 if !exists('g:minimap_auto_start_win_enter')
     let g:minimap_auto_start_win_enter = 0
 endif
