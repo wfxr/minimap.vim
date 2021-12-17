@@ -4,7 +4,7 @@
 
 " Define the minimap dimensions
 let s:win_info = { 'winid': 0, 'height': 12, 'mm_height': 3,
-                \ 'max_width': 91, 'mm_max_width': 9}
+                \ 'working_width': 91, 'mm_max_width': 9}
 " Save the current view for restoring
 let s:testview = winsaveview()
 let s:testfile = expand('%')
