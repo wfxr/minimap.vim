@@ -26,6 +26,7 @@ function! minimap#vim#MinimapRefresh() abort
 endfunction
 
 function! minimap#vim#MinimapUpdateHighlight() abort
+    let s:win_info = s:get_window_info()
     call s:update_highlight()
 endfunction
 
@@ -269,6 +270,7 @@ function! s:refresh_minimap(force) abort
         return
     endif
 
+    let s:win_info = s:get_window_info()
     if a:force || !has_key(s:minimap_cache, bufnr) ||
                 \ s:minimap_cache[bufnr].mtime != getftime(fname)
         call s:generate_minimap(mmwinnr, bufnr, fname, &filetype)
@@ -280,21 +282,8 @@ function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
     if !exists('s:win_info') || s:win_info == {}
         let s:win_info = s:get_window_info()
     endif
-    let winwidth = winwidth('%')
-    if s:win_info['max_width'] > winwidth
-        " The buffer wraps, so scale it way down so the minimap doesn't scroll
-        let denom = s:win_info['max_width']
-    else
-        " The minimap loses detail if we go beyond 120, so cap it there.
-        " It's ok to cap it smaller because we don't wrap.
-        let denom = min([winwidth, g:minimap_window_width_cap])
-    endif
-    " Let users override the max width. By default, this does nothing.
-    let denom = min([denom, g:minimap_window_width_override_for_scaling])
-    " Protect against divide by 0 or negative hscale - denom must be > 0
-    let denom = max([denom, 1])
 
-    let hscale = string(2.0 * g:minimap_width / denom)
+    let hscale = string(2.0 * g:minimap_width / s:win_info['working_width'])
     let vscale = string(4.0 * winheight(s:win_info['mmwinid']) / line('$'))
 
     " Users that have custom shells and shell flags may face problems.
@@ -508,6 +497,10 @@ function! s:get_window_info() abort
             let max_width = max([max_width, col('.')])
             let line_num = line_num + 1
         endwhile
+        " Let users override the max width. By default, this does nothing.
+        let working_width = min([max_width, g:minimap_window_width_override_for_scaling])
+        " Protect against divide by 0 or negative hscale - working_width must be > 0
+        let working_width = max([working_width, 1])
 
         " Go to the minimap
         call win_gotoid(mmwinid)
@@ -537,9 +530,9 @@ function! s:get_window_info() abort
         call winrestview(curwinview)
 
         let g:minimap_getting_window_info = 0
-        return {'mmwinid': mmwinid,
+        return { 'mmwinid': mmwinid,
                     \ 'height': height, 'mm_height': mm_height,
-                    \ 'max_width': max_width, 'mm_max_width': mm_max_width}
+                    \ 'working_width': working_width, 'mm_max_width': mm_max_width }
     endif
     return {}
 endfunction
@@ -549,7 +542,6 @@ endfunction
 " This function builds a new line state table from scratch, clearing out the
 " old one.
 function! s:update_highlight(...) abort
-    let s:win_info = s:get_window_info()
     if len(s:win_info) == 0
         return
     endif
@@ -720,6 +712,7 @@ function! s:minimap_win_enter() abort
 endfunction
 
 function! s:source_win_enter() abort
+    let s:win_info = s:get_window_info()
     call s:update_highlight()
 endfunction
 
@@ -913,8 +906,8 @@ function! s:minimap_color_search_get_spans(win_info, query) abort
         " Braille takes 3 bytes when using UTF-8. Column position is specified
         " in number of bytes offset, so to calculate horizontal position to
         " pass to the highlighting function, we need to multiply by 3
-        let mm_col = 3 * (s:buffer_to_map(this_location['col'] - 1,       a:win_info['max_width'], a:win_info['mm_max_width']))
-        let mm_len = 3 * (s:buffer_to_map(this_location['match_len'] - 1, a:win_info['max_width'], a:win_info['mm_max_width']))
+        let mm_col = 3 * (s:buffer_to_map(this_location['col'] - 1,       a:win_info['working_width'], a:win_info['mm_max_width']))
+        let mm_len = 3 * (s:buffer_to_map(this_location['match_len'] - 1, a:win_info['working_width'], a:win_info['mm_max_width']))
         " If we don't land directly on an integer value of ([byte length]x + 1),
         " the highlight will not show up. Make sure the values land in those
         " bins. Above scaling gives 3 as a minimum. We take off any
