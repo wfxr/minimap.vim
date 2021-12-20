@@ -222,21 +222,28 @@ function! s:handle_autocmd(cmd) abort
         elseif s:ignored()
             return
         elseif a:cmd == 0           " WinEnter <buffer>
+            " echom 'WinEnter <buffer>'
             call s:close_auto()
         elseif a:cmd == 1           " WinEnter *
+            " echom 'WinEnter *'
             " If previously triggered minimap_did_quit, untrigger it
             let g:minimap_did_quit = 0
             call s:win_enter_handler()
         elseif a:cmd == 2           " BufWritePost,VimResized *
+            " echom 'BufWritePost,VimResized *'
             call s:refresh_minimap(1)
             call s:update_highlight()
         elseif a:cmd == 3           " BufEnter,FileType *
+            " echom 'BufEnter,FileType *'
             call s:buffer_enter_handler()
         elseif a:cmd == 4           " FocusGained,CursorMoved,CursorMovedI <buffer>
+            " echom 'FocusGained,CursorMoved,CursorMovedI <buffer>'
             call s:minimap_move()
         elseif a:cmd == 5           " FocusGained,WinScrolled * (neovim); else same autocmds as below
+            " echom 'FocusGained,WinScrolled * (neovim); else same autocmds as below'
             call s:source_win_scroll()
         elseif a:cmd == 6           " FocusGained,CursorMoved,CursorMovedI *
+            " echom 'FocusGained,CursorMoved,CursorMovedI *'
             call s:source_move()
         endif
     endif
@@ -717,7 +724,9 @@ function! s:source_win_enter() abort
 endfunction
 
 function! s:minimap_buffer_enter_handler() abort
-    " do nothing
+    " Move the cursor to where we were in the main buffer. Without this it
+    " jumps to the top of the minimap
+    call cursor(s:last_pos, 1)
 endfunction
 
 function! s:source_buffer_enter_handler() abort
