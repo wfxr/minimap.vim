@@ -210,9 +210,9 @@ nnoremap <silent> `` :nohlsearch<CR>:call minimap#vim#ClearColorSearch()<CR>
 
 ### 🌼 Maintainers
 
-| [![wfxr](https://avatars1.githubusercontent.com/u/6105425?s=72)](https://github.com/wfxr) | [![rabirabirara](https://avatars1.githubusercontent.com/u/59306451?s=72)](https://github.com/rabirabirara) | [![ZNielsen](https://avatars1.githubusercontent.com/u/13890741?s=72)](https://github.com/ZNielsen) |
-| :---:                                                                                     | :---:                                                                                                      | :---:                                                                                              |
-| [wfxr](https://github.com/wfxr)                                                           | [rabirabirara](https://github.com/rabirabirara)                                                            | [ZNielsen](https://github.com/ZNielsen)                                                            |
+| [![ZNielsen](https://avatars1.githubusercontent.com/u/13890741?s=72)](https://github.com/ZNielsen) | [![wfxr](https://avatars1.githubusercontent.com/u/6105425?s=72)](https://github.com/wfxr) | [![rabirabirara](https://avatars1.githubusercontent.com/u/59306451?s=72)](https://github.com/rabirabirara) |
+| :---:                                                                                              | :---:                                                                                     | :---:                                                                                                      |
+| [ZNielsen](https://github.com/ZNielsen)                                                            | [wfxr](https://github.com/wfxr)                                                           | [rabirabirara](https://github.com/rabirabirara)                                                            |
 
 ### 📃 License
 
