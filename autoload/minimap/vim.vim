@@ -8,6 +8,7 @@ let s:STATE_DIFF_MOD     = 0b01000
 let s:STATE_WINDOW_RANGE = 0b10000
 let s:last_pos = {}
 let s:last_range = {}
+let s:win_info = {}
 
 function! minimap#vim#MinimapToggle() abort
     call s:toggle_window()
@@ -843,7 +844,7 @@ function! minimap#vim#UpdateColorSearch(query) abort
 endfunction
 
 function! s:minimap_update_color_search(query) abort
-    if win_getid() != s:win_info['mmwinid']
+    if s:win_info != {} && win_getid() != s:win_info['mmwinid']
         call s:minimap_color_search(s:win_info, a:query)
     endif
 endfunction
