@@ -4,31 +4,36 @@
 
 " Define the minimap dimensions
 let s:win_info = { 'winid': 0, 'height': 12, 'mm_height': 3,
-                \ 'working_width': 91, 'mm_max_width': 9}
+                \ 'working_width': 91, 'mm_max_width': 9, 'max_width': 91}
 " Save the current view for restoring
 let s:testview = winsaveview()
 let s:testfile = expand('%')
 
+if has('win32')
+    let s:tempfolder = fnamemodify(expand("$TEMP"), ":p:h")
+else
+    let s:tempfolder = '/tmp'
+endif
+
 " Search tests
 function! s:minimap_test_search()
     " Create the subjest of our search
-    let test_file = '/tmp/minimap_search_unit_test_file'
-    let text =        'This is a test line and it needs to be long enough to register as multiple braille characters.\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'pad height\n'
-    let text = text . 'And another, this one is shorter\n'
-    let text = text . 'and flows to the numbers line, this one, this one has some numbers 1234 numbers'
-    execute 'silent !echo "' . text . '" > ' . test_file
+    let test_file = s:tempfolder . '/minimap_search_unit_test_file'
+    let text = ["This is a test line and it needs to be long enough to register as multiple braille characters." 
+             \ ,"pad height" 
+             \ ,"pad height" 
+             \ ,"pad height" 
+             \ ,"pad height" 
+             \ ,"pad height" 
+             \ ,"pad height" 
+             \ ,"pad height" 
+             \ ,"pad height" 
+             \ ,"pad height" 
+             \ ,"And another, this one is shorter" 
+             \ ,"and flows to the numbers line, this one, this one has some numbers 1234 numbers"]
+    call writefile(text, test_file)
     execute 'edit ' . test_file
 endfunction
-
 function! s:minimap_test_search_beginning_of_file()
     " Beginning of file
     let search = '\cThi'
@@ -118,3 +123,4 @@ call testify#it('Search - Many results',         function('s:minimap_test_search
 call testify#it('Search - Long Match',           function('s:minimap_test_search_long_match'))
 call testify#it('Search - History',              function('s:minimap_test_search_history'))
 call testify#it('Search tear down', function('s:minimap_test_search_tear_down'))
+
