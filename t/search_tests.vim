@@ -19,18 +19,18 @@ endif
 function! s:minimap_test_search()
     " Create the subjest of our search
     let test_file = s:tempfolder . '/minimap_search_unit_test_file'
-    let text = ["This is a test line and it needs to be long enough to register as multiple braille characters." 
-             \ ,"pad height" 
-             \ ,"pad height" 
-             \ ,"pad height" 
-             \ ,"pad height" 
-             \ ,"pad height" 
-             \ ,"pad height" 
-             \ ,"pad height" 
-             \ ,"pad height" 
-             \ ,"pad height" 
-             \ ,"And another, this one is shorter" 
-             \ ,"and flows to the numbers line, this one, this one has some numbers 1234 numbers"]
+    let text = [ 'This is a test line and it needs to be long enough to register as multiple braille characters.'
+             \ , 'pad height'
+             \ , 'pad height'
+             \ , 'pad height'
+             \ , 'pad height'
+             \ , 'pad height'
+             \ , 'pad height'
+             \ , 'pad height'
+             \ , 'pad height'
+             \ , 'pad height'
+             \ , 'And another, this one is shorter'
+             \ , 'and flows to the numbers line, this one, this one has some numbers 1234 numbers']
     call writefile(text, test_file)
     execute 'edit ' . test_file
 endfunction
