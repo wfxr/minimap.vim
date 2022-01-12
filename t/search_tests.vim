@@ -10,7 +10,7 @@ let s:testview = winsaveview()
 let s:testfile = expand('%')
 
 if has('win32')
-    let s:tempfolder = fnamemodify(expand("$TEMP"), ":p:h")
+    let s:tempfolder = fnamemodify(expand('$TEMP'), ':p:h')
 else
     let s:tempfolder = '/tmp'
 endif
@@ -123,4 +123,3 @@ call testify#it('Search - Many results',         function('s:minimap_test_search
 call testify#it('Search - Long Match',           function('s:minimap_test_search_long_match'))
 call testify#it('Search - History',              function('s:minimap_test_search_history'))
 call testify#it('Search tear down', function('s:minimap_test_search_tear_down'))
-
