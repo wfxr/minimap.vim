@@ -32,6 +32,13 @@ function! minimap#vim#MinimapUpdateHighlight() abort
     call s:update_highlight()
 endfunction
 
+function! minimap#vim#MinimapRescan() abort
+    call remove(s:len_cache, expand('%'))
+    let s:win_info = s:get_window_info()
+    call s:refresh_minimap(1)
+    call s:update_highlight()
+endfunction
+
 function! s:buffer_enter_handler() abort
     if &filetype ==# 'minimap'
         call s:minimap_buffer_enter_handler()

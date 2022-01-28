@@ -64,13 +64,14 @@ let g:minimap_auto_start_win_enter = 1
 
 ### 🛠  Commands
 
-| Flag                   | Description                    |
-|------------------------|--------------------------------|
-| Minimap                | Show minimap window            |
-| MinimapClose           | Close minimap window           |
-| MinimapToggle          | Toggle minimap window          |
-| MinimapRefresh         | Force refresh minimap window   |
-| MinimapUpdateHighlight | Force update minimap highlight |
+| Flag                   | Description                                  |
+|------------------------|----------------------------------------------|
+| Minimap                | Show minimap window                          |
+| MinimapClose           | Close minimap window                         |
+| MinimapToggle          | Toggle minimap window                        |
+| MinimapRefresh         | Force refresh minimap window                 |
+| MinimapUpdateHighlight | Force update minimap highlight               |
+| MinimapRescan          | Force recalculation of minimap scaling ratio |
 
 ### ⚙  Options
 

@@ -21,6 +21,7 @@ command! MinimapClose           call minimap#vim#MinimapClose()
 command! MinimapToggle          call minimap#vim#MinimapToggle()
 command! MinimapRefresh         call minimap#vim#MinimapRefresh()
 command! MinimapUpdateHighlight call minimap#vim#MinimapUpdateHighlight()
+command! MinimapRescan          call minimap#vim#MinimapRescan()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Configuration
