@@ -31,6 +31,12 @@ MinimapUpdateHighlight                                 *MinimapUpdateHighlight*
 
   Force update minimap window
 
+MinimapRescan                                                   *MinimapRescan*
+
+  Force recalculation of minimap scaling ratio.
+  Scans every line of the buffer to calculate the scaling ratio, then updates
+  the minimap. Scanning can cause noticeable lag on large files.
+
 =============================================================================
 2. Options                                                    *minimap-options*
 

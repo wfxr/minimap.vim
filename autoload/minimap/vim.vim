@@ -9,6 +9,7 @@ let s:STATE_WINDOW_RANGE = 0b10000
 let s:last_pos = {}
 let s:last_range = {}
 let s:win_info = {}
+let s:len_cache = {}
 
 function! minimap#vim#MinimapToggle() abort
     call s:toggle_window()
@@ -28,6 +29,13 @@ endfunction
 
 function! minimap#vim#MinimapUpdateHighlight() abort
     let s:win_info = s:get_window_info()
+    call s:update_highlight()
+endfunction
+
+function! minimap#vim#MinimapRescan() abort
+    call remove(s:len_cache, expand('%'))
+    let s:win_info = s:get_window_info()
+    call s:refresh_minimap(1)
     call s:update_highlight()
 endfunction
 
@@ -496,15 +504,22 @@ function! s:get_window_info() abort
         let mmwinid = win_getid(mmwinnr)
         let height = line('$')
         let max_width = 0
-        " Get the max width of this buffer
-        let line_num = 1
-        while line_num <= line('$')
-            call setpos('.', [0, line_num, 1])
-            " Move cursor to the last non-blank character on the line
-            normal! g_
-            let max_width = max([max_width, col('.')])
-            let line_num = line_num + 1
-        endwhile
+        " Get the max width of this buffer. Value is cached so this only runs
+        " on first open of any file.
+        let filename = expand('%')
+        if has_key(s:len_cache, filename)
+            let max_width = s:len_cache[filename]
+        else
+            let line_num = 1
+            while line_num <= line('$')
+                call setpos('.', [0, line_num, 1])
+                " Move cursor to the last non-blank character on the line
+                normal! g_
+                let max_width = max([max_width, col('.')])
+                let line_num = line_num + 1
+            endwhile
+            let s:len_cache[filename] = max_width
+        endif
         " Let users override the max width. By default, this does nothing.
         let working_width = min([max_width, g:minimap_window_width_override_for_scaling])
         " Protect against divide by 0 or negative hscale - working_width must be > 0
