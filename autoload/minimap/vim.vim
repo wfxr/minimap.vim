@@ -139,7 +139,7 @@ function! s:open_window() abort
         return
     endif
 
-    let g:minimap_opening = 1
+    let g:minimap_opening = 1 " Used to lock out autocmds, otherwise we get multiple fires that take a long time
 
     " Preserve 'previous buffer' when opening the minimap
     let prev_buffer = bufnr('#')
@@ -212,6 +212,7 @@ function! s:open_window() abort
 
     execute 'wincmd p'
     call s:refresh_minimap(1)
+    let s:win_info = s:get_window_info() " Must call after refresh_minimap so we can get the mm height after creation
     call s:update_highlight()
 
     " Restore buffer orders
