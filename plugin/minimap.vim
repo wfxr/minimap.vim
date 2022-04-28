@@ -81,6 +81,10 @@ if !exists('g:minimap_git_colors')
     let g:minimap_git_colors = 0
 endif
 
+if !exists('g:minimap_enable_highlight_colorgroup')
+    let g:minimap_git_colors = 1
+endif
+
 if !exists('g:minimap_highlight_search')
     let g:minimap_highlight_search = 0
 endif
@@ -103,7 +107,7 @@ highlight minimapRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#
 " Need the autocmd because some colorschemes clear all colors, so we need to
 " re-add them so they stay valid
 
-if !exists('g:minimap_set_highlights')
+if !exists('g:minimap_enable_highlight_colorgroup')
     augroup MinimapColorSchemes
         autocmd!
         autocmd ColorScheme *
