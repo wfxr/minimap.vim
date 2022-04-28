@@ -103,21 +103,23 @@ highlight minimapRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#
 " Need the autocmd because some colorschemes clear all colors, so we need to
 " re-add them so they stay valid
 
-augroup MinimapColorSchemes
-    autocmd!
-    autocmd ColorScheme *
-        \ highlight minimapCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
-        \ highlight minimapRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
-        \ highlight minimapDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
-        \ highlight minimapDiffAdded                     ctermfg=148               guifg=#A4E400 |
-        \ highlight minimapDiffLine                      ctermfg=141               guifg=#AF87FF |
-        \ highlight minimapCursorDiffRemoved ctermbg=59  ctermfg=197 guibg=#5F5F5F guifg=#FC1A70 |
-        \ highlight minimapCursorDiffAdded   ctermbg=59  ctermfg=148 guibg=#5F5F5F guifg=#A4E400 |
-        \ highlight minimapCursorDiffLine    ctermbg=59  ctermfg=141 guibg=#5F5F5F guifg=#AF87FF |
-        \ highlight minimapRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
-        \ highlight minimapRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
-        \ highlight minimapRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
-augroup END
+if !exists('g:minimap_set_highlights')
+    augroup MinimapColorSchemes
+        autocmd!
+        autocmd ColorScheme *
+            \ highlight minimapCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
+            \ highlight minimapRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87 |
+            \ highlight minimapDiffRemoved                   ctermfg=197               guifg=#FC1A70 |
+            \ highlight minimapDiffAdded                     ctermfg=148               guifg=#A4E400 |
+            \ highlight minimapDiffLine                      ctermfg=141               guifg=#AF87FF |
+            \ highlight minimapCursorDiffRemoved ctermbg=59  ctermfg=197 guibg=#5F5F5F guifg=#FC1A70 |
+            \ highlight minimapCursorDiffAdded   ctermbg=59  ctermfg=148 guibg=#5F5F5F guifg=#A4E400 |
+            \ highlight minimapCursorDiffLine    ctermbg=59  ctermfg=141 guibg=#5F5F5F guifg=#AF87FF |
+            \ highlight minimapRangeDiffRemoved  ctermbg=242 ctermfg=197 guibg=#4F4F4F guifg=#FC1A70 |
+            \ highlight minimapRangeDiffAdded    ctermbg=242 ctermfg=148 guibg=#4F4F4F guifg=#A4E400 |
+            \ highlight minimapRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#AF87FF
+    augroup END
+endif
 
 if !exists('g:minimap_base_highlight')
     let g:minimap_base_highlight = 'Normal'

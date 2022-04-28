@@ -90,6 +90,8 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_highlight_range`                   | `0`                                                       | if set, minimap will highlight range of visible lines                |
 | `g:minimap_highlight_search`                  | `0`                                                       | if set, minimap will highlight searched patterns                     |
 | `g:minimap_git_colors`                        | `0`                                                       | if set, minimap will highlight range of changes as reported by git   |
+| `g:minimap_set_highlights`                    | `1`                                                       | if set, minimap will create an autocommand to set highlights on color scheme changes. |
+
 
 ### ⚙  Color Options
 Minimap.vim sets its own color groups to give a reasonable default.
@@ -112,27 +114,33 @@ Minimap.vim sets its own color groups to give a reasonable default.
 | `g:minimap_range_diff_color`        | `minimapRangeDiffLine`                                    | the color group for the window range encompassing modified lines     |
 
 You can create your own colorgroup by specifying the foreground and background colors for the cterm or gui:
+
 ```
 :highlight minimapCursor ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87
 ```
 
 For more information, see `:help highlight`
 
-note: some colorschemes will clear all previous colors, so you may have to add an `autocmd` to ensure your custom colorgroups are added back:
+Note: some colorschemes will clear all previous colors, so you may have to add an `autocmd` to ensure your custom colorgroups are added back:
+
 ```
 autocmd ColorScheme *
         \ highlight minimapCursor            ctermbg=59  ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 |
         \ highlight minimapRange             ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87
 ```
 
+If you prefer to disable this behavior, set `g:minimap_set_highlights` to 0 / false. This is useful if you have a color scheme that sets the minimap highlight groups explicitly.
+
 ### 💬 F.A.Q
 
 ---
+
 #### Highlight and scroll are not working properly.
 
 Check the vim version you are using. `minimap.vim` requires [vim 8.2+](https://github.com/wfxr/minimap.vim/issues/5) or [neovim 0.5.0+](https://github.com/wfxr/minimap.vim/issues/4).
 
 ---
+
 #### Integrated with diagnostics or git status plugins?
 
 Not implemented currently but it should be possible.
