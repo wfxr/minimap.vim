@@ -82,7 +82,7 @@ if !exists('g:minimap_git_colors')
 endif
 
 if !exists('g:minimap_enable_highlight_colorgroup')
-    let g:minimap_git_colors = 1
+    let g:minimap_enable_highlight_colorgroup = 1
 endif
 
 if !exists('g:minimap_highlight_search')
