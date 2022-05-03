@@ -151,6 +151,13 @@ g:minimap_git_colors                                     *g:minimap_git_colors*
   and `g:minimap_diff_color` are used for additions, deletions, and line changes
   respectively.
 
+`g:minimap_enable_highlight_colorgroup`
+
+  Type: |Number|
+  Default: 1
+
+  If set to 1, minimap will create anautocommand to set highlights on color scheme changes.
+
 g:minimap_base_highlight                             *g:minimap_base_highlight*
 
   Type: |String|
