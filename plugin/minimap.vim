@@ -222,6 +222,8 @@ endif
 if g:minimap_highlight_search != 0
     nnoremap <silent> * *:call minimap#vim#UpdateColorSearch(1)<CR>
     nnoremap <silent> # #:call minimap#vim#UpdateColorSearch(1)<CR>
+    nnoremap <silent> g* g*:call minimap#vim#UpdateColorSearch(1)<CR>
+    nnoremap <silent> g# g#:call minimap#vim#UpdateColorSearch(1)<CR>
     " Example mapping for nohlsearch to also clear the minimap search highlighting
     " nnoremap <silent> `` :nohlsearch<CR>:call minimap#vim#ClearColorSearch()<CR>
 endif
