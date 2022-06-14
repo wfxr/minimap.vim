@@ -152,7 +152,7 @@ function! s:open_window() abort
     setlocal filetype=minimap
     setlocal noreadonly " in case the "view" mode is used
     setlocal buftype=nofile
-    setlocal bufhidden=hide
+    setlocal bufhidden=wipe
     setlocal noswapfile
     setlocal nobuflisted
     setlocal nomodifiable
