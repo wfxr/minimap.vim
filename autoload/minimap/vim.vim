@@ -135,7 +135,7 @@ endfunction
 function! s:open_window() abort
     " If the minimap window is already open jump to it
     let mmwinnr = bufwinnr('-MINIMAP-')
-    if mmwinnr != -1 || s:closed_on()   " Don't open if file/buftype is closed on
+    if mmwinnr != -1 || s:closed_on() || s:ignored() " Don't open if file/buftype is ignored/closed on
         return
     endif
 
