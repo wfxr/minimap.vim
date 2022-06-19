@@ -191,12 +191,12 @@ function! s:open_window() abort
                 autocmd FocusGained,CursorMoved,CursorMovedI *  call s:handle_autocmd(5)
             endif
         endif
-        autocmd FocusGained,CursorMoved,CursorMovedI *      call s:handle_autocmd(6)
+        autocmd FocusGained,CursorMoved,CursorMovedI *          call s:handle_autocmd(6)
         if g:minimap_highlight_search != 0
             autocmd CmdlineLeave * if expand('<afile>') == '/' || expand('<afile>') == '?' |
                         \ call s:minimap_update_color_search(getcmdline())
         endif
-        autocmd DiffUpdated *                                   call s:handle_autocmd(7)
+        autocmd VimEnter,DiffUpdated *                          call s:handle_autocmd(7)
     augroup END
 
     " https://github.com/neovim/neovim/issues/6211
@@ -256,8 +256,8 @@ function! s:handle_autocmd(cmd) abort
         elseif a:cmd == 6           " FocusGained,CursorMoved,CursorMovedI *
             " echom 'FocusGained,CursorMoved,CursorMovedI *'
             call s:source_move()
-        elseif a:cmd == 7           " DiffUpdated *
-            " echom 'DiffUpdated *'
+        elseif a:cmd == 7           " VimEnter,DiffUpdated *
+            " echom 'VimEnter,DiffUpdated *'
             call s:minimap_diffoff()
         endif
     endif
