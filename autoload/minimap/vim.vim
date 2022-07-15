@@ -711,6 +711,9 @@ function! s:clear_highlights() abort
 endfunction
 
 function! s:minimap_move() abort
+    if s:win_info == {}
+        let s:win_info = s:get_window_info()
+    end
     let curr = line('.')
 
     execute 'wincmd p'
