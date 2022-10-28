@@ -87,7 +87,7 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_close_filetypes`                   | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                                |
 | `g:minimap_close_buftypes`                    | `[]`                                                      | close minimap for specific buffer types                              |
 | `g:minimap_left`                              | `0`                                                       | if set, minimap window will append left                              |
-| `g:minimap_highlight_range`                   | `0`                                                       | if set, minimap will highlight range of visible lines                |
+| `g:minimap_highlight_range`                   | `1`                                                       | if set, minimap will highlight range of visible lines                |
 | `g:minimap_highlight_search`                  | `0`                                                       | if set, minimap will highlight searched patterns                     |
 | `g:minimap_git_colors`                        | `0`                                                       | if set, minimap will highlight range of changes as reported by git   |
 | `g:minimap_enable_highlight_colorgroup`                    | `1`                                                       | if set, minimap will create an autocommand to set highlights on color scheme changes. |

@@ -74,7 +74,7 @@ endif
 """ Feature Flags
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if !exists('g:minimap_highlight_range')
-    let g:minimap_highlight_range = 0
+    let g:minimap_highlight_range = 1
 endif
 
 if !exists('g:minimap_git_colors')
