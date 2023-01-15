@@ -506,14 +506,14 @@ endfunction
 " All of this results in the minimap 'popping in', but the tradeoff is we are
 " no longer blocking the file open to scan for the longest line.
 let s:chunks = ['']
-function s:background_worker_event(job_id, data, event) dict
-    if a:event == 'stdout'
+function! s:background_worker_event(job_id, data, event) dict abort
+    if a:event ==? 'stdout'
         " echom 'received callback stdout: '.join(a:data)
         let s:chunks[-1] .= a:data[0]
         call extend(s:chunks, a:data[1:])
-    elseif a:event == 'stderr'
+    elseif a:event ==? 'stderr'
         " echom 'received callback stderr: '.join(a:data)
-    elseif a:event == 'exit'
+    elseif a:event ==? 'exit'
         " Have the data, call the set function
         " echom 'received callback exit '.join(s:chunks)
         for multiplier in range(0, len(s:chunks)/2 - 1)
