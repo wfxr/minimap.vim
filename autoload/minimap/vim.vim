@@ -63,6 +63,13 @@ function! s:win_enter_handler() abort
     endif
 endfunction
 
+function! s:get_longest_line_cmd() abort
+    if has('mac')
+        return 'gwc'
+    endif
+    return 'wc'
+endfunction
+
 let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
 if has('win32')
     let s:minimap_gen = s:bin_dir.'minimap_generator.bat'
@@ -514,13 +521,24 @@ function! s:background_worker_event(job_id, data, event) dict abort
     elseif a:event ==? 'stderr'
         " echom 'received callback stderr: '.join(a:data)
     elseif a:event ==? 'exit'
-        " Have the data, call the set function
+        " Have the data, parse then call the set function
         " echom 'received callback exit '.join(s:chunks)
-        for multiplier in range(0, len(s:chunks)/2 - 1)
-            let offset = 2 * multiplier
-            " echom 'doing ' . len(s:chunks) . '(' . len(s:chunks)/2 . ') on ' . multiplier . ' offset ' . offset
-            " echom 'adding' . s:chunks[0 + offset] . ' val ' . str2nr(s:chunks[1 + offset])
-            let s:len_cache[s:chunks[0 + offset]] = str2nr(s:chunks[1 + offset])
+
+        " Parse each line into the number of lines + filename. wc -L gives
+        " <length of longest line> <filename>
+
+        for chunk in s:chunks
+            " echom 'doing ' . len(s:chunks) . '(' . chunk . ')'
+            if len(chunk) == 0
+                continue
+            endif
+
+            let splits = split(chunk, ' ')
+            let longest = splits[0]
+            let file_name = join(splits[1:], ' ')
+
+            " echom 'adding [' . file_name . '] val [' . str2nr(longest) .']'
+            let s:len_cache[file_name] = str2nr(longest)
         endfor
         let g:minimap_getting_window_info = 0
         call s:refresh_minimap(1)
@@ -564,8 +582,16 @@ function! s:get_window_info() abort
         if has_key(s:len_cache, filename)
             let max_width = s:len_cache[filename]
         else
-            " Spawn a job to get the longest line
-            let s:job_id = jobstart(['code-minimap', filename, '-O', 'longestline'], s:callbacks)
+            " Make sure the file exists
+            if filereadable(filename)
+                " Spawn a job to get the longest line
+                let longest_line_cmd = s:get_longest_line_cmd()
+                let s:job_id = jobstart([longest_line_cmd, '-L', filename], s:callbacks)
+            else
+                " If not, don't spawn a job, it will freak out. We know
+                " there's nothing there, so just fill with 0
+                let max_width = 0
+            endif
         endif
         " Let users override the max width. By default, this does nothing.
         let working_width = min([max_width, g:minimap_window_width_override_for_scaling])
