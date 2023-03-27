@@ -581,6 +581,16 @@ function! s:get_window_info() abort
         " echom 'checking filename ' . filename
         if has_key(s:len_cache, filename)
             let max_width = s:len_cache[filename]
+        elseif g:minimap_background_processing == 0
+            let line_num = 1
+            while line_num <= line('$')
+                call setpos('.', [0, line_num, 1])
+                " Move cursor to the last non-blank character on the line
+                normal! g_
+                let max_width = max([max_width, col('.')])
+                let line_num = line_num + 1
+            endwhile
+            let s:len_cache[filename] = max_width
         else
             " Make sure the file exists
             if filereadable(filename)
@@ -589,8 +599,7 @@ function! s:get_window_info() abort
                 let s:job_id = jobstart([longest_line_cmd, '-L', filename], s:callbacks)
             else
                 " If not, don't spawn a job, it will freak out. We know
-                " there's nothing there, so just fill with 0
-                let max_width = 0
+                " there's nothing there, so let 0 ride.
             endif
         endif
         " Let users override the max width. By default, this does nothing.

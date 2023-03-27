@@ -141,6 +141,20 @@ g:minimap_highlight_search                         *g:minimap_highlight_search*
   the user. The highlight group `g:minimap_search_color` will be used for
   highlighting matches.
 
+g:minimap_background_processing               *g:minimap_background_processing*
+
+  Type: |Number|
+  Default: `0`
+
+  If set to 1, the minimap will use background processing to get the longest
+  line in a file, which is used for minimap scaling. The default behavior will
+  tend to lag with long files, as all the minimap calculation is done serially
+  at file-open time, blocking until the longest line is obtained. Background
+  processing will allow editing/navigation sooner, with the minimap 'popping
+  in' when the longest line is ready.
+  On MacOS, this requires `gnu-wc`, as the default version of `wc` does not
+  support the `-L` (longest line) flag.
+
 g:minimap_git_colors                                     *g:minimap_git_colors*
 
   Type: |Number|

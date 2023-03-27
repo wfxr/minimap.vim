@@ -89,8 +89,9 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_left`                              | `0`                                                       | if set, minimap window will append left                              |
 | `g:minimap_highlight_range`                   | `0`                                                       | if set, minimap will highlight range of visible lines                |
 | `g:minimap_highlight_search`                  | `0`                                                       | if set, minimap will highlight searched patterns                     |
+| `g:minimap_background_processing`             | `0`                                                       | if set, minimap will use a background job to get the longest line (requires `gnu-wc` on MacOS)   |
 | `g:minimap_git_colors`                        | `0`                                                       | if set, minimap will highlight range of changes as reported by git   |
-| `g:minimap_enable_highlight_colorgroup`                    | `1`                                                       | if set, minimap will create an autocommand to set highlights on color scheme changes. |
+| `g:minimap_enable_highlight_colorgroup`       | `1`                                                       | if set, minimap will create an autocommand to set highlights on color scheme changes. |
 
 
 ### ⚙  Color Options
@@ -190,6 +191,7 @@ is recent enough (after November 7, 2020), you can set this option to update
 the highlight when the window is scrolled.
 
 ![screenshot-highlight-range](https://raw.githubusercontent.com/wfxr/i/master/minimap-vim-highlight-range.png)
+
 ---
 #### I'm using `g:minimap_highlight_search` and the highlighted searches don't go away until I `:nohlsearch` and save!
 
@@ -198,6 +200,16 @@ minimap all in one action. For example:
 ```
 nnoremap <silent> `` :nohlsearch<CR>:call minimap#vim#ClearColorSearch()<CR>
 ```
+
+---
+#### I'm using `g:minimap_background_processing` on MacOS and the minimap isn't working!
+
+The version of `wc` that ships with MacOS does not have support for the `-L` flag.
+To use background processing on MacOS, install `gnu-wc`. Example via homebrew:
+```
+brew install gnu-wc
+```
+
 ---
 ### 📋 Running Unit Tests
 - Install [Testify](https://github.com/dhruvasagar/vim-testify).
