@@ -28,5 +28,5 @@ endfunction
 
 call testify#it('Minimap conversion math works as expected',
             \ function('s:minimap_test_utility'))
-call testify#it('Opening minimap restults in only one call to update_minimap',
+call testify#it('Opening minimap results in only one call to update_minimap',
             \ function('s:minimap_test_calls_to_update_minimap'))

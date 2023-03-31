@@ -654,7 +654,7 @@ endfunction
 " This function builds a new line state table from scratch, clearing out the
 " old one.
 function! s:update_highlight(...) abort
-    if len(s:win_info) == 0
+    if s:win_info == {}
         return
     endif
 

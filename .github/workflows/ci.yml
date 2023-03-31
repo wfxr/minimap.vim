@@ -59,7 +59,8 @@ jobs:
         shell: bash
       - name: Run Unit Tests
         run: |
-          nvim -c "set rtp+=$NEOVIM_CONFIG_PATH/plugins/vim-testify" -c "set rtp+=./" -S $NEOVIM_CONFIG_PATH/plugins/vim-testify/plugin/testify.vim -S ./plugin/minimap.vim +TestifySuite
+          echo "not empty file" > testfile
+          nvim -c "set rtp+=$NEOVIM_CONFIG_PATH/plugins/vim-testify" -c "set rtp+=./" -S $NEOVIM_CONFIG_PATH/plugins/vim-testify/plugin/testify.vim -S ./plugin/minimap.vim +TestifySuite testfile
         shell: bash
         env:
           NEOVIM_CONFIG_PATH: '${{ matrix.NEOVIM_CONFIG_PATH }}'
