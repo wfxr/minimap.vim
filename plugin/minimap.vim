@@ -89,6 +89,10 @@ if !exists('g:minimap_highlight_search')
     let g:minimap_highlight_search = 0
 endif
 
+if !exists('g:minimap_background_processing')
+    let g:minimap_background_processing = 0
+endif
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Colors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

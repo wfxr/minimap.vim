@@ -28,13 +28,13 @@ function! minimap#vim#MinimapRefresh() abort
 endfunction
 
 function! minimap#vim#MinimapUpdateHighlight() abort
-    let s:win_info = s:get_window_info()
+    call s:get_window_info()
     call s:update_highlight()
 endfunction
 
 function! minimap#vim#MinimapRescan() abort
     call remove(s:len_cache, expand('%'))
-    let s:win_info = s:get_window_info()
+    call s:get_window_info()
     call s:refresh_minimap(1)
     call s:update_highlight()
 endfunction
@@ -61,6 +61,13 @@ function! s:win_enter_handler() abort
     else
         call s:source_win_enter()
     endif
+endfunction
+
+function! s:get_longest_line_cmd() abort
+    if has('mac')
+        return 'gwc'
+    endif
+    return 'wc'
 endfunction
 
 let s:bin_dir = expand('<sfile>:p:h:h:h').'/bin/'
@@ -213,7 +220,7 @@ function! s:open_window() abort
 
     execute 'wincmd p'
     call s:refresh_minimap(1)
-    let s:win_info = s:get_window_info() " Must call after refresh_minimap so we can get the mm height after creation
+    call s:get_window_info() " Must call after refresh_minimap so we can get the mm height after creation
     call s:update_highlight()
 
     " Restore buffer orders
@@ -291,7 +298,7 @@ function! s:refresh_minimap(force) abort
         return
     endif
 
-    let s:win_info = s:get_window_info()
+    call s:get_window_info()
     if a:force || !has_key(s:minimap_cache, bufnr) ||
                 \ s:minimap_cache[bufnr].mtime != getftime(fname)
         call s:generate_minimap(mmwinnr, bufnr, fname, &filetype)
@@ -301,7 +308,7 @@ endfunction
 
 function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
     if !exists('s:win_info') || s:win_info == {}
-        let s:win_info = s:get_window_info()
+        call s:get_window_info()
     endif
 
     let hscale = string(2.0 * g:minimap_width / s:win_info['working_width'])
@@ -488,6 +495,62 @@ function! s:get_highlight_range(win_info) abort
     return { 'pos1': pos1, 'pos2': pos2 }
 endfunction
 
+" We expect to get 2 things from the background worker, separated by newlines:
+" 1) The filename that was checked
+" 2) The number of characters in the longest line (currently expecting ascii
+"    characters, multibyte characters haven't seen any testing)
+"
+" This event function collects the output we have gotten from the worker.
+" Information may arrive all chunked up, so the collection step is required,
+" see: https://neovim.io/doc/user/job_control.html
+" After the program exits, we set the cached length. Following symlinks will
+" result in multiple file names being checked, even though they are the same
+" file. (aside: That may have been part of the reason the original 'get the
+" length inline' strategy was so slow.)
+" Once we have the cached length set, we do a hard refresh of the minimap,
+" which will now find a cached length value and won't spawn another job for
+" this file.
+" All of this results in the minimap 'popping in', but the tradeoff is we are
+" no longer blocking the file open to scan for the longest line.
+let s:chunks = ['']
+function! s:background_worker_event(job_id, data, event) dict abort
+    if a:event ==? 'stdout'
+        " echom 'received callback stdout: '.join(a:data)
+        let s:chunks[-1] .= a:data[0]
+        call extend(s:chunks, a:data[1:])
+    elseif a:event ==? 'stderr'
+        " echom 'received callback stderr: '.join(a:data)
+    elseif a:event ==? 'exit'
+        " Have the data, parse then call the set function
+        " echom 'received callback exit '.join(s:chunks)
+
+        " Parse each line into the number of lines + filename. wc -L gives
+        " <length of longest line> <filename>
+
+        for chunk in s:chunks
+            " echom 'doing ' . len(s:chunks) . '(' . chunk . ')'
+            if len(chunk) == 0
+                continue
+            endif
+
+            let splits = split(chunk, ' ')
+            let longest = splits[0]
+            let file_name = join(splits[1:], ' ')
+
+            " echom 'adding [' . file_name . '] val [' . str2nr(longest) .']'
+            let s:len_cache[file_name] = str2nr(longest)
+        endfor
+        let g:minimap_getting_window_info = 0
+        call s:refresh_minimap(1)
+        call s:update_highlight()
+    endif
+endfunction
+let s:callbacks = {
+\ 'on_stdout': function('s:background_worker_event'),
+\ 'on_stderr': function('s:background_worker_event'),
+\ 'on_exit': function('s:background_worker_event')
+\ }
+
 function! s:get_window_info() abort
     " This function moves to the minimap to get info, which will trigger
     " autocmds set up to catch switching windows. Protect with a mutex so it
@@ -510,11 +573,15 @@ function! s:get_window_info() abort
         let height = line('$')
         let max_width = 0
         " Get the max width of this buffer. Value is cached so this only runs
-        " on first open of any file.
+        " on first open of any file. This means significant changes to the
+        " file may result in an inaccurate minimap, but the tradeoff is worth
+        " it. This cache only lasts for the life of this vim instance, so it
+        " will be updated with each new open.
         let filename = expand('%')
+        " echom 'checking filename ' . filename
         if has_key(s:len_cache, filename)
             let max_width = s:len_cache[filename]
-        else
+        elseif g:minimap_background_processing == 0
             let line_num = 1
             while line_num <= line('$')
                 call setpos('.', [0, line_num, 1])
@@ -524,6 +591,16 @@ function! s:get_window_info() abort
                 let line_num = line_num + 1
             endwhile
             let s:len_cache[filename] = max_width
+        else
+            " Make sure the file exists
+            if filereadable(filename)
+                " Spawn a job to get the longest line
+                let longest_line_cmd = s:get_longest_line_cmd()
+                let s:job_id = jobstart([longest_line_cmd, '-L', filename], s:callbacks)
+            else
+                " If not, don't spawn a job, it will freak out. We know
+                " there's nothing there, so let 0 ride.
+            endif
         endif
         " Let users override the max width. By default, this does nothing.
         let working_width = min([max_width, g:minimap_window_width_override_for_scaling])
@@ -557,12 +634,13 @@ function! s:get_window_info() abort
         execute 'wincmd p'
         call winrestview(curwinview)
 
-        let g:minimap_getting_window_info = 0
-        return { 'mmwinid': mmwinid,
+        if has_key(s:len_cache, filename)
+            let g:minimap_getting_window_info = 0
+        endif
+        let s:win_info = { 'mmwinid': mmwinid,
                     \ 'height': height, 'mm_height': mm_height,
                     \ 'working_width': working_width, 'mm_max_width': mm_max_width }
     endif
-    return {}
 endfunction
 
 " botline is broken and this works.  However, it's slow, so we call this function less.
@@ -712,7 +790,7 @@ endfunction
 
 function! s:minimap_move() abort
     if s:win_info == {}
-        let s:win_info = s:get_window_info()
+        call s:get_window_info()
     end
     let curr = line('.')
 
@@ -743,7 +821,7 @@ function! s:minimap_win_enter() abort
 endfunction
 
 function! s:source_win_enter() abort
-    let s:win_info = s:get_window_info()
+    call s:get_window_info()
     call s:update_highlight()
 endfunction
 
@@ -760,7 +838,6 @@ function! s:source_buffer_enter_handler() abort
 endfunction
 
 function! s:minimap_diffoff() abort
-    let s:win_info = s:get_window_info()
     if s:win_info == {}
         return
     endif
