@@ -567,6 +567,14 @@ function! s:get_window_info() abort
             let g:minimap_getting_window_info = 0
             return {}
         endif
+
+        let filename = expand('%')
+        " echom 'checking filename [' . filename .']'
+        if filename == ''
+            let g:minimap_getting_window_info = 0
+            return {}
+        endif
+
         let curwinview = winsaveview()
 
         let mmwinid = win_getid(mmwinnr)
@@ -577,8 +585,6 @@ function! s:get_window_info() abort
         " file may result in an inaccurate minimap, but the tradeoff is worth
         " it. This cache only lasts for the life of this vim instance, so it
         " will be updated with each new open.
-        let filename = expand('%')
-        " echom 'checking filename ' . filename
         if has_key(s:len_cache, filename)
             let max_width = s:len_cache[filename]
         elseif g:minimap_background_processing == 0
