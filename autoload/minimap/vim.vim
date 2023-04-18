@@ -311,6 +311,11 @@ function! s:generate_minimap(mmwinnr, bufnr, fname, ftype) abort
         call s:get_window_info()
     endif
 
+    " No file will result in an empty win_info, bail out early
+    if s:win_info == {}
+        return
+    endif
+
     let hscale = string(2.0 * g:minimap_width / s:win_info['working_width'])
     let vscale = string(4.0 * winheight(s:win_info['mmwinid']) / line('$'))
 
