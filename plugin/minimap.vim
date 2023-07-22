@@ -9,8 +9,15 @@ if v:version < 800
     finish
 endif
 
+if !exists('g:minimap_exec_warning')
+    let g:minimap_exec_warning  = 1
+endif
+
 if !executable('code-minimap')
-    echom 'minimap: this plugin requires code-minimap installed.'
+    if g:minimap_exec_warning != 0
+        echom 'minimap: this plugin requires code-minimap installed.'
+    endif
+
     finish
 endif
 

@@ -132,6 +132,13 @@ g:minimap_close_buftypes                             *g:minimap_close_buftypes*
   present in `g:minimap_block_buftypes`, the minimap will prefer to close
   rather than disable.
 
+g:minimap_exec_warning                               *g:minimap_exec_warning*
+
+  Type: |Number|
+  Default: `1`
+
+  If set to 1, enables code-minimap not found warning message at startup.
+
 g:minimap_highlight_search                         *g:minimap_highlight_search*
 
   Type: |Number|

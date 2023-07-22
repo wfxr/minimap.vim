@@ -86,6 +86,7 @@ let g:minimap_auto_start_win_enter = 1
 | `g:minimap_block_buftypes`                    | `['nofile', 'nowrite', 'quickfix', 'terminal', 'prompt']` | disable minimap for specific buffer types                            |
 | `g:minimap_close_filetypes`                   | `['startify', 'netrw', 'vim-plug']`                       | close minimap for specific file types                                |
 | `g:minimap_close_buftypes`                    | `[]`                                                      | close minimap for specific buffer types                              |
+| `g:minimap_exec_warning`                      | `1`                                                       | if set, enables code-minimap not found warning message at startup    |
 | `g:minimap_left`                              | `0`                                                       | if set, minimap window will append left                              |
 | `g:minimap_highlight_range`                   | `1`                                                       | if set, minimap will highlight range of visible lines                |
 | `g:minimap_highlight_search`                  | `0`                                                       | if set, minimap will highlight searched patterns                     |
