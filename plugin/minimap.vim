@@ -118,7 +118,7 @@ highlight minimapRangeDiffLine     ctermbg=242 ctermfg=141 guibg=#4F4F4F guifg=#
 " Need the autocmd because some colorschemes clear all colors, so we need to
 " re-add them so they stay valid
 
-if !exists('g:minimap_enable_highlight_colorgroup')
+if g:minimap_enable_highlight_colorgroup == 1
     augroup MinimapColorSchemes
         autocmd!
         autocmd ColorScheme *
