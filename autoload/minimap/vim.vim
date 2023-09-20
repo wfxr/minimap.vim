@@ -802,7 +802,10 @@ endfunction
 function! s:minimap_move() abort
     if s:win_info == {}
         call s:get_window_info()
-    end
+        if s:win_info == {}
+            echom 'Could not populate s:win_info, exiting'
+        endif
+    endif
     let curr = line('.')
 
     execute 'wincmd p'
