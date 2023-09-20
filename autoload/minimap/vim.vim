@@ -63,6 +63,15 @@ function! s:win_enter_handler() abort
     endif
 endfunction
 
+function! s:tab_leave_handler() abort
+    " Nuke our state - we don't keep a per-tab cache so we need to rebuild on
+    " any tab change
+    let s:last_pos = {}
+    let s:last_range = {}
+    let s:win_info = {}
+    let s:len_cache = {}
+endfunction
+
 function! s:get_longest_line_cmd() abort
     if has('mac')
         return 'gwc'
@@ -204,6 +213,7 @@ function! s:open_window() abort
                         \ call s:minimap_update_color_search(getcmdline())
         endif
         autocmd VimEnter,DiffUpdated *                          call s:handle_autocmd(7)
+        autocmd TabLeave *                                      call s:handle_autocmd(8)
     augroup END
 
     " https://github.com/neovim/neovim/issues/6211
@@ -266,6 +276,9 @@ function! s:handle_autocmd(cmd) abort
         elseif a:cmd == 7           " VimEnter,DiffUpdated *
             " echom 'VimEnter,DiffUpdated *'
             call s:minimap_diffoff()
+        elseif a:cmd == 8           " TabLeave *
+            echom 'TabLeave *'
+            call s:tab_leave_handler()
         endif
     endif
 endfunction
