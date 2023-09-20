@@ -1011,8 +1011,9 @@ function! s:minimap_color_search_get_spans(win_info, query) abort
                 continue
             endif
             if end_location[1] < start_location[1]
-                " Error - end not farther than start. Skip.
-                continue
+                " Error - end not farther than start. Abort.
+                echom 'Error looking for matches: end_location: [' . end_location[1] . '] is less than start_location: [' . start_location[1] . ']. Aborting'
+                break
             endif
             let match_len = end_location[1] - start_location[1]
             let this_location = {}
