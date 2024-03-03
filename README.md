@@ -208,7 +208,7 @@ nnoremap <silent> `` :nohlsearch<CR>:call minimap#vim#ClearColorSearch()<CR>
 The version of `wc` that ships with MacOS does not have support for the `-L` flag.
 To use background processing on MacOS, install `gnu-wc`. Example via homebrew:
 ```
-brew install gnu-wc
+brew install coreutils
 ```
 
 ---
