@@ -4,10 +4,10 @@ on: [ push, pull_request ]
 jobs:
   lint:
     name: Vint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
       - name: Install
         run: |
           pip install vim-vint
@@ -19,18 +19,15 @@ jobs:
     name: Unit Tests
     strategy:
       matrix:
-        # os: [ windows-2022, ubuntu-20.04 ]
-        os: [ ubuntu-20.04 ]
+        os: [ ubuntu-latest ]
         include:
-          # - os: windows-2022
-          #   NEOVIM_CONFIG_PATH: ~/AppData/Local/nvim
-          - os: ubuntu-20.04
+          - os: ubuntu-latest
             NEOVIM_CONFIG_PATH: $HOME/.config/nvim
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Vim
-        uses: rhysd/action-setup-vim@v1.2.6
+        uses: rhysd/action-setup-vim@v1
         with:
           neovim: true
       - name: Ensure plugins directory exists
@@ -38,18 +35,12 @@ jobs:
           NEOVIM_CONFIG_PATH: '${{ matrix.NEOVIM_CONFIG_PATH }}'
         run: |
           mkdir -p $NEOVIM_CONFIG_PATH/plugins
-      - if: ${{ !contains(matrix.os, 'windows') }}
-        name: Create a fake code-minimap executable
+      - name: Create a fake code-minimap executable
         # Necessary for minimap.vim to start up
         run: |
           mkdir -p "$HOME/bin"
           ln -s /bin/echo "$HOME/bin/code-minimap"
           echo "$HOME/bin" >> $GITHUB_PATH
-      # - if: ${{ contains(matrix.os, 'windows') }}
-      #   name: Create a fake code-minimap executable (Windows)
-      #   run: |
-      #     mkdir -p ~/bin
-      #     cp  C:/Windows/System32/doskey.exe ~/bin/code-minimap.exe
 
       - name: Checkout Testify
         run: |
