@@ -76,9 +76,9 @@ let g:minimap_auto_start_win_enter = 1
 ### ⚙  Options
 
 | Flag                                          | Default                                                   | Description                                                          |
-|-------------------------------------------    |-----------------------------------------------------------|----------------------------------------------------------------------|
-| `g:minimap_auto_start`                        | `0`                                                       | if, set minimap will show at startup                                 |
-| `g:minimap_auto_start_win_enter`              | `0`                                                       | if, set with `g:minimap_auto_start` minimap shows on `WinEnter`      |
+|-----------------------------------------------|-----------------------------------------------------------|----------------------------------------------------------------------|
+| `g:minimap_auto_start`                        | `0`                                                       | if set, minimap will show at startup                                 |
+| `g:minimap_auto_start_win_enter`              | `0`                                                       | if set with `g:minimap_auto_start`, minimap shows on `WinEnter`      |
 | `g:minimap_width`                             | `10`                                                      | the width of the minimap window in characters                        |
 | `g:minimap_window_width_override_for_scaling` | `2147483647`                                              | the width cap for scaling the minimap (see minimap.txt help file)    |
 | `g:minimap_base_highlight`                    | `Normal`                                                  | the base color group for minimap                                     |
@@ -145,10 +145,7 @@ Check the vim version you are using. `minimap.vim` requires [vim 8.2+](https://g
 
 #### Integrated with diagnostics or git status plugins?
 
-Not implemented currently but it should be possible.
-Welcome to contribute!
-
-**update**: Git support has been implemented [#72](https://github.com/wfxr/minimap.vim/pull/72).
+Git integration is supported. See `g:minimap_git_colors` and [#72](https://github.com/wfxr/minimap.vim/pull/72).
 
 ---
 #### Minimap window is too wide for me, how to use it as a simple scrollbar?
@@ -175,7 +172,7 @@ hi MinimapCurrentLine ctermfg=Green guifg=#50FA7B guibg=#32302f
 let g:minimap_cursor_color = 'MinimapCurrentLine'
 ```
 
-*All existed Highlight groups can be displayed by `:hi`.*
+*All existing highlight groups can be displayed by `:hi`.*
 
 ---
 #### Minimap shows up as a jumble of characters?

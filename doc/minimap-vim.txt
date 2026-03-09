@@ -103,7 +103,7 @@ g:minimap_auto_start_win_enter                 *g:minimap_auto_start_win_enter*
 g:minimap_block_filetypes                           *g:minimap_block_filetypes*
 
   Type: |Array|
-  Default: `['fugitive', 'nerdtree', 'tagbar']`
+  Default: `['fugitive', 'nerdtree', 'tagbar', 'fzf']`
 
   Disable minimap for specific file types.
 
@@ -168,7 +168,7 @@ g:minimap_git_colors                                     *g:minimap_git_colors*
   Default: `0`
 
   If set to 1, the minimap will highlight changes as reported by git.
-  The highlight groups `g:minimap_diffadd_color`, `g:minimiap_diffremove_color`,
+  The highlight groups `g:minimap_diffadd_color`, `g:minimap_diffremove_color`,
   and `g:minimap_diff_color` are used for additions, deletions, and line changes
   respectively.
 
@@ -177,7 +177,7 @@ g:minimap_git_colors                                     *g:minimap_git_colors*
   Type: |Number|
   Default: 1
 
-  If set to 1, minimap will create anautocommand to set highlights on color scheme changes.
+  If set to 1, minimap will create an autocommand to set highlights on color scheme changes.
 
 g:minimap_base_highlight                             *g:minimap_base_highlight*
 
@@ -199,7 +199,7 @@ g:minimap_search_color                                 *g:minimap_search_color*
   Type: |String|
   Default: `'Search'`
 
-  The color group for matched seaches shown in the minimap.
+  The color group for matched searches shown in the minimap.
   Possible values are any |group-name|.
   Requires `g:minimap_highlight_search` to be enabled.
 
@@ -354,7 +354,7 @@ g:minimap_search_color_priority               *g:minimap_search_color_priority*
   for minimap like this:
 
       hi MinimapCurrentLine ctermfg=Green guifg=#50FA7B guibg=#32302f
-      let g:minimap_highlight = 'MinimapCurrentLine'
+      let g:minimap_cursor_color = 'MinimapCurrentLine'
 
 
 |Q:|
