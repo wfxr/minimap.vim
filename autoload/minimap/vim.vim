@@ -933,7 +933,7 @@ function! s:minimap_color_git(win_info) abort
     let lines = split(git_diff, '\n')
     let diff_list = []
     for line in lines
-        if line[0] ==? '@'
+        if len(line) > 0 && line[0] ==? '@'
             let this_diff = s:minimap_parse_git_diff_line(line,
                         \ a:win_info['height'], a:win_info['mm_height'])
             " Add to list
