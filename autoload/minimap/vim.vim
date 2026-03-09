@@ -928,7 +928,7 @@ endfunction
 function! s:minimap_color_git(win_info) abort
     " Get git info
     let git_call = 'git diff -U0 -- ' . expand('%')
-    let git_diff = substitute(system(git_call), '\n\+&', '', '') | silent echo strtrans(git_diff)
+    let git_diff = substitute(system(git_call), '\n\+$', '', '')
 
     let lines = split(git_diff, '\n')
     let diff_list = []
