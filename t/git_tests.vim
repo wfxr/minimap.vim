@@ -1,5 +1,6 @@
 " MIT (c) Wenxuan Zhang
 " MIT (c) Zach Nielsen 2021
+scriptencoding utf-8
 
 " Git tests
 function! s:minimap_test_git_multiline()

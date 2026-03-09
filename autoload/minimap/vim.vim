@@ -1,4 +1,5 @@
 " MIT (c) Wenxuan Zhang and Zach Nielsen
+scriptencoding utf-8
 
 " Script-scoped constants
 let s:STATE_CURSOR       = 0b00001

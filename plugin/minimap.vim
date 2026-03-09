@@ -1,4 +1,5 @@
 " MIT (c) Wenxuan Zhang and Zach Nielsen
+scriptencoding utf-8
 
 if exists('g:loaded_minimap')
     finish
