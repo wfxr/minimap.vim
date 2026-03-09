@@ -667,7 +667,7 @@ function! s:get_window_info() abort
 endfunction
 
 " botline is broken and this works.  However, it's slow, so we call this function less.
-" Remove this function when `getwininfo().botline` is fixed. <- still relevent?
+" Remove this function when `getwininfo().botline` is fixed. <- still relevant?
 " This function builds a new line state table from scratch, clearing out the
 " old one.
 function! s:update_highlight(...) abort
