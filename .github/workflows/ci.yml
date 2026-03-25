@@ -6,7 +6,7 @@ jobs:
     name: Vint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
       - name: Install
         run: |
@@ -25,7 +25,7 @@ jobs:
             NEOVIM_CONFIG_PATH: $HOME/.config/nvim
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Vim
         uses: rhysd/action-setup-vim@v1
         with:
