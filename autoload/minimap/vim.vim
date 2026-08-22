@@ -279,6 +279,15 @@ function! s:handle_autocmd(cmd) abort
             call s:minimap_diffoff()
         elseif a:cmd == 8           " TabLeave *
             call s:tab_leave_handler()
+        elseif a:cmd == 9           " TextChanged,TextChangedI *
+            for timer_id in s:postchange_timer_group
+                call timer_stop(timer_id)
+            endfor
+
+            let s:postchange_timer_group = []
+            let l:postchange_timer = timer_start(500, 's:PostChange')
+
+            call add(s:postchange_timer_group, l:postchange_timer)
         endif
     endif
 endfunction
@@ -878,6 +887,10 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Git Stuff
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let s:max_coc_git_attempts = 10
+let s:git_check_timer = -1
+let s:we_have_git_info = 0
+
 function! minimap#vim#MinimapParseGitDiffLine(line, buffer_lines, mm_height) abort
     return s:minimap_parse_git_diff_line(a:line, a:buffer_lines, a:mm_height)
 endfunction
@@ -926,13 +939,40 @@ function! s:minimap_parse_git_diff_line(line, buffer_lines, mm_height) abort
     return this_diff
 endfunction
 
-function! s:minimap_color_git(win_info) abort
-    " Get git info
-    let git_call = 'git diff -U0 -- ' . expand('%')
-    let git_diff = substitute(system(git_call), '\n\+$', '', '')
+function! s:git_diff() abort
+        let git_call = 'git diff -U0 -- ' . expand('%')
+        let git_diff = substitute(system(git_call), '\n\+$', '', '')
 
-    let lines = split(git_diff, '\n')
+        let lines = split(git_diff, '\n')
+		return lines
+endfunction
+
+function! s:try_coc_git() abort
+	try
+		let coc_git_changes = CocAction('runCommand', 'git.allChunkInfo')
+		let lines = map(copy(l:coc_git_changes), 'v:val["head"]')
+		return lines
+	catch
+		" Silently tray errors
+	endtry
+
+	return v:null
+endfunction
+
+function! s:minimap_color_git(win_info) abort
     let diff_list = []
+	let lines = v:null
+
+    " Get git info
+	if s:we_have_git_info
+		let lines = s:try_coc_git()
+	endif
+
+	" Fall back to shelling out to git-diff
+	if l:lines is v:null
+		let l:lines = s:git_diff()
+	endif
+
     for line in lines
         if len(line) > 0 && line[0] ==? '@'
             let this_diff = s:minimap_parse_git_diff_line(line,
@@ -966,6 +1006,46 @@ function! s:get_diff_state_flag(state) abort
 
     return 0xFFFF
 endfunction
+
+function! s:PostChange(timer_id) abort
+    call filter(s:postchange_timer_group, 'v:val != a:timer_id')
+    call s:refresh_minimap(1)
+    call s:update_highlight()
+endfunction
+
+function! s:has_git_chunk_info() abort
+    if !exists('*coc#rpc#ready') || !coc#rpc#ready()
+        return 0
+    endif
+
+    try
+        let l:registered_commands = coc#rpc#request('commands', [])
+        let l:all_ids = map(copy(l:registered_commands), 'get(v:val, "id", "")')
+        return index(l:all_ids, 'git.allChunkInfo') >= 0
+    catch
+        return 0
+    endtry
+endfunction
+
+
+function! s:check_and_install_git_features(...) abort
+    if s:has_git_chunk_info()
+        call s:install_git_autocmds()
+        call timer_stop(s:git_check_timer)
+        return
+    endif
+endfunction
+
+let s:git_check_timer = timer_start(1000, function('s:check_and_install_git_features'), {'repeat': 10})
+
+function! s:install_git_autocmds() abort
+    let s:we_have_git_info = 1
+    let s:postchange_timer_group = []
+    augroup MinimapAutoCmds_coc_git
+        autocmd TextChanged,TextChangedI *  call s:handle_autocmd(9)
+    augroup END
+endfunction
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Search Highlight Stuff
